@@ -138,9 +138,7 @@ If you encounter any issues:
 
 ## 🔗 Links
 
-- **Live Demo**: [https://vercel.com/innovationsmastery-gmailcoms-projects/v0-architech](https://vercel.com/innovationsmastery-gmailcoms-projects/v0-architech)
 - **Repository**: [https://github.com/badtiger7/architech-saas](https://github.com/badtiger7/architech-saas)
-- **v0.dev Project**: [https://v0.dev/chat/projects/Jf79S9J78Jf](https://v0.dev/chat/projects/Jf79S9J78Jf)
 
 ---
 
