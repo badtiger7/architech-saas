@@ -10,6 +10,25 @@ import Link from "next/link"
 import { Navbar } from "@/components/navbar"
 
 export default function DashboardPage() {
+
+    // Fonction pour calculer la durée du projet
+    const calculateProjectDuration = (startDate: string) => {
+      const today = new Date()
+      const start = new Date(startDate)
+      const diffTime = Math.abs(today.getTime() - start.getTime())
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+      
+      if (diffDays < 30) {
+        return `${diffDays} jour${diffDays > 1 ? 's' : ''}`
+      } else if (diffDays < 365) {
+        const months = Math.floor(diffDays / 30)
+        return `${months} mois`
+      } else {
+        const years = Math.floor(diffDays / 365)
+        const remainingMonths = Math.floor((diffDays % 365) / 30)
+        return `${years} an${years > 1 ? 's' : ''}${remainingMonths > 0 ? ` et ${remainingMonths} mois` : ''}`
+      }
+    }
   const projects = [
     {
       id: 1,
@@ -18,8 +37,12 @@ export default function DashboardPage() {
       progress: 65,
       status: "En cours",
       currentPhase: "APD",
-      deadline: "15 Mars 2024",
-      team: ["JD", "ML", "PL"],
+      startDate: "2023-10-15",
+      team: [
+        { name: "Jean Dupont", role: "Architecte", initials: "JD" },
+        { name: "Marie Leroy", role: "Ingénieur", initials: "ML" },
+        { name: "Paul Leroy", role: "Dessinateur", initials: "PL" }
+      ],
     },
     {
       id: 2,
@@ -28,8 +51,11 @@ export default function DashboardPage() {
       progress: 30,
       status: "En cours",
       currentPhase: "APS",
-      deadline: "22 Avril 2024",
-      team: ["JD", "ML"],
+      startDate: "2023-10-15",
+      team: [
+        { name: "Jean Dupont", role: "Architecte", initials: "JD" },
+        { name: "Marie Leroy", role: "Ingénieur", initials: "ML" }
+      ],
     },
     {
       id: 3,
@@ -38,8 +64,11 @@ export default function DashboardPage() {
       progress: 90,
       status: "Validation",
       currentPhase: "EXE",
-      deadline: "8 Février 2024",
-      team: ["PL", "ML"],
+      startDate: "2023-10-15",
+      team: [
+        { name: "Paul Leroy", role: "Dessinateur", initials: "PL" },
+        { name: "Marie Leroy", role: "Ingénieur", initials: "ML" }
+      ],
     },
   ]
 
@@ -134,6 +163,7 @@ export default function DashboardPage() {
                       <div>
                         <h3 className="font-semibold text-lg">{project.name}</h3>
                         <p className="text-sm text-gray-600">{project.client}</p>
+                        <div className="text-xs text-gray-400 inline-block">Commencé il y a</div>
                       </div>
                       <div className="flex items-center space-x-2">
                         <Badge variant={project.status === "En cours" ? "default" : "secondary"}>
@@ -148,22 +178,42 @@ export default function DashboardPage() {
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
                       <div>
                         <p className="text-sm text-gray-500">Phase actuelle</p>
                         <p className="font-medium">{project.currentPhase}</p>
                       </div>
                       <div>
-                        <p className="text-sm text-gray-500">Échéance</p>
-                        <p className="font-medium">{project.deadline}</p>
+                        <p className="text-sm text-gray-500">Date de début</p>
+                        <p className="font-medium">{project.startDate}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-500">Commencé il y a
+                        </p>      
+                          <p className="font-medium">{calculateProjectDuration(project.startDate)}</p>
+
                       </div>
                       <div>
                         <p className="text-sm text-gray-500">Équipe</p>
-                        <div className="flex -space-x-2 mt-1">
+                        <div className="flex flex-wrap gap-2 mt-1">
                           {project.team.map((member, index) => (
-                            <Avatar key={index} className="w-6 h-6 border-2 border-white">
-                              <AvatarFallback className="text-xs">{member}</AvatarFallback>
-                            </Avatar>
+                            <div 
+                              key={index} 
+                              className="group relative flex items-center space-x-2 bg-blue-50 border border-blue-200 rounded-lg px-3 py-1 hover:bg-blue-100 transition-colors cursor-pointer"
+                            >
+                              <Avatar className="w-6 h-6">
+                                <AvatarFallback className="text-xs bg-blue-600 text-white">{member.initials}</AvatarFallback>
+                              </Avatar>
+                              <div className="text-xs">
+                                <p className="font-medium text-gray-900">{member.name}</p>
+                                <p className="text-gray-600">{member.role}</p>
+                              </div>
+                              
+                              {/* Tooltip on hover */}
+                              <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
+                                {member.name} - {member.role}
+                              </div>
+                            </div>
                           ))}
                         </div>
                       </div>
