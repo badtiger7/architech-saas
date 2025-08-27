@@ -1,19 +1,48 @@
 "use client"
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { Calendar, FileText, Users, Clock, AlertCircle, TrendingUp, Plus, Eye } from "lucide-react"
+import { Calendar, FileText, Users, Clock, AlertCircle, TrendingUp, Plus, Eye, Camera, Edit3 } from "lucide-react"
 import Link from "next/link"
 import { Navbar } from "@/components/navbar"
+import { useState, useRef } from "react"
+
 
 export default function DashboardPage() {
 
-    // Fonction pour calculer la durée du projet
-    const calculateProjectDuration = (startDate: string) => {
-      const today = new Date()
+    const [projectThumbnails, setProjectThumbnails] = useState<{[key: number]: string}>({
+      1: "/placeholder.jpg", // Default placeholder
+      2: "/placeholder.jpg",
+      3: "/placeholder.jpg"
+    })
+
+      // Function to trigger file input
+      const fileInputRefs = useRef<{ [key: number]: HTMLInputElement | null }>({});
+
+      // Function to handle thumbnail upload
+      const handleThumbnailChange = (projectId: number, event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0]
+        if (file) {
+          const reader = new FileReader()
+          reader.onload = (e) => {
+            const result = e.target?.result as string
+            setProjectThumbnails(prev => ({
+              ...prev,
+              [projectId]: result
+            }))
+          }
+          reader.readAsDataURL(file)
+        }
+      }
+
+      const triggerFileInput = (projectId: number) => {
+        fileInputRefs.current[projectId]?.click();
+      }
+
+      const calculateProjectDuration = (startDate: string) => {
+        const today = new Date()
       const start = new Date(startDate)
       const diffTime = Math.abs(today.getTime() - start.getTime())
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
@@ -159,25 +188,70 @@ export default function DashboardPage() {
               <CardContent className="space-y-6">
                 {projects.map((project) => (
                   <div key={project.id} className="border rounded-lg p-4">
-                    <div className="flex items-center justify-between mb-3">
-                      <div>
-                        <h3 className="font-semibold text-lg">{project.name}</h3>
-                        <p className="text-sm text-gray-600">{project.client}</p>
-                        <div className="text-xs text-gray-400 inline-block">Commencé il y a</div>
+                    {/* Hidden file input for each project */}
+                    <input
+                      type="file"
+                      ref={(el) => fileInputRefs.current[project.id] = el}
+                      onChange={(e) => handleThumbnailChange(project.id, e)}
+                      accept="image/*"
+                      style={{ display: 'none' }}
+                    />
+
+                    <div className="flex items-start space-x-4 mb-3">
+                      {/* Project Thumbnail */}
+                      <div className="relative group">
+                        <div className="w-20 h-20 rounded-lg overflow-hidden bg-gray-100 border-2 border-dashed border-gray-300 flex items-center justify-center">
+                          {projectThumbnails[project.id] ? (
+                            <img 
+                              src={projectThumbnails[project.id]} 
+                              alt={`Miniature ${project.name}`}
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <Camera className="w-8 h-8 text-gray-400" />
+                          )}
+                          
+                          {/* Edit overlay on hover */}
+                          <div 
+                            className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                            onClick={() => triggerFileInput(project.id)}
+                          >
+                            <Edit3 className="w-5 h-5 text-white" />
+                          </div>
+                        </div>
+                        
+                        {/* Edit button always visible on mobile */}
+                        <button
+                          onClick={() => triggerFileInput(project.id)}
+                          className="absolute -bottom-1 -right-1 bg-blue-600 text-white rounded-full p-1 shadow-lg md:hidden"
+                        >
+                          <Edit3 className="w-3 h-3" />
+                        </button>
                       </div>
-                      <div className="flex items-center space-x-2">
-                        <Badge variant={project.status === "En cours" ? "default" : "secondary"}>
-                          {project.status}
-                        </Badge>
-                        <Link href="/timeline">
-                          <Button variant="outline" size="sm">
-                            <Eye className="h-4 w-4 mr-1" />
-                            Voir
-                          </Button>
-                        </Link>
+
+                      {/* Project Info */}
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between mb-2">
+                          <div>
+                            <h3 className="font-semibold text-lg">{project.name}</h3>
+                            <p className="text-sm text-gray-600">{project.client}</p>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Badge variant={project.status === "En cours" ? "default" : "secondary"}>
+                              {project.status}
+                            </Badge>
+                            <Link href="/timeline">
+                              <Button variant="outline" size="sm">
+                                <Eye className="h-4 w-4 mr-1" />
+                                Voir
+                              </Button>
+                            </Link>
+                          </div>
+                        </div>
                       </div>
                     </div>
 
+                    {/* Rest of the existing project card content */}
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
                       <div>
                         <p className="text-sm text-gray-500">Phase actuelle</p>
@@ -188,10 +262,8 @@ export default function DashboardPage() {
                         <p className="font-medium">{project.startDate}</p>
                       </div>
                       <div>
-                        <p className="text-sm text-gray-500">Commencé il y a
-                        </p>      
-                          <p className="font-medium">{calculateProjectDuration(project.startDate)}</p>
-
+                        <p className="text-sm text-gray-500">Commencé il y a</p>      
+                        <p className="font-medium">{calculateProjectDuration(project.startDate)}</p>
                       </div>
                       <div>
                         <p className="text-sm text-gray-500">Équipe</p>
