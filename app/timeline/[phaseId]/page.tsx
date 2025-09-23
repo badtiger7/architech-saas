@@ -36,6 +36,7 @@ import {
   Save,
 } from "lucide-react"
 import { Navbar } from "@/components/navbar"
+import { getStatusClasses } from "@/lib/utils"
 
 export default function PhaseDetailPage({ params }: { params: { phaseId: string } }) {
   const router = useRouter()
@@ -131,32 +132,22 @@ export default function PhaseDetailPage({ params }: { params: { phaseId: string 
   ]
 
   const getStatusColor = (status: string) => {
-    switch (status) {
-      case "validated":
-        return "bg-green-100 text-green-800"
-      case "in-review":
-        return "bg-yellow-100 text-yellow-800"
-      case "pending":
-        return "bg-gray-100 text-gray-800"
-      case "rejected":
-        return "bg-red-100 text-red-800"
-      default:
-        return "bg-gray-100 text-gray-800"
-    }
+    const classes = getStatusClasses(status as any)
+    return classes.badge
   }
 
   const getStatusIcon = (status: string) => {
     switch (status) {
       case "validated":
-        return <CheckCircle className="h-4 w-4 text-green-600" />
+        return <CheckCircle className="h-4 w-4 text-success" />
       case "in-review":
-        return <Clock className="h-4 w-4 text-yellow-600" />
+        return <Clock className="h-4 w-4 text-warning" />
       case "pending":
-        return <AlertCircle className="h-4 w-4 text-gray-600" />
+        return <AlertCircle className="h-4 w-4 text-muted-foreground" />
       case "rejected":
-        return <XCircle className="h-4 w-4 text-red-600" />
+        return <XCircle className="h-4 w-4 text-danger" />
       default:
-        return <AlertCircle className="h-4 w-4 text-gray-600" />
+        return <AlertCircle className="h-4 w-4 text-muted-foreground" />
     }
   }
 

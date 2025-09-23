@@ -31,6 +31,27 @@ const config: Config = {
   				DEFAULT: 'hsl(var(--secondary))',
   				foreground: 'hsl(var(--secondary-foreground))'
   			},
+  			// Architech Custom Colors
+  			tertiary: {
+  				DEFAULT: 'hsl(var(--tertiary))',
+  				foreground: 'hsl(var(--tertiary-foreground))'
+  			},
+  			success: {
+  				DEFAULT: 'hsl(var(--success))',
+  				foreground: 'hsl(var(--success-foreground))'
+  			},
+  			warning: {
+  				DEFAULT: 'hsl(var(--warning))',
+  				foreground: 'hsl(var(--warning-foreground))'
+  			},
+  			danger: {
+  				DEFAULT: 'hsl(var(--danger))',
+  				foreground: 'hsl(var(--danger-foreground))'
+  			},
+  			info: {
+  				DEFAULT: 'hsl(var(--info))',
+  				foreground: 'hsl(var(--info-foreground))'
+  			},
   			muted: {
   				DEFAULT: 'hsl(var(--muted))',
   				foreground: 'hsl(var(--muted-foreground))'

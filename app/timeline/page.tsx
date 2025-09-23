@@ -36,6 +36,7 @@ import {
   Edit3,
 } from "lucide-react"
 import { Navbar } from "@/components/navbar"
+import { getStatusClasses, getProjectStatusClasses } from "@/lib/utils"
 
 export default function TimelinePage() {
   const router = useRouter()
@@ -83,16 +84,14 @@ export default function TimelinePage() {
       id: "residence-jardins",
       name: "Résidence Les Jardins",
       status: "En cours",
-      color: "bg-green-100 text-green-800",
     },
     {
       id: "centre-commercial",
       name: "Centre Commercial Atlantis",
       status: "En révision",
-      color: "bg-yellow-100 text-yellow-800",
     },
-    { id: "bureaux-tech", name: "Bureaux Tech Park", status: "Terminé", color: "bg-blue-100 text-blue-800" },
-    { id: "villa-moderne", name: "Villa Moderne", status: "En cours", color: "bg-green-100 text-green-800" },
+    { id: "bureaux-tech", name: "Bureaux Tech Park", status: "Terminé" },
+    { id: "villa-moderne", name: "Villa Moderne", status: "En cours" },
   ]
 
   const [phases, setPhases] = useState([
@@ -156,28 +155,30 @@ export default function TimelinePage() {
   const currentProject = projects.find((p) => p.id === selectedProject)
 
   const getStatusColor = (status: string) => {
+    const classes = getStatusClasses(status as any)
     switch (status) {
       case "completed":
-        return "bg-green-600"
+        return "bg-success"
       case "in-progress":
-        return "bg-yellow-600"
+        return "bg-warning"
       case "blocked":
-        return "bg-red-600"
+        return "bg-danger"
       default:
-        return "bg-gray-400"
+        return "bg-muted-foreground"
     }
   }
 
   const getStatusBadge = (status: string) => {
+    const classes = getStatusClasses(status as any)
     switch (status) {
       case "completed":
-        return <Badge className="bg-green-600 text-white hover:bg-green-700">Terminée</Badge>
+        return <Badge className="bg-success text-success-foreground hover:bg-success/90">Terminée</Badge>
       case "in-progress":
-        return <Badge className="text-white hover:opacity-90" style={{ backgroundColor: '#D4AF37' }}>En cours</Badge>
+        return <Badge className="bg-warning text-warning-foreground hover:bg-warning/90">En cours</Badge>
       case "blocked":
-        return <Badge className="bg-red-600 text-white hover:bg-red-700">Bloquée</Badge>
+        return <Badge className="bg-danger text-danger-foreground hover:bg-danger/90">Bloquée</Badge>
       default:
-        return <Badge className="bg-gray-500 text-white hover:bg-gray-600">Non commencée</Badge>
+        return <Badge className="bg-muted text-muted-foreground hover:bg-muted/90">Non commencée</Badge>
     }
   }
 
@@ -317,15 +318,12 @@ export default function TimelinePage() {
                   {projects.map((project) => (
                     <SelectItem key={project.id} value={project.id} className="p-3 hover:bg-opacity-50" style={{ backgroundColor: 'transparent' }}>
                       <div className="flex items-center space-x-3 w-full">
-                        <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: '#D4AF37' }}></div>
+                        <div className="w-2 h-2 rounded-full flex-shrink-0 bg-primary"></div>
                         <div className="flex-1 min-w-0">
-                          <div className="font-medium truncate" style={{ color: '#8B4513' }}>{project.name}</div>
-                          <div className="text-xs" style={{ color: '#A0522D' }}>Timeline documentaire</div>
+                          <div className="font-medium truncate text-secondary">{project.name}</div>
+                          <div className="text-xs text-tertiary">Timeline documentaire</div>
                         </div>
-                        <Badge 
-                          className="text-xs flex-shrink-0 text-white"
-                          style={{ backgroundColor: '#D4AF37' }}
-                        >
+                        <Badge className={`text-xs flex-shrink-0 ${getProjectStatusClasses(project.status).badge}`}>
                           {project.status}
                         </Badge>
                       </div>
