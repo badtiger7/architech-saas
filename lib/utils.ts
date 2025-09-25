@@ -56,3 +56,15 @@ export function getProjectStatusClasses(status: string) {
   const normalizedStatus = status.toLowerCase().replace(/\s+/g, '-') as StatusType
   return getStatusClasses(normalizedStatus)
 }
+
+// Fonction pour afficher les dates correctement (évite le problème de fuseau horaire)
+export function formatDateForDisplay(dateString: string | null): string {
+  if (!dateString) return "Non définie"
+  
+  // Split la date pour éviter les problèmes de fuseau horaire
+  const [year, month, day] = dateString.split('-')
+  const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day))
+  
+  return date.toLocaleDateString("fr-FR")
+}
+

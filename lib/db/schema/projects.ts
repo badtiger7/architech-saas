@@ -41,6 +41,8 @@ export const projectSteps = pgTable('project_steps', {
   name: text('name').notNull(),
   orderIndex: integer('order_index').notNull(),
   startDate: date('start_date'),
+  endDate: date('end_date'),
+  description: text('description'),
   status: text('status').notNull(), // 'pending', 'in_progress', 'completed', 'blocked'
   progressRatio: integer('progress_ratio').default(0).notNull(), // 0-100
 })

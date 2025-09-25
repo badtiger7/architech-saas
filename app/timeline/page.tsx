@@ -1,42 +1,53 @@
 "use client"
 
-import { useState, useRef } from "react"
-import { useRouter } from "next/navigation"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { useState, useEffect, useRef, useCallback } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Textarea } from "@/components/ui/textarea"
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from "@/components/ui/select"
 import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
 import {
+  Calendar,
   CheckCircle,
   Clock,
-  AlertCircle,
-  Plus,
-  Calendar,
   FileText,
-  Lock,
-  Edit,
-  Save,
-  X,
+  MessageSquare,
+  MoreHorizontal,
+  Plus,
+  Settings,
   Share2,
-  ExternalLink,
-  Building2,
-  ChevronDown,
+  Users,
   Camera,
   Edit3,
+  Trash2,
+  ChevronRight,
+  AlertCircle,
 } from "lucide-react"
 import { Navbar } from "@/components/navbar"
-import { getStatusClasses, getProjectStatusClasses } from "@/lib/utils"
+import { getStatusClasses, getProjectStatusClasses, formatDateForDisplay } from "@/lib/utils"
+import { useProjects } from "@/hooks/use-projects"
+import { useApi, type Project, type Phase } from "@/lib/api/client"
+import { toast } from "sonner"
 
 export default function TimelinePage() {
   const router = useRouter()
@@ -47,16 +58,22 @@ export default function TimelinePage() {
     email: "",
     permission: "read",
   })
-  const [selectedProject, setSelectedProject] = useState("residence-jardins")
-
-  // Project thumbnail state and functionality
-  const [projectThumbnails, setProjectThumbnails] = useState<{[key: string]: string}>({
-    "residence-jardins": "/placeholder.jpg",
-    "centre-commercial": "/placeholder.jpg", 
-    "bureaux-tech": "/placeholder.jpg",
-    "villa-moderne": "/placeholder.jpg"
+  const [selectedProject, setSelectedProject] = useState<string>("")
+  const [phases, setPhases] = useState<Phase[]>([])
+  const [loadingPhases, setLoadingPhases] = useState(false)
+  const [addPhaseDialogOpen, setAddPhaseDialogOpen] = useState(false)
+  const [newPhaseForm, setNewPhaseForm] = useState({
+    name: "",
+    startDate: "",
   })
 
+  // API hooks
+  const { projects, loading: loadingProjects } = useProjects("y1dz7q6fj91e3cf0i0p7t67d") // Real org ID
+  const api = useApi()
+  const searchParams = useSearchParams()
+
+  // Project thumbnail state and functionality
+  const [projectThumbnails, setProjectThumbnails] = useState<{[key: string]: string}>({})
   const fileInputRef = useRef<HTMLInputElement | null>(null)
 
   // Function to handle thumbnail upload
@@ -79,80 +96,50 @@ export default function TimelinePage() {
     fileInputRef.current?.click()
   }
 
-  const projects = [
-    {
-      id: "residence-jardins",
-      name: "Résidence Les Jardins",
-      status: "En cours",
-    },
-    {
-      id: "centre-commercial",
-      name: "Centre Commercial Atlantis",
-      status: "En révision",
-    },
-    { id: "bureaux-tech", name: "Bureaux Tech Park", status: "Terminé" },
-    { id: "villa-moderne", name: "Villa Moderne", status: "En cours" },
-  ]
+  // Load phases when project changes
+  // Set first project as selected by default when projects load, or from URL parameter
+  useEffect(() => {
+    if (projects.length > 0 && !selectedProject) {
+      const projectFromUrl = searchParams.get('project')
+      if (projectFromUrl && projects.find(p => p.id === projectFromUrl)) {
+        // Select project from URL if it exists
+        setSelectedProject(projectFromUrl)
+      } else {
+        // Default to first project if none selected
+        setSelectedProject(projects[0].id)
+      }
+    }
+  }, [projects, searchParams]) // Retiré selectedProject des dépendances !
 
-  const [phases, setPhases] = useState([
-    {
-      id: 1,
-      name: "Esquisse",
-      status: "completed",
-      startDate: "2024-01-15",
-      endDate: "2024-02-15",
-      progress: 100,
-      documents: 5,
-      validatedDocs: 5,
-      locked: true,
-    },
-    {
-      id: 2,
-      name: "APS (Avant-Projet Sommaire)",
-      status: "completed",
-      startDate: "2024-02-16",
-      endDate: "2024-03-20",
-      progress: 100,
-      documents: 8,
-      validatedDocs: 8,
-      locked: true,
-    },
-    {
-      id: 3,
-      name: "APD (Avant-Projet Détaillé)",
-      status: "in-progress",
-      startDate: "2024-03-21",
-      endDate: "2024-04-25",
-      progress: 65,
-      documents: 12,
-      validatedDocs: 8,
-      locked: false,
-    },
-    {
-      id: 4,
-      name: "Permis de Construire",
-      status: "pending",
-      startDate: "2024-04-26",
-      endDate: "2024-06-15",
-      progress: 0,
-      documents: 0,
-      validatedDocs: 0,
-      locked: true,
-    },
-    {
-      id: 5,
-      name: "EXE (Projet d'Exécution)",
-      status: "pending",
-      startDate: "2024-06-16",
-      endDate: "2024-08-30",
-      progress: 0,
-      documents: 0,
-      validatedDocs: 0,
-      locked: true,
-    },
-  ])
+  const loadPhases = useCallback(async () => {
+    if (!selectedProject) return
+    setLoadingPhases(true)
+    try {
+      const response = await api.phases.list(selectedProject)
+      if (response.success && response.data) {
+        setPhases(response.data)
+      } else {
+        toast.error('Erreur lors du chargement des phases')
+      }
+    } catch (error) {
+      toast.error('Erreur de connexion')
+    } finally {
+      setLoadingPhases(false)
+    }
+  }, [selectedProject])
+
+  // Charger les phases quand le projet sélectionné change
+  useEffect(() => {
+    if (selectedProject) {
+      loadPhases()
+    }
+  }, [selectedProject, loadPhases])
 
   const currentProject = projects.find((p) => p.id === selectedProject)
+
+  const handleProjectChange = (projectId: string) => {
+    setSelectedProject(projectId)
+  }
 
   const getStatusColor = (status: string) => {
     const classes = getStatusClasses(status as any)
@@ -182,546 +169,466 @@ export default function TimelinePage() {
     }
   }
 
-  const validatePhase = (phaseId: number) => {
-    setPhases(
-      phases.map((phase) =>
-        phase.id === phaseId
-          ? { ...phase, status: "completed", progress: 100, validatedDocs: phase.documents }
-          : phase.id === phaseId + 1
-            ? { ...phase, locked: false }
-            : phase,
-      ),
-    )
-  }
-
-  const savePhaseEdit = (phaseId: number, updates: any) => {
-    setPhases(phases.map((phase) => (phase.id === phaseId ? { ...phase, ...updates } : phase)))
-    setEditingPhase(null)
-  }
-
-  const handlePhaseClick = (phaseId: number) => {
-    router.push(`/timeline/${phaseId}`)
-  }
-
-  const handleShare = (phaseId: number) => {
-    console.log("Partage de l'étape:", phaseId, shareForm)
+  const handleShareSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
     setShareDialogOpen(null)
     setShareForm({ fullName: "", email: "", permission: "read" })
   }
 
+  const updatePhaseStatus = async (phaseId: string, newStatus: Phase['status']) => {
+    if (!selectedProject) return
+
+    try {
+      const response = await api.phases.update(selectedProject, phaseId, { status: newStatus })
+      if (response.success && response.data) {
+        setPhases(prev => 
+          prev.map(phase => 
+            phase.id === phaseId ? { ...phase, status: newStatus } : phase
+          )
+        )
+        toast.success('Phase mise à jour')
+      } else {
+        toast.error('Erreur lors de la mise à jour')
+      }
+    } catch (error) {
+      toast.error('Erreur de connexion')
+    }
+  }
+
+  const addPhase = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    if (!selectedProject || !newPhaseForm.name.trim()) {
+      return
+    }
+
+    try {
+      const nextOrderIndex = phases.length
+      
+      const response = await api.phases.create(selectedProject, {
+        name: newPhaseForm.name,
+        orderIndex: nextOrderIndex,
+        startDate: newPhaseForm.startDate || undefined,
+      })
+
+      if (response.success && response.data) {
+        setPhases(prev => [...prev, response.data!])
+        setAddPhaseDialogOpen(false)
+        setNewPhaseForm({ name: "", startDate: "" })
+        toast.success('Phase ajoutée avec succès')
+      } else {
+        toast.error('Erreur lors de la création de la phase: ' + (response.error || 'Erreur inconnue'))
+      }
+    } catch (error) {
+      toast.error('Erreur de connexion: ' + (error instanceof Error ? error.message : 'Erreur inconnue'))
+    }
+  }
+
+  if (loadingProjects) {
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#F5F0E8' }}>
+      <div className="min-h-screen bg-background">
       <Navbar />
-
-      <main className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="flex flex-col space-y-6 mb-8">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-4 sm:space-y-0">
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-bold" style={{ color: '#8B4513' }}>Timeline Documentaire</h1>
-              <p className="mt-1 text-sm sm:text-base" style={{ color: '#A0522D' }}>Suivi des phases du projet architectural</p>
-            </div>
-            <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button 
-                    variant="outline" 
-                    className="w-full sm:w-auto border-2 hover:shadow-md transition-all"
-                    style={{ 
-                      borderColor: '#D4AF37', 
-                      color: '#8B4513',
-                      backgroundColor: '#FFFFFF'
-                    }}
-                  >
-                    <Plus className="h-4 w-4 mr-2" />
-                    Ajouter une étape
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="bg-white">
-                  <DialogHeader>
-                    <DialogTitle style={{ color: '#8B4513' }}>Ajouter une nouvelle étape</DialogTitle>
-                    <DialogDescription style={{ color: '#A0522D' }}>Créez une nouvelle phase dans votre timeline de projet</DialogDescription>
-                  </DialogHeader>
-                  <div className="space-y-4">
-                    <div>
-                      <Label htmlFor="phaseName" style={{ color: '#8B4513' }}>Nom de la phase</Label>
-                      <Input 
-                        id="phaseName" 
-                        placeholder="Ex: Études techniques" 
-                        className="border-2 focus:border-opacity-80"
-                        style={{ borderColor: '#D4AF37' }}
-                      />
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="startDate" style={{ color: '#8B4513' }}>Date de début</Label>
-                        <Input 
-                          id="startDate" 
-                          type="date" 
-                          className="border-2 focus:border-opacity-80"
-                          style={{ borderColor: '#D4AF37' }}
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="endDate" style={{ color: '#8B4513' }}>Date de fin</Label>
-                        <Input 
-                          id="endDate" 
-                          type="date" 
-                          className="border-2 focus:border-opacity-80"
-                          style={{ borderColor: '#D4AF37' }}
-                        />
-                      </div>
-                    </div>
-                    <Button 
-                      className="w-full text-white hover:opacity-90 transition-opacity"
-                      style={{ backgroundColor: '#D4AF37' }}
-                    >
-                      Ajouter la phase
-                    </Button>
-                  </div>
-                </DialogContent>
-              </Dialog>
-              <Button 
-                className="w-full sm:w-auto text-white hover:opacity-90 transition-opacity"
-                style={{ backgroundColor: '#D4AF37' }}
-              >
-                Charger un modèle
-              </Button>
-            </div>
-          </div>
-
-          {/* Project Selector */}
-          <div className="bg-white rounded-lg shadow-sm border-2 p-4" style={{ borderColor: '#D4AF37' }}>
-            <div className="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
-              <div className="flex items-center space-x-2 text-sm font-medium" style={{ color: '#8B4513' }}>
-                <Building2 className="h-4 w-4" />
-                <span>Projet actuel :</span>
-              </div>
-              <Select value={selectedProject} onValueChange={setSelectedProject}>
-                <SelectTrigger 
-                  className="w-full sm:w-80 border-2 hover:shadow-sm transition-all"
-                  style={{ 
-                    backgroundColor: '#FFF8DC', 
-                    borderColor: '#D4AF37' 
-                  }}
-                >
-                  <div className="flex items-center space-x-3">
-                    <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#D4AF37' }}></div>
-                    <div className="flex-1 text-left">
-                      <div className="font-medium" style={{ color: '#8B4513' }}>{currentProject?.name}</div>
-                      <div className="text-xs" style={{ color: '#A0522D' }}>Timeline documentaire</div>
-                    </div>
-                  </div>
-                  <ChevronDown className="h-4 w-4" style={{ color: '#A0522D' }} />
-                </SelectTrigger>
-                <SelectContent className="bg-white border-2" style={{ borderColor: '#D4AF37' }}>
-                  {projects.map((project) => (
-                    <SelectItem key={project.id} value={project.id} className="p-3 hover:bg-opacity-50" style={{ backgroundColor: 'transparent' }}>
-                      <div className="flex items-center space-x-3 w-full">
-                        <div className="w-2 h-2 rounded-full flex-shrink-0 bg-primary"></div>
-                        <div className="flex-1 min-w-0">
-                          <div className="font-medium truncate text-secondary">{project.name}</div>
-                          <div className="text-xs text-tertiary">Timeline documentaire</div>
-                        </div>
-                        <Badge className={`text-xs flex-shrink-0 ${getProjectStatusClasses(project.status).badge}`}>
-                          {project.status}
-                        </Badge>
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+        <div className="flex items-center justify-center h-64">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+            <p className="text-muted-foreground">Chargement des projets...</p>
           </div>
         </div>
+      </div>
+    )
+  }
 
-        {/* Timeline Overview */}
-        <Card className="mb-8 bg-white shadow-sm border-2" style={{ borderColor: '#D4AF37' }}>
-          <CardHeader>
+  return (
+    <div className="min-h-screen bg-background">
+      <Navbar />
+      
+      {/* Project Selection Header */}
+      <div className="border-b bg-card">
+        <div className="container mx-auto px-4 py-6">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div className="flex items-center space-x-4">
-              {/* Hidden file input */}
-              <input
-                type="file"
-                ref={fileInputRef}
-                onChange={handleThumbnailChange}
-                accept="image/*"
-                style={{ display: 'none' }}
-              />
-              
-              {/* Project Thumbnail */}
               <div className="relative group">
-                <div className="w-16 h-16 rounded-lg overflow-hidden border-2 border-dashed flex items-center justify-center" style={{ backgroundColor: '#FFF8DC', borderColor: '#D4AF37' }}>
+                <div 
+                  className="w-16 h-16 rounded-lg overflow-hidden cursor-pointer bg-muted flex items-center justify-center"
+                  onClick={triggerFileInput}
+                >
                   {projectThumbnails[selectedProject] ? (
                     <img 
                       src={projectThumbnails[selectedProject]} 
-                      alt={`Miniature ${currentProject?.name}`}
+                      alt="Project thumbnail" 
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <Camera className="w-6 h-6" style={{ color: '#D4AF37' }} />
+                    <Camera className="h-6 w-6 text-muted-foreground" />
                   )}
-                  
-                  {/* Edit overlay on hover */}
-                  <div 
-                    className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
-                    onClick={triggerFileInput}
-                  >
-                    <Edit3 className="w-4 h-4 text-white" />
+                  <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                    <Camera className="h-4 w-4 text-white" />
                   </div>
                 </div>
-                
-                {/* Edit button always visible on mobile */}
-                <button
-                  onClick={triggerFileInput}
-                  className="absolute -bottom-1 -right-1 text-white rounded-full p-1 shadow-lg md:hidden"
-                  style={{ backgroundColor: '#D4AF37' }}
-                >
-                  <Edit3 className="w-3 h-3" />
-                </button>
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleThumbnailChange}
+                  accept="image/*"
+                  className="hidden"
+                />
               </div>
               
-              <div>
-                <CardTitle style={{ color: '#8B4513' }}>Vue d'ensemble du projet</CardTitle>
-                <CardDescription style={{ color: '#A0522D' }}>Progression globale : 53% • 3/5 phases terminées</CardDescription>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center space-x-4 mb-4">
               <div className="flex-1">
-                <Progress value={53} className="h-3" />
+                <Select value={selectedProject} onValueChange={handleProjectChange}>
+                  <SelectTrigger className="w-full md:w-80 bg-background border-border">
+                    <SelectValue placeholder="Sélectionner un projet" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {projects.map((project) => (
+                      <SelectItem key={project.id} value={project.id} className="p-3 hover:bg-accent">
+                        <div className="flex items-center space-x-3 w-full">
+                          <div className="w-2 h-2 rounded-full flex-shrink-0 bg-primary"></div>
+                          <div className="flex-1 min-w-0">
+                            <div className="font-medium truncate text-secondary">{project.name}</div>
+                            <div className="text-xs text-tertiary">Timeline documentaire</div>
               </div>
-              <span className="text-sm font-medium" style={{ color: '#8B4513' }}>53%</span>
+                          <Badge className={`text-xs flex-shrink-0 ${getProjectStatusClasses(project.status).badge}`}>
+                            {project.status}
+                          </Badge>
+            </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
-            {/* Timeline visualization */}
-            <div className="relative">
-              <div className="absolute left-6 top-0 bottom-0 w-0.5" style={{ backgroundColor: '#D4AF37' }}></div>
-              <div className="space-y-6">
-                {phases.map((phase, index) => (
-                  <div key={phase.id} className="relative flex items-start">
-                    <div className={`w-3 h-3 rounded-full ${getStatusColor(phase.status)} relative z-10`}></div>
-                    <div className="ml-6 flex-1">
-                      <div className="flex items-center justify-between">
-                        <h3 className="font-medium text-sm" style={{ color: '#8B4513' }}>{phase.name}</h3>
-                        <span className="text-xs" style={{ color: '#A0522D' }}>
-                          {phase.startDate} → {phase.endDate}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            {currentProject && (
+              <div className="flex items-center space-x-2">
 
-        {/* Phases Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
-          {phases.map((phase) => (
-            <Card
-              key={phase.id}
-              className={`relative cursor-pointer transition-all hover:shadow-lg bg-white border-2 ${
-                phase.status === "in-progress" ? "ring-2" : ""
-              }`}
-              style={{ 
-                borderColor: '#D4AF37',
-                ...(phase.status === "in-progress" ? { 
-                  '--tw-ring-color': '#D4AF37',
-                  '--tw-ring-opacity': '0.5' 
-                } : {})
-              }}
-              onClick={() => handlePhaseClick(phase.id)}
-            >
-              <CardHeader className="pb-3">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-base sm:text-lg flex items-center" style={{ color: '#8B4513' }}>
-                    {phase.name}
-                    <ExternalLink className="h-4 w-4 ml-2" style={{ color: '#A0522D' }} />
-                  </CardTitle>
-                  {phase.locked && <Lock className="h-4 w-4" style={{ color: '#A0522D' }} />}
-                </div>
-                <div className="flex items-center justify-between">
-                  {getStatusBadge(phase.status)}
-                  <div className="flex space-x-1">
-                    <Dialog
-                      open={shareDialogOpen === phase.id}
-                      onOpenChange={(open) => setShareDialogOpen(open ? phase.id : null)}
-                    >
+                <Dialog>
                       <DialogTrigger asChild>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="border-2 hover:shadow-sm"
-                          style={{ 
-                            borderColor: '#D4AF37',
-                            color: '#8B4513',
-                            backgroundColor: '#FFFFFF'
-                          }}
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            setShareDialogOpen(phase.id)
-                          }}
-                        >
-                          <Share2 className="h-3 w-3" />
+                    <Button variant="outline" size="sm" className="flex items-center space-x-2">
+                      <Share2 className="h-4 w-4" />
+                      <span>Partager</span>
                         </Button>
                       </DialogTrigger>
-                      <DialogContent className="sm:max-w-md bg-white" onClick={(e) => e.stopPropagation()}>
+                  <DialogContent className="sm:max-w-md">
                         <DialogHeader>
-                          <DialogTitle style={{ color: '#8B4513' }}>Partager l'étape "{phase.name}"</DialogTitle>
-                          <DialogDescription style={{ color: '#A0522D' }}>
-                            Invitez des collaborateurs à accéder à cette étape du projet
+                      <DialogTitle>Partager le projet</DialogTitle>
+                      <DialogDescription>
+                        Inviter quelqu'un à collaborer sur {currentProject.name}
                           </DialogDescription>
                         </DialogHeader>
-                        <div className="space-y-4">
-                          <div>
-                            <Label htmlFor="fullName" style={{ color: '#8B4513' }}>Nom complet</Label>
+                    <form onSubmit={handleShareSubmit} className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="fullName">Nom complet</Label>
                             <Input
                               id="fullName"
-                              placeholder="Ex: Jean Dupont"
                               value={shareForm.fullName}
-                              onChange={(e) => setShareForm({ ...shareForm, fullName: e.target.value })}
-                              className="border-2"
-                              style={{ borderColor: '#D4AF37' }}
+                          onChange={(e) => setShareForm(prev => ({ ...prev, fullName: e.target.value }))}
+                          placeholder="Jean Dupont"
                             />
                           </div>
-                          <div>
-                            <Label htmlFor="email" style={{ color: '#8B4513' }}>Email</Label>
+                      <div className="space-y-2">
+                        <Label htmlFor="email">Email</Label>
                             <Input
                               id="email"
                               type="email"
-                              placeholder="jean.dupont@example.com"
                               value={shareForm.email}
-                              onChange={(e) => setShareForm({ ...shareForm, email: e.target.value })}
-                              className="border-2"
-                              style={{ borderColor: '#D4AF37' }}
+                          onChange={(e) => setShareForm(prev => ({ ...prev, email: e.target.value }))}
+                          placeholder="jean@example.com"
                             />
                           </div>
-                          <div>
-                            <Label htmlFor="permission" style={{ color: '#8B4513' }}>Permissions</Label>
-                            <Select
-                              value={shareForm.permission}
-                              onValueChange={(value) => setShareForm({ ...shareForm, permission: value })}
-                            >
-                              <SelectTrigger className="border-2" style={{ borderColor: '#D4AF37' }}>
+                      <div className="space-y-2">
+                        <Label htmlFor="permission">Permission</Label>
+                        <Select value={shareForm.permission} onValueChange={(value) => setShareForm(prev => ({ ...prev, permission: value }))}>
+                          <SelectTrigger>
                                 <SelectValue />
                               </SelectTrigger>
-                              <SelectContent className="bg-white">
+                          <SelectContent>
                                 <SelectItem value="read">Lecture seule</SelectItem>
-                                <SelectItem value="comment">Commentaires</SelectItem>
-                                <SelectItem value="edit">Modification</SelectItem>
-                                <SelectItem value="admin">Administration</SelectItem>
+                            <SelectItem value="write">Lecture et écriture</SelectItem>
+                            <SelectItem value="admin">Administrateur</SelectItem>
                               </SelectContent>
                             </Select>
                           </div>
-                          <div className="flex space-x-2">
-                            <Button 
-                              onClick={() => handleShare(phase.id)} 
-                              className="flex-1 text-white hover:opacity-90"
-                              style={{ backgroundColor: '#D4AF37' }}
-                            >
-                              Partager
+                      <DialogFooter>
+                        <Button type="submit" className="w-full">
+                          Envoyer l'invitation
+                        </Button>
+                      </DialogFooter>
+                    </form>
+                  </DialogContent>
+                </Dialog>
+                <Button variant="outline" size="sm" className="flex items-center space-x-2">
+                  <Settings className="h-4 w-4" />
+                  <span>Configuration</span>
+                </Button>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Timeline Content */}
+      <div className="container mx-auto px-4 py-8">
+        {!selectedProject ? (
+          <div className="text-center py-12">
+            <div className="text-muted-foreground">
+              {projects.length === 0 ? 'Aucun projet disponible' : 'Sélectionnez un projet pour voir sa timeline'}
+            </div>
+          </div>
+        ) : loadingPhases ? (
+          <div className="flex items-center justify-center py-12">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+              <p className="text-muted-foreground">Chargement des phases...</p>
+            </div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            {/* Timeline */}
+            <div className="lg:col-span-3">
+              <div className="space-y-6">
+                                 <div className="flex items-center justify-between">
+                   <h2 className="text-2xl font-bold text-secondary">Timeline du Projet</h2>
+                   <Dialog open={addPhaseDialogOpen} onOpenChange={setAddPhaseDialogOpen}>
+                     <DialogTrigger asChild>
+                       <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
+                         <Plus className="h-4 w-4 mr-2" />
+                         Ajouter une phase
                             </Button>
+                     </DialogTrigger>
+                     <DialogContent className="sm:max-w-md">
+                       <DialogHeader>
+                         <DialogTitle>Ajouter une nouvelle phase</DialogTitle>
+                         <DialogDescription>
+                           Créer une nouvelle phase pour le projet {currentProject?.name}
+                         </DialogDescription>
+                       </DialogHeader>
+                       <form onSubmit={addPhase} className="space-y-4">
+                         <div className="space-y-2">
+                           <Label htmlFor="phaseName">Nom de la phase</Label>
+                           <Input
+                             id="phaseName"
+                             value={newPhaseForm.name}
+                             onChange={(e) => setNewPhaseForm(prev => ({ ...prev, name: e.target.value }))}
+                             placeholder="Ex: Études techniques"
+                             required
+                           />
+                         </div>
+                         <div className="space-y-2">
+                           <Label htmlFor="phaseStartDate">Date de début (optionnel)</Label>
+                           <Input
+                             id="phaseStartDate"
+                             type="date"
+                             value={newPhaseForm.startDate}
+                             onChange={(e) => setNewPhaseForm(prev => ({ ...prev, startDate: e.target.value }))}
+                           />
+                         </div>
+                         <DialogFooter>
                             <Button 
+                             type="button" 
                               variant="outline" 
-                              onClick={() => setShareDialogOpen(null)}
-                              className="border-2"
-                              style={{ 
-                                borderColor: '#D4AF37',
-                                color: '#8B4513'
-                              }}
+                             onClick={() => setAddPhaseDialogOpen(false)}
                             >
                               Annuler
                             </Button>
-                          </div>
-                        </div>
+                           <Button type="submit" className="bg-primary text-primary-foreground hover:bg-primary/90">
+                             Ajouter la phase
+                           </Button>
+                         </DialogFooter>
+                       </form>
                       </DialogContent>
                     </Dialog>
-                    {editingPhase === phase.id ? (
-                      <>
+                 </div>
+
+                {phases.length === 0 ? (
+                  <Card>
+                    <CardContent className="p-8 text-center">
+                      <Calendar className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                      <h3 className="text-lg font-medium text-secondary mb-2">Aucune phase</h3>
+                      <p className="text-muted-foreground mb-4">
+                        Ce projet n'a pas encore de phases définies.
+                      </p>
+                                             <Dialog open={addPhaseDialogOpen} onOpenChange={setAddPhaseDialogOpen}>
+                         <DialogTrigger asChild>
+                           <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
+                             <Plus className="h-4 w-4 mr-2" />
+                             Créer la première phase
+                           </Button>
+                         </DialogTrigger>
+                         <DialogContent className="sm:max-w-md">
+                           <DialogHeader>
+                             <DialogTitle>Ajouter une nouvelle phase</DialogTitle>
+                             <DialogDescription>
+                               Créer la première phase pour le projet {currentProject?.name}
+                             </DialogDescription>
+                           </DialogHeader>
+                           <form onSubmit={addPhase} className="space-y-4">
+                             <div className="space-y-2">
+                               <Label htmlFor="phaseName">Nom de la phase</Label>
+                               <Input
+                                 id="phaseName"
+                                 value={newPhaseForm.name}
+                                 onChange={(e) => setNewPhaseForm(prev => ({ ...prev, name: e.target.value }))}
+                                 placeholder="Ex: Esquisse"
+                                 required
+                               />
+                             </div>
+                             <div className="space-y-2">
+                               <Label htmlFor="phaseStartDate">Date de début (optionnel)</Label>
+                               <Input
+                                 id="phaseStartDate"
+                                 type="date"
+                                 value={newPhaseForm.startDate}
+                                 onChange={(e) => setNewPhaseForm(prev => ({ ...prev, startDate: e.target.value }))}
+                               />
+                             </div>
+                             <DialogFooter>
                         <Button
-                          size="sm"
+                                 type="button" 
                           variant="outline"
-                          className="border-2 hover:shadow-sm"
-                          style={{ 
-                            borderColor: '#D4AF37',
-                            color: '#8B4513',
-                            backgroundColor: '#FFFFFF'
-                          }}
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            savePhaseEdit(phase.id, {})
-                          }}
-                        >
-                          <Save className="h-3 w-3" />
+                                 onClick={() => setAddPhaseDialogOpen(false)}
+                               >
+                                 Annuler
                         </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="border-2 hover:shadow-sm"
-                          style={{ 
-                            borderColor: '#D4AF37',
-                            color: '#8B4513',
-                            backgroundColor: '#FFFFFF'
-                          }}
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            setEditingPhase(null)
-                          }}
-                        >
-                          <X className="h-3 w-3" />
+                               <Button type="submit" className="bg-primary text-primary-foreground hover:bg-primary/90">
+                                 Créer la phase
                         </Button>
-                      </>
-                    ) : (
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="border-2 hover:shadow-sm"
-                        style={{ 
-                          borderColor: '#D4AF37',
-                          color: '#8B4513',
-                          backgroundColor: '#FFFFFF'
+                             </DialogFooter>
+                           </form>
+                         </DialogContent>
+                       </Dialog>
+                    </CardContent>
+                  </Card>
+                ) : (
+                  <div className="space-y-4">
+                    {phases.map((phase, index) => (
+                      <Card 
+                        key={phase.id} 
+                        className={`transition-all duration-200 hover:shadow-md cursor-pointer ${
+                          phase.status === 'in-progress' ? 'ring-2 ring-primary ring-opacity-50' : ''
+                        }`}
+                        onClick={() => {
+                          const url = `/timeline/${phase.id}?projectId=${selectedProject}`
+                          router.push(url)
                         }}
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          setEditingPhase(phase.id)
-                        }}
-                        disabled={phase.locked}
                       >
-                        <Edit className="h-3 w-3" />
-                      </Button>
+                        <CardContent className="p-6">
+                          <div className="flex items-start space-x-4">
+                            {/* Timeline connector */}
+                            <div className="flex flex-col items-center">
+                              <div className={`w-4 h-4 rounded-full border-2 border-background ${getStatusColor(phase.status)}`}></div>
+                              {index < phases.length - 1 && (
+                                <div className="w-0.5 h-16 bg-border mt-2"></div>
                     )}
                   </div>
+
+                            {/* Content */}
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center justify-between mb-2">
+                                <h3 className="text-lg font-semibold text-secondary">{phase.name}</h3>
+                                <div className="flex items-center space-x-2">
+                                  {getStatusBadge(phase.status)}
+                                  <ChevronRight className="h-4 w-4 text-muted-foreground" />
                 </div>
-              </CardHeader>
+                    </div>
 
-              <CardContent className="space-y-4">
-                {editingPhase === phase.id ? (
-                  <div className="space-y-3" onClick={(e) => e.stopPropagation()}>
+                              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                     <div>
-                      <Label htmlFor={`start-${phase.id}`} style={{ color: '#8B4513' }}>Date de début</Label>
-                      <Input 
-                        id={`start-${phase.id}`} 
-                        type="date" 
-                        defaultValue={phase.startDate} 
-                        className="text-sm border-2" 
-                        style={{ borderColor: '#D4AF37' }}
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor={`end-${phase.id}`} style={{ color: '#8B4513' }}>Date de fin</Label>
-                      <Input 
-                        id={`end-${phase.id}`} 
-                        type="date" 
-                        defaultValue={phase.endDate} 
-                        className="text-sm border-2" 
-                        style={{ borderColor: '#D4AF37' }}
-                      />
+                                  <p className="text-sm text-muted-foreground">Progression</p>
+                                  <div className="flex items-center space-x-2">
+                                    <Progress value={phase.progressRatio} className="flex-1" />
+                                    <span className="text-sm font-medium">{phase.progressRatio}%</span>
                     </div>
                   </div>
-                ) : (
-                  <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
-                      <p style={{ color: '#A0522D' }}>Début</p>
-                      <p className="font-medium" style={{ color: '#8B4513' }}>{new Date(phase.startDate).toLocaleDateString("fr-FR")}</p>
+                                  <p className="text-sm text-muted-foreground">Début</p>
+                                  <p className="text-sm font-medium">
+                                    {formatDateForDisplay(phase.startDate)}
+                                  </p>
                     </div>
                     <div>
-                      <p style={{ color: '#A0522D' }}>Fin</p>
-                      <p className="font-medium" style={{ color: '#8B4513' }}>{new Date(phase.endDate).toLocaleDateString("fr-FR")}</p>
+                                  <p className="text-sm text-muted-foreground">Ordre</p>
+                                  <p className="text-sm font-medium">Phase {phase.orderIndex + 1}</p>
                     </div>
                   </div>
-                )}
 
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm" style={{ color: '#A0522D' }}>Progression</span>
-                    <span className="text-sm font-medium" style={{ color: '#8B4513' }}>{phase.progress}%</span>
+                              <div className="flex items-center space-x-4 text-sm text-muted-foreground">
+                                <div className="flex items-center space-x-1">
+                                  <FileText className="h-4 w-4" />
+                                  <span>0 documents</span>
                   </div>
-                  <Progress value={phase.progress} className="h-2" />
+                                <div className="flex items-center space-x-1">
+                                  <Users className="h-4 w-4" />
+                                  <span>0 collaborateurs</span>
                 </div>
-
-                <div className="flex items-center justify-between text-sm">
                   <div className="flex items-center space-x-1">
-                    <FileText className="h-4 w-4" style={{ color: '#A0522D' }} />
-                    <span style={{ color: '#8B4513' }}>
-                      {phase.validatedDocs}/{phase.documents} validés
-                    </span>
+                                  <MessageSquare className="h-4 w-4" />
+                                  <span>0 commentaires</span>
+                                </div>
                   </div>
-                  {phase.status === "in-progress" && (
-                    <Button
-                      size="sm"
-                      className="text-white hover:opacity-90"
-                      style={{ backgroundColor: '#D4AF37' }}
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        validatePhase(phase.id)
-                      }}
-                      disabled={phase.validatedDocs < phase.documents}
-                    >
-                      <CheckCircle className="h-3 w-3 mr-1" />
-                      Valider
-                    </Button>
-                  )}
                 </div>
-
-                {phase.status === "in-progress" && (
-                  <div className="pt-2 border-t" style={{ borderColor: '#D4AF37' }}>
-                    <div className="flex items-center space-x-2 text-sm" style={{ color: '#D4AF37' }}>
-                      <Clock className="h-4 w-4" />
-                      <span>Phase en cours</span>
                     </div>
+                        </CardContent>
+                      </Card>
+                    ))}
                   </div>
                 )}
+              </div>
+            </div>
 
-                {phase.locked && phase.status === "pending" && (
-                  <div className="pt-2 border-t" style={{ borderColor: '#D4AF37' }}>
-                    <div className="flex items-center space-x-2 text-sm" style={{ color: '#A0522D' }}>
-                      <Lock className="h-4 w-4" />
-                      <span>Verrouillée - Terminer la phase précédente</span>
+            {/* Sidebar */}
+            <div className="space-y-6">
+              {/* Project Info */}
+              {currentProject && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg">Informations Projet</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div>
+                      <p className="text-sm text-muted-foreground">Client</p>
+                      <p className="font-medium text-secondary">{currentProject.clientName}</p>
                     </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Statut</p>
+                      <Badge className={getProjectStatusClasses(currentProject.status).badge}>
+                        {currentProject.status}
+                      </Badge>
                   </div>
-                )}
-              </CardContent>
-            </Card>
-          ))}
+                    <div>
+                      <p className="text-sm text-muted-foreground">Créé le</p>
+                      <p className="text-sm">
+                        {new Date(currentProject.createdAt).toLocaleDateString('fr-FR')}
+                      </p>
         </div>
-
-        {/* Project Statistics */}
-        <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-          <Card className="bg-white border-2 shadow-sm" style={{ borderColor: '#D4AF37' }}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium" style={{ color: '#8B4513' }}>Documents totaux</CardTitle>
-              <FileText className="h-4 w-4" style={{ color: '#D4AF37' }} />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold" style={{ color: '#8B4513' }}>25</div>
-              <p className="text-xs" style={{ color: '#A0522D' }}>21 validés</p>
             </CardContent>
           </Card>
+              )}
 
-          <Card className="bg-white border-2 shadow-sm" style={{ borderColor: '#D4AF37' }}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium" style={{ color: '#8B4513' }}>Temps restant</CardTitle>
-              <Calendar className="h-4 w-4" style={{ color: '#D4AF37' }} />
+              {/* Quick Actions */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Actions Rapides</CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold" style={{ color: '#8B4513' }}>127j</div>
-              <p className="text-xs" style={{ color: '#A0522D' }}>Jusqu'à la livraison</p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-white border-2 shadow-sm" style={{ borderColor: '#D4AF37' }}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium" style={{ color: '#8B4513' }}>Prochaine échéance</CardTitle>
-              <AlertCircle className="h-4 w-4" style={{ color: '#D4AF37' }} />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold" style={{ color: '#8B4513' }}>3j</div>
-              <p className="text-xs" style={{ color: '#A0522D' }}>Validation APD</p>
+                <CardContent className="space-y-2">
+                  <Button variant="outline" className="w-full justify-start">
+                    <FileText className="h-4 w-4 mr-2" />
+                    Ajouter un document
+                  </Button>
+                  <Button variant="outline" className="w-full justify-start">
+                    <Users className="h-4 w-4 mr-2" />
+                    Inviter un collaborateur
+                  </Button>
+                  <Button variant="outline" className="w-full justify-start">
+                    <Calendar className="h-4 w-4 mr-2" />
+                    Planifier une réunion
+                  </Button>
             </CardContent>
           </Card>
         </div>
-      </main>
+          </div>
+        )}
+      </div>
     </div>
   )
 }
