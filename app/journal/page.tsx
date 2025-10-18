@@ -50,7 +50,7 @@ export default function JournalPage() {
   
   // Hooks pour la connexion à la base de données
   const emptyOptions = useMemo(() => ({}), [])
-  const { tasks: dbTasks, loading, updateTask } = useTasks(emptyOptions)
+  const { tasks: dbTasks, loading, updateTask, createTask } = useTasks(emptyOptions)
   
   // TODO: Récupérer l'organizationId depuis le contexte utilisateur/session
   // Pour l'instant, on utilise l'ID hardcodé de l'organisation de test
@@ -75,7 +75,8 @@ export default function JournalPage() {
       project: task.projectName || "Projet non défini",
       dueDate: task.dueDate || new Date().toISOString().split('T')[0],
       createdAt: task.createdAt,
-      tags: task.tags || [],
+      // S'assurer que tags est toujours un tableau
+      tags: Array.isArray(task.tags) ? task.tags : [],
       comments: 0, // TODO: Implémenter les commentaires
       attachments: 0, // TODO: Implémenter les pièces jointes
       estimatedHours: task.estimatedHours || 0,
@@ -198,6 +199,19 @@ export default function JournalPage() {
   const [selectedProject, setSelectedProject] = useState("all")
   const [selectedAssignee, setSelectedAssignee] = useState("all")
   const [searchQuery, setSearchQuery] = useState("")
+  
+  // États pour le formulaire de nouvelle tâche
+  const [isNewTaskDialogOpen, setIsNewTaskDialogOpen] = useState(false)
+  const [newTaskForm, setNewTaskForm] = useState({
+    title: "",
+    description: "",
+    projectId: "",
+    assigneeUserId: "",
+    priority: "medium" as "low" | "medium" | "high",
+    dueDate: "",
+    estimatedHours: 0,
+    status: "todo" as "todo" | "in-progress" | "review" | "done",
+  })
 
   const columns = [
     { id: "todo", title: "À faire", color: "bg-gray-100", count: tasks.filter((t) => t.status === "todo").length },
@@ -322,6 +336,62 @@ export default function JournalPage() {
   const handleExport = () => {
     alert("Fonctionnalité d'export à implémenter (CSV, PDF, Excel)")
   }
+
+  // Gérer la création d'une nouvelle tâche
+  const handleCreateTask = async () => {
+    // Validation
+    if (!newTaskForm.title.trim()) {
+      alert("Le titre de la tâche est obligatoire")
+      return
+    }
+    
+    if (!newTaskForm.projectId) {
+      alert("Veuillez sélectionner un projet")
+      return
+    }
+
+    try {
+      const result = await createTask({
+        projectId: newTaskForm.projectId,
+        title: newTaskForm.title,
+        description: newTaskForm.description || undefined,
+        status: newTaskForm.status,
+        priority: newTaskForm.priority,
+        assigneeUserId: newTaskForm.assigneeUserId || undefined,
+        dueDate: newTaskForm.dueDate || undefined,
+        estimatedHours: newTaskForm.estimatedHours,
+        tags: [],
+      })
+
+      if (result.success) {
+        // Réinitialiser le formulaire
+        setNewTaskForm({
+          title: "",
+          description: "",
+          projectId: "",
+          assigneeUserId: "",
+          priority: "medium",
+          dueDate: "",
+          estimatedHours: 0,
+          status: "todo",
+        })
+        setIsNewTaskDialogOpen(false)
+        // Afficher un message de succès (optionnel avec react-toastify plus tard)
+        alert("✅ Tâche créée avec succès !")
+      } else {
+        alert(`❌ Erreur lors de la création : ${result.error}`)
+      }
+    } catch (error) {
+      console.error("Erreur création tâche:", error)
+      alert("❌ Erreur lors de la création de la tâche")
+    }
+  }
+
+  // Ouvrir le dialogue avec un statut prédéfini (depuis une colonne)
+  const openTaskDialog = (status: string) => {
+    setNewTaskForm(prev => ({ ...prev, status: status as any }))
+    setIsNewTaskDialogOpen(true)
+  }
   
   // Afficher un loader pendant le chargement
   if (loading && dbTasks.length === 0) {
@@ -350,7 +420,7 @@ export default function JournalPage() {
             <p className="text-gray-600 mt-1 text-sm sm:text-base">Gestion des tâches et suivi des projets</p>
           </div>
           <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
-            <Dialog>
+            <Dialog open={isNewTaskDialogOpen} onOpenChange={setIsNewTaskDialogOpen}>
               <DialogTrigger asChild>
                 <Button className="w-full sm:w-auto">
                   <Plus className="h-4 w-4 mr-2" />
@@ -364,39 +434,61 @@ export default function JournalPage() {
                 </DialogHeader>
                 <div className="space-y-4">
                   <div>
-                    <Label htmlFor="taskTitle">Titre de la tâche</Label>
-                    <Input id="taskTitle" placeholder="Titre de la tâche..." />
+                    <Label htmlFor="taskTitle">Titre de la tâche *</Label>
+                    <Input 
+                      id="taskTitle" 
+                      placeholder="Titre de la tâche..." 
+                      value={newTaskForm.title}
+                      onChange={(e) => setNewTaskForm(prev => ({ ...prev, title: e.target.value }))}
+                    />
                   </div>
 
                   <div>
                     <Label htmlFor="taskDescription">Description</Label>
-                    <Textarea id="taskDescription" placeholder="Description détaillée..." rows={3} />
+                    <Textarea 
+                      id="taskDescription" 
+                      placeholder="Description détaillée..." 
+                      rows={3}
+                      value={newTaskForm.description}
+                      onChange={(e) => setNewTaskForm(prev => ({ ...prev, description: e.target.value }))}
+                    />
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="taskProject">Projet</Label>
-                      <Select>
+                      <Label htmlFor="taskProject">Projet *</Label>
+                      <Select 
+                        value={newTaskForm.projectId} 
+                        onValueChange={(value) => setNewTaskForm(prev => ({ ...prev, projectId: value }))}
+                      >
                         <SelectTrigger>
                           <SelectValue placeholder="Sélectionner un projet" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="jardins">Résidence Les Jardins</SelectItem>
-                          <SelectItem value="tech">Bureaux Tech Center</SelectItem>
-                          <SelectItem value="villa">Villa Moderne</SelectItem>
+                          {projects.map(project => (
+                            <SelectItem key={project.id} value={project.id}>
+                              {project.name}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                     </div>
                     <div>
                       <Label htmlFor="taskAssignee">Assigné à</Label>
-                      <Select>
+                      <Select 
+                        value={newTaskForm.assigneeUserId || "unassigned"} 
+                        onValueChange={(value) => setNewTaskForm(prev => ({ 
+                          ...prev, 
+                          assigneeUserId: value === "unassigned" ? "" : value 
+                        }))}
+                      >
                         <SelectTrigger>
-                          <SelectValue placeholder="Sélectionner une personne" />
+                          <SelectValue placeholder="Non assigné" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="jean">Jean Dupont</SelectItem>
-                          <SelectItem value="marie">Marie Leroy</SelectItem>
-                          <SelectItem value="paul">Paul Martin</SelectItem>
+                          <SelectItem value="unassigned">Non assigné</SelectItem>
+                          {/* TODO: Remplacer par une vraie API users - Pour l'instant on utilise l'ID de test */}
+                          <SelectItem value="user-test">Utilisateur Test</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -405,7 +497,10 @@ export default function JournalPage() {
                   <div className="grid grid-cols-3 gap-4">
                     <div>
                       <Label htmlFor="taskPriority">Priorité</Label>
-                      <Select>
+                      <Select 
+                        value={newTaskForm.priority} 
+                        onValueChange={(value: "low" | "medium" | "high") => setNewTaskForm(prev => ({ ...prev, priority: value }))}
+                      >
                         <SelectTrigger>
                           <SelectValue placeholder="Priorité" />
                         </SelectTrigger>
@@ -418,15 +513,32 @@ export default function JournalPage() {
                     </div>
                     <div>
                       <Label htmlFor="taskDueDate">Échéance</Label>
-                      <Input id="taskDueDate" type="date" />
+                      <Input 
+                        id="taskDueDate" 
+                        type="date"
+                        value={newTaskForm.dueDate}
+                        onChange={(e) => setNewTaskForm(prev => ({ ...prev, dueDate: e.target.value }))}
+                      />
                     </div>
                     <div>
                       <Label htmlFor="taskHours">Heures estimées</Label>
-                      <Input id="taskHours" type="number" placeholder="8" />
+                      <Input 
+                        id="taskHours" 
+                        type="number" 
+                        placeholder="8"
+                        value={newTaskForm.estimatedHours}
+                        onChange={(e) => setNewTaskForm(prev => ({ ...prev, estimatedHours: parseInt(e.target.value) || 0 }))}
+                      />
                     </div>
                   </div>
 
-                  <Button className="w-full">Créer la tâche</Button>
+                  <Button 
+                    className="w-full" 
+                    onClick={handleCreateTask}
+                    disabled={!newTaskForm.title.trim() || !newTaskForm.projectId}
+                  >
+                    Créer la tâche
+                  </Button>
                 </div>
               </DialogContent>
             </Dialog>
@@ -648,24 +760,14 @@ export default function JournalPage() {
                 ))}
 
                 {/* Add Task Button */}
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      className="w-full border-2 border-dashed border-gray-300 bg-white/50 hover:bg-white/80 h-12"
-                    >
-                      <Plus className="h-4 w-4 mr-2" />
-                      Ajouter une tâche
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-2xl">
-                    <DialogHeader>
-                      <DialogTitle>Nouvelle tâche - {column.title}</DialogTitle>
-                      <DialogDescription>Créer une nouvelle tâche dans la colonne "{column.title}"</DialogDescription>
-                    </DialogHeader>
-                    {/* Same form as above but with pre-selected status */}
-                  </DialogContent>
-                </Dialog>
+                <Button
+                  variant="ghost"
+                  className="w-full border-2 border-dashed border-gray-300 bg-white/50 hover:bg-white/80 h-12"
+                  onClick={() => openTaskDialog(column.id)}
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Ajouter une tâche
+                </Button>
               </div>
             </div>
           ))}
