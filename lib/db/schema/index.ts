@@ -10,6 +10,9 @@ export * from './documents'
 // Meetings and Work Items
 export * from './meetings'
 
+// Tasks Management
+export * from './tasks'
+
 // System Tables (ACL, Notifications, etc.)
 export * from './system'
 
@@ -18,6 +21,7 @@ import * as organizations from './organizations'
 import * as projects from './projects'
 import * as documents from './documents'
 import * as meetings from './meetings'
+import * as tasks from './tasks'
 import * as system from './system'
 
 export const schema = {
@@ -25,5 +29,6 @@ export const schema = {
   ...projects,
   ...documents,
   ...meetings,
+  ...tasks,
   ...system,
 } 

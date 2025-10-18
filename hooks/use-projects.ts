@@ -123,7 +123,9 @@ export function useProjects(organizationId: string | null) {
 
   // Fetch projects when organizationId changes
   useEffect(() => {
-    fetchProjects()
+    if (organizationId) {
+      fetchProjects()
+    }
   }, [organizationId])
 
   return {

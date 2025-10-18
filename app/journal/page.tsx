@@ -41,10 +41,50 @@ import {
   ExternalLink,
 } from "lucide-react"
 import { Navbar } from "@/components/navbar"
+import { useTasks } from "@/hooks/use-tasks"
+import { useProjects } from "@/hooks/use-projects"
+import { useMemo } from "react"
 
 export default function JournalPage() {
   const router = useRouter()
-  const [draggedTask, setDraggedTask] = useState<number | null>(null)
+  
+  // Hooks pour la connexion à la base de données
+  const emptyOptions = useMemo(() => ({}), [])
+  const { tasks: dbTasks, loading, updateTask } = useTasks(emptyOptions)
+  
+  // TODO: Récupérer l'organizationId depuis le contexte utilisateur/session
+  // Pour l'instant, on utilise l'ID hardcodé de l'organisation de test
+  const organizationId = "y1dz7q6fj91e3cf0i0p7t67d"
+  const { projects } = useProjects(organizationId)
+  
+  const [draggedTask, setDraggedTask] = useState<string | null>(null)
+  
+  // Convertir les tâches de la base de données au format attendu par l'UI
+  const tasks = useMemo(() => {
+    return dbTasks.map(task => ({
+      id: task.id,
+      title: task.title,
+      description: task.description || "",
+      status: task.status,
+      priority: task.priority,
+      assignee: task.assignee ? {
+        name: task.assignee.name,
+        avatar: task.assignee.avatar,
+        company: task.assignee.company
+      } : { name: "Non assigné", avatar: "?", company: "" },
+      project: task.projectName || "Projet non défini",
+      dueDate: task.dueDate || new Date().toISOString().split('T')[0],
+      createdAt: task.createdAt,
+      tags: task.tags || [],
+      comments: 0, // TODO: Implémenter les commentaires
+      attachments: 0, // TODO: Implémenter les pièces jointes
+      estimatedHours: task.estimatedHours || 0,
+      completedAt: task.status === 'done' ? task.updatedAt : undefined
+    }))
+  }, [dbTasks])
+  
+  // Ancienne structure hardcodée (à supprimer ou commenter)
+  /*
   const [tasks, setTasks] = useState([
     {
       id: 1,
@@ -153,9 +193,11 @@ export default function JournalPage() {
       estimatedHours: 10,
     },
   ])
+  */
 
   const [selectedProject, setSelectedProject] = useState("all")
   const [selectedAssignee, setSelectedAssignee] = useState("all")
+  const [searchQuery, setSearchQuery] = useState("")
 
   const columns = [
     { id: "todo", title: "À faire", color: "bg-gray-100", count: tasks.filter((t) => t.status === "todo").length },
@@ -205,8 +247,26 @@ export default function JournalPage() {
   }
 
   const filteredTasks = tasks.filter((task) => {
+    // Filtre par projet
     if (selectedProject !== "all" && task.project !== selectedProject) return false
+    
+    // Filtre par assigné
     if (selectedAssignee !== "all" && task.assignee.name !== selectedAssignee) return false
+    
+    // Filtre par recherche de texte
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase()
+      const matchesTitle = task.title?.toLowerCase().includes(query)
+      const matchesDescription = task.description?.toLowerCase().includes(query)
+      const matchesProject = task.project?.toLowerCase().includes(query)
+      const matchesAssignee = task.assignee?.name?.toLowerCase().includes(query)
+      const matchesTags = task.tags?.some(tag => tag.toLowerCase().includes(query))
+      
+      if (!matchesTitle && !matchesDescription && !matchesProject && !matchesAssignee && !matchesTags) {
+        return false
+      }
+    }
+    
     return true
   })
 
@@ -215,7 +275,7 @@ export default function JournalPage() {
   }
 
   // Drag and Drop handlers
-  const handleDragStart = (e: React.DragEvent, taskId: number) => {
+  const handleDragStart = (e: React.DragEvent, taskId: string) => {
     setDraggedTask(taskId)
     e.dataTransfer.effectAllowed = "move"
   }
@@ -225,20 +285,57 @@ export default function JournalPage() {
     e.dataTransfer.dropEffect = "move"
   }
 
-  const handleDrop = (e: React.DragEvent, newStatus: string) => {
+  const handleDrop = async (e: React.DragEvent, newStatus: string) => {
     e.preventDefault()
     if (draggedTask) {
-      setTasks(tasks.map((task) => (task.id === draggedTask ? { ...task, status: newStatus } : task)))
+      // Appeler l'API pour persister le changement dans la base de données
+      await updateTask(draggedTask, { status: newStatus as any })
       setDraggedTask(null)
     }
   }
 
-  const handleTaskClick = (taskId: number, e: React.MouseEvent) => {
+  const handleTaskClick = (taskId: string, e: React.MouseEvent) => {
     // Prevent navigation if clicking on buttons
     if ((e.target as HTMLElement).closest("button")) {
       return
     }
     router.push(`/journal/${taskId}`)
+  }
+
+  // TODO: Implémenter la suppression de tâche
+  const handleDeleteTask = async (taskId: string, e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (confirm("Êtes-vous sûr de vouloir supprimer cette tâche ?")) {
+      // const { deleteTask } = useTasks() sera nécessaire
+      // await deleteTask(taskId)
+      alert("Fonctionnalité de suppression à implémenter")
+    }
+  }
+
+  // TODO: Implémenter la modification de tâche
+  const handleEditTask = (taskId: string, e: React.MouseEvent) => {
+    e.stopPropagation()
+    alert(`Édition de la tâche ${taskId} - À implémenter`)
+  }
+
+  // TODO: Implémenter l'export des tâches
+  const handleExport = () => {
+    alert("Fonctionnalité d'export à implémenter (CSV, PDF, Excel)")
+  }
+  
+  // Afficher un loader pendant le chargement
+  if (loading && dbTasks.length === 0) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Navbar />
+        <div className="flex items-center justify-center h-screen">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+            <p className="text-gray-600">Chargement des tâches...</p>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -333,7 +430,11 @@ export default function JournalPage() {
                 </div>
               </DialogContent>
             </Dialog>
-            <Button variant="outline" className="w-full sm:w-auto bg-transparent">
+            <Button 
+              variant="outline" 
+              className="w-full sm:w-auto bg-transparent"
+              onClick={handleExport}
+            >
               <Download className="h-4 w-4 mr-2" />
               Exporter
             </Button>
@@ -346,7 +447,12 @@ export default function JournalPage() {
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                <Input placeholder="Rechercher des tâches..." className="pl-10 w-full sm:w-64" />
+                <Input 
+                  placeholder="Rechercher des tâches..." 
+                  className="pl-10 w-full sm:w-64"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
               </div>
 
               <Select value={selectedProject} onValueChange={setSelectedProject}>
@@ -355,9 +461,12 @@ export default function JournalPage() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Tous les projets</SelectItem>
-                  <SelectItem value="Résidence Les Jardins">Résidence Les Jardins</SelectItem>
-                  <SelectItem value="Bureaux Tech Center">Bureaux Tech Center</SelectItem>
-                  <SelectItem value="Villa Moderne">Villa Moderne</SelectItem>
+                  {/* Générer dynamiquement la liste des projets uniques depuis les tâches */}
+                  {Array.from(new Set(tasks.map(t => t.project))).sort().map(project => (
+                    <SelectItem key={project} value={project}>
+                      {project}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
 
@@ -367,10 +476,12 @@ export default function JournalPage() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Toutes les personnes</SelectItem>
-                  <SelectItem value="Jean Dupont">Jean Dupont</SelectItem>
-                  <SelectItem value="Marie Leroy">Marie Leroy</SelectItem>
-                  <SelectItem value="Paul Martin">Paul Martin</SelectItem>
-                  <SelectItem value="Luc Moreau">Luc Moreau</SelectItem>
+                  {/* Générer dynamiquement la liste des assignés uniques depuis les tâches */}
+                  {Array.from(new Set(tasks.map(t => t.assignee.name).filter(name => name !== "Non assigné"))).sort().map(assignee => (
+                    <SelectItem key={assignee} value={assignee}>
+                      {assignee}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -439,15 +550,21 @@ export default function JournalPage() {
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
-                              <DropdownMenuItem onClick={() => router.push(`/journal/${task.id}`)}>
+                              <DropdownMenuItem onClick={(e) => {
+                                e.stopPropagation()
+                                router.push(`/journal/${task.id}`)
+                              }}>
                                 <Eye className="mr-2 h-4 w-4" />
                                 Voir détails
                               </DropdownMenuItem>
-                              <DropdownMenuItem>
+                              <DropdownMenuItem onClick={(e) => handleEditTask(task.id, e)}>
                                 <Edit className="mr-2 h-4 w-4" />
                                 Modifier
                               </DropdownMenuItem>
-                              <DropdownMenuItem className="text-red-600">
+                              <DropdownMenuItem 
+                                className="text-red-600"
+                                onClick={(e) => handleDeleteTask(task.id, e)}
+                              >
                                 <Trash2 className="mr-2 h-4 w-4" />
                                 Supprimer
                               </DropdownMenuItem>

@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { useMemo } from 'react'
 
 // Base API configuration
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'
@@ -75,6 +76,57 @@ export const UpdatePhaseSchema = z.object({
 export type Phase = z.infer<typeof PhaseSchema>
 export type CreatePhaseData = z.infer<typeof CreatePhaseSchema>
 export type UpdatePhaseData = z.infer<typeof UpdatePhaseSchema>
+
+// Task schemas
+export const TaskSchema = z.object({
+  id: z.string(),
+  projectId: z.string(),
+  title: z.string(),
+  description: z.string().nullable(),
+  status: z.enum(['todo', 'in-progress', 'review', 'done']),
+  priority: z.enum(['low', 'medium', 'high']),
+  assigneeUserId: z.string().nullable(),
+  dueDate: z.string().nullable(),
+  estimatedHours: z.number(),
+  tags: z.array(z.string()),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+  // Joined data from API
+  projectName: z.string().nullable(),
+  assignee: z.object({
+    name: z.string(),
+    email: z.string(),
+    avatar: z.string(),
+    company: z.string(),
+  }).nullable(),
+})
+
+export const CreateTaskSchema = z.object({
+  projectId: z.string(),
+  title: z.string(),
+  description: z.string().optional(),
+  status: z.enum(['todo', 'in-progress', 'review', 'done']).optional(),
+  priority: z.enum(['low', 'medium', 'high']).optional(),
+  assigneeUserId: z.string().optional(),
+  dueDate: z.string().optional(),
+  estimatedHours: z.number().optional(),
+  tags: z.array(z.string()).optional(),
+})
+
+export const UpdateTaskSchema = z.object({
+  title: z.string().optional(),
+  description: z.string().optional(),
+  status: z.enum(['todo', 'in-progress', 'review', 'done']).optional(),
+  priority: z.enum(['low', 'medium', 'high']).optional(),
+  assigneeUserId: z.string().optional(),
+  dueDate: z.string().optional(),
+  estimatedHours: z.number().optional(),
+  tags: z.array(z.string()).optional(),
+})
+
+export type TaskData = z.infer<typeof TaskSchema>
+export type CreateTaskData = z.infer<typeof CreateTaskSchema>
+export type UpdateTaskData = z.infer<typeof UpdateTaskSchema>
 
 // Generic API client
 class ApiClient {
@@ -190,6 +242,41 @@ class ApiClient {
       method: 'DELETE',
     })
   }
+
+  // Task endpoints
+  async getTasks(params?: { projectId?: string; status?: string; assigneeUserId?: string }): Promise<ApiResponse<TaskData[]>> {
+    const searchParams = new URLSearchParams()
+    if (params?.projectId) searchParams.append('projectId', params.projectId)
+    if (params?.status) searchParams.append('status', params.status)
+    if (params?.assigneeUserId) searchParams.append('assigneeUserId', params.assigneeUserId)
+    
+    const queryString = searchParams.toString()
+    return this.request(`/tasks${queryString ? `?${queryString}` : ''}`)
+  }
+
+  async createTask(data: CreateTaskData): Promise<ApiResponse<TaskData>> {
+    return this.request('/tasks', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async getTask(taskId: string): Promise<ApiResponse<TaskData>> {
+    return this.request(`/tasks/${taskId}`)
+  }
+
+  async updateTask(taskId: string, data: UpdateTaskData): Promise<ApiResponse<TaskData>> {
+    return this.request(`/tasks/${taskId}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    })
+  }
+
+  async deleteTask(taskId: string): Promise<ApiResponse<void>> {
+    return this.request(`/tasks/${taskId}`, {
+      method: 'DELETE',
+    })
+  }
 }
 
 // Export singleton instance
@@ -197,7 +284,7 @@ export const apiClient = new ApiClient()
 
 // React hooks for API calls
 export const useApi = () => {
-  return {
+  return useMemo(() => ({
     organizations: {
       list: () => apiClient.getOrganizations(),
       create: (data: CreateOrganizationData) => apiClient.createOrganization(data),
@@ -219,5 +306,17 @@ export const useApi = () => {
       delete: (projectId: string, phaseId: string) => 
         apiClient.deletePhase(projectId, phaseId),
     },
-  }
+    tasks: {
+      list: (params?: { projectId?: string; status?: string; assigneeUserId?: string }) => 
+        apiClient.getTasks(params),
+      create: (data: CreateTaskData) => 
+        apiClient.createTask(data),
+      get: (taskId: string) => 
+        apiClient.getTask(taskId),
+      update: (taskId: string, data: UpdateTaskData) => 
+        apiClient.updateTask(taskId, data),
+      delete: (taskId: string) => 
+        apiClient.deleteTask(taskId),
+    },
+  }), [])
 } 
