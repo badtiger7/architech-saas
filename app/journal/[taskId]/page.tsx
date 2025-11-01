@@ -7,6 +7,11 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import {
   ArrowLeft,
   Calendar,
@@ -19,6 +24,8 @@ import {
   Paperclip,
 } from "lucide-react"
 import { Navbar } from "@/components/navbar"
+import { useApi } from "@/lib/api/client"
+import { useProjects } from "@/hooks/use-projects"
 
 interface TaskDetailPageProps {
   params: Promise<{ taskId: string }>
@@ -26,33 +33,124 @@ interface TaskDetailPageProps {
 
 export default function TaskDetailPage({ params }: TaskDetailPageProps) {
   const router = useRouter()
+  const api = useApi()
   const [taskId, setTaskId] = useState<string>("")
   const [loading, setLoading] = useState(true)
+  const [task, setTask] = useState<any>(null)
+  const [error, setError] = useState<string | null>(null)
 
-  // Unwrap params (Next.js 15)
+  // États pour le formulaire d'édition
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
+  const [editForm, setEditForm] = useState({
+    title: "",
+    description: "",
+    projectId: "",
+    assigneeUserId: "",
+    priority: "medium" as "low" | "medium" | "high",
+    dueDate: "",
+    estimatedHours: 0,
+    status: "todo" as "todo" | "in-progress" | "review" | "done",
+  })
+
+  const organizationId = "y1dz7q6fj91e3cf0i0p7t67d"
+  const { projects } = useProjects(organizationId)
+
+  // Unwrap params (Next.js 15) and fetch task
   useEffect(() => {
-    params.then((p) => {
+    params.then(async (p) => {
       setTaskId(p.taskId)
-      setLoading(false)
+      await fetchTask(p.taskId)
     })
   }, [params])
 
-  // Mock task data - in real app, fetch based on taskId
-  const task = {
-    id: taskId,
-    title: "Corriger les plans de façade",
-    description:
-      "Ajuster les cotes des fenêtres selon les remarques du client. Il faut revoir l'ensemble des ouvertures de la façade sud et s'assurer que les dimensions respectent les normes en vigueur.",
-    status: "in-progress",
-    priority: "high",
-    assignee: { name: "Jean Dupont", avatar: "JD", email: "jean.dupont@architech.com" },
-    project: "Résidence Les Jardins",
-    dueDate: "2024-01-20",
-    createdAt: "2024-01-15",
-    estimatedHours: 8,
-    tags: ["Plans", "Façade"],
-    comments: [],
-    attachments: [],
+  const fetchTask = async (id: string) => {
+    setLoading(true)
+    setError(null)
+    try {
+      const response = await api.tasks.get(id)
+      if (response.success && response.data) {
+        setTask(response.data)
+      } else {
+        setError(response.error || "Tâche non trouvée")
+      }
+    } catch (err) {
+      setError("Erreur lors du chargement de la tâche")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleEdit = () => {
+    if (!task) return
+    
+    setEditForm({
+      title: task.title,
+      description: task.description || "",
+      projectId: task.projectId,
+      assigneeUserId: task.assigneeUserId || "",
+      priority: task.priority,
+      dueDate: task.dueDate || "",
+      estimatedHours: task.estimatedHours || 0,
+      status: task.status,
+    })
+    setIsEditDialogOpen(true)
+  }
+
+  const handleSaveEdit = async () => {
+    if (!taskId) return
+    
+    if (!editForm.title.trim()) {
+      alert("Le titre est obligatoire")
+      return
+    }
+
+    if (!editForm.projectId) {
+      alert("Veuillez sélectionner un projet")
+      return
+    }
+
+    try {
+      const response = await api.tasks.update(taskId, {
+        title: editForm.title,
+        description: editForm.description || undefined,
+        status: editForm.status,
+        priority: editForm.priority,
+        assigneeUserId: editForm.assigneeUserId || undefined,
+        dueDate: editForm.dueDate || undefined,
+        estimatedHours: editForm.estimatedHours,
+        tags: task.tags || [],
+      })
+
+      if (response.success) {
+        setIsEditDialogOpen(false)
+        await fetchTask(taskId) // Recharger les données
+        alert("✅ Tâche modifiée avec succès !")
+      } else {
+        alert(`❌ Erreur : ${response.error}`)
+      }
+    } catch (err) {
+      alert("❌ Erreur lors de la modification")
+    }
+  }
+
+  const handleDelete = async () => {
+    if (!taskId) return
+    
+    if (!confirm("Êtes-vous sûr de vouloir supprimer cette tâche ?")) {
+      return
+    }
+
+    try {
+      const response = await api.tasks.delete(taskId)
+      if (response.success) {
+        alert("✅ Tâche supprimée")
+        router.push("/journal")
+      } else {
+        alert(`❌ Erreur : ${response.error}`)
+      }
+    } catch (err) {
+      alert("❌ Erreur lors de la suppression")
+    }
   }
 
   const getPriorityColor = (priority: string) => {
@@ -97,6 +195,23 @@ export default function TaskDetailPage({ params }: TaskDetailPageProps) {
     )
   }
 
+  if (error || !task) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Navbar />
+        <div className="flex items-center justify-center h-screen">
+          <div className="text-center">
+            <p className="text-red-600 mb-4">{error || "Tâche non trouvée"}</p>
+            <Button onClick={() => router.push("/journal")}>
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Retour au journal
+            </Button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
@@ -129,11 +244,11 @@ export default function TaskDetailPage({ params }: TaskDetailPageProps) {
             </div>
 
             <div className="flex space-x-2">
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" onClick={handleEdit}>
                 <Edit className="h-4 w-4 mr-2" />
                 Modifier
               </Button>
-              <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700">
+              <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700" onClick={handleDelete}>
                 <Trash2 className="h-4 w-4 mr-2" />
                 Supprimer
               </Button>
@@ -155,14 +270,14 @@ export default function TaskDetailPage({ params }: TaskDetailPageProps) {
             </Card>
 
             {/* Tags */}
-            {task.tags.length > 0 && (
+            {task.tags && task.tags.length > 0 && (
               <Card>
                 <CardHeader>
                   <CardTitle>Tags</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="flex flex-wrap gap-2">
-                    {task.tags.map((tag, index) => (
+                    {task.tags.map((tag: string, index: number) => (
                       <Badge key={index} variant="secondary">
                         {tag}
                       </Badge>
@@ -177,7 +292,7 @@ export default function TaskDetailPage({ params }: TaskDetailPageProps) {
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <MessageSquare className="h-5 w-5 mr-2" />
-                  Commentaires ({task.comments.length})
+                  Commentaires
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -191,7 +306,7 @@ export default function TaskDetailPage({ params }: TaskDetailPageProps) {
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <Paperclip className="h-5 w-5 mr-2" />
-                  Pièces jointes ({task.attachments.length})
+                  Pièces jointes
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -209,7 +324,7 @@ export default function TaskDetailPage({ params }: TaskDetailPageProps) {
                 <CardTitle className="text-sm">Projet</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="font-medium">{task.project}</p>
+                <p className="font-medium">{task.projectName || task.project || "Non défini"}</p>
               </CardContent>
             </Card>
 
@@ -219,17 +334,21 @@ export default function TaskDetailPage({ params }: TaskDetailPageProps) {
                 <CardTitle className="text-sm">Assigné à</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="flex items-center space-x-3">
-                  <Avatar className="h-10 w-10">
-                    <AvatarFallback className="bg-blue-100 text-blue-700">
-                      {task.assignee.avatar}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <p className="font-medium text-sm">{task.assignee.name}</p>
-                    <p className="text-xs text-gray-500">{task.assignee.email}</p>
+                {task.assignee ? (
+                  <div className="flex items-center space-x-3">
+                    <Avatar className="h-10 w-10">
+                      <AvatarFallback className="bg-blue-100 text-blue-700">
+                        {task.assignee.avatar}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <p className="font-medium text-sm">{task.assignee.name}</p>
+                      <p className="text-xs text-gray-500">{task.assignee.email}</p>
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <p className="text-gray-500 text-sm">Non assigné</p>
+                )}
               </CardContent>
             </Card>
 
@@ -260,6 +379,147 @@ export default function TaskDetailPage({ params }: TaskDetailPageProps) {
             </Card>
           </div>
         </div>
+
+        {/* Dialog d'édition */}
+        <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>Modifier la tâche</DialogTitle>
+              <DialogDescription>Modifiez les informations de la tâche</DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="editTitle">Titre de la tâche *</Label>
+                <Input 
+                  id="editTitle" 
+                  placeholder="Titre de la tâche..." 
+                  value={editForm.title}
+                  onChange={(e) => setEditForm(prev => ({ ...prev, title: e.target.value }))}
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="editDescription">Description</Label>
+                <Textarea 
+                  id="editDescription" 
+                  placeholder="Description détaillée..." 
+                  rows={3}
+                  value={editForm.description}
+                  onChange={(e) => setEditForm(prev => ({ ...prev, description: e.target.value }))}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="editProject">Projet *</Label>
+                  <Select 
+                    value={editForm.projectId} 
+                    onValueChange={(value) => setEditForm(prev => ({ ...prev, projectId: value }))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Sélectionner un projet" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {projects.map(project => (
+                        <SelectItem key={project.id} value={project.id}>
+                          {project.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label htmlFor="editAssignee">Assigné à</Label>
+                  <Select 
+                    value={editForm.assigneeUserId || "unassigned"} 
+                    onValueChange={(value) => setEditForm(prev => ({ 
+                      ...prev, 
+                      assigneeUserId: value === "unassigned" ? "" : value 
+                    }))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Non assigné" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="unassigned">Non assigné</SelectItem>
+                      <SelectItem value="user-test">Utilisateur Test</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-4 gap-4">
+                <div>
+                  <Label htmlFor="editStatus">Statut</Label>
+                  <Select 
+                    value={editForm.status} 
+                    onValueChange={(value: "todo" | "in-progress" | "review" | "done") => setEditForm(prev => ({ ...prev, status: value }))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="todo">À faire</SelectItem>
+                      <SelectItem value="in-progress">En cours</SelectItem>
+                      <SelectItem value="review">En révision</SelectItem>
+                      <SelectItem value="done">Terminé</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label htmlFor="editPriority">Priorité</Label>
+                  <Select 
+                    value={editForm.priority} 
+                    onValueChange={(value: "low" | "medium" | "high") => setEditForm(prev => ({ ...prev, priority: value }))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="high">Haute</SelectItem>
+                      <SelectItem value="medium">Moyenne</SelectItem>
+                      <SelectItem value="low">Basse</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label htmlFor="editDueDate">Échéance</Label>
+                  <Input 
+                    id="editDueDate" 
+                    type="date"
+                    value={editForm.dueDate}
+                    onChange={(e) => setEditForm(prev => ({ ...prev, dueDate: e.target.value }))}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="editHours">Heures estimées</Label>
+                  <Input 
+                    id="editHours" 
+                    type="number" 
+                    placeholder="8"
+                    value={editForm.estimatedHours}
+                    onChange={(e) => setEditForm(prev => ({ ...prev, estimatedHours: parseInt(e.target.value) || 0 }))}
+                  />
+                </div>
+              </div>
+
+              <div className="flex justify-end space-x-2 pt-4">
+                <Button 
+                  variant="outline" 
+                  onClick={() => setIsEditDialogOpen(false)}
+                >
+                  Annuler
+                </Button>
+                <Button 
+                  onClick={handleSaveEdit}
+                  disabled={!editForm.title.trim() || !editForm.projectId}
+                >
+                  Sauvegarder
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </main>
     </div>
   )

@@ -43,22 +43,10 @@ export function useTasks(options: UseTasksOptions = {}) {
       const response = await api.tasks.create(data)
       
       if (response.success && response.data) {
-        // Add the new task to the list with proper formatting
-        const formattedTask = {
-          ...response.data,
-          tags: response.data.tags || [],
-          assignee: null, // Will be populated on refresh
-          projectName: null,
-          assigneeName: null,
-          assigneeEmail: null,
-        }
-        
-        setTasks(prev => [formattedTask, ...prev])
-        
         // Refresh to get complete data with joins
-        fetchTasks()
+        await fetchTasks()
         
-        return { success: true, data: formattedTask }
+        return { success: true, data: response.data }
       } else {
         setError(response.error || 'Erreur lors de la création de la tâche')
         return { success: false, error: response.error }
@@ -77,15 +65,8 @@ export function useTasks(options: UseTasksOptions = {}) {
       const response = await api.tasks.update(taskId, data)
       
       if (response.success && response.data) {
-        // Update optimistically first for better UX
-        setTasks(prev => prev.map(task => 
-          task.id === taskId 
-            ? { ...task, ...data, updatedAt: new Date().toISOString() }
-            : task
-        ))
-        
-        // Then refresh to get complete data with joins
-        setTimeout(() => fetchTasks(), 100)
+        // Refresh to get complete data with joins
+        await fetchTasks()
         
         return { success: true, data: response.data }
       } else {

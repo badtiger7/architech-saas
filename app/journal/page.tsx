@@ -19,7 +19,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import {
   Plus,
@@ -50,7 +56,7 @@ export default function JournalPage() {
   
   // Hooks pour la connexion à la base de données
   const emptyOptions = useMemo(() => ({}), [])
-  const { tasks: dbTasks, loading, updateTask, createTask } = useTasks(emptyOptions)
+  const { tasks: dbTasks, loading, updateTask, createTask, deleteTask } = useTasks(emptyOptions)
   
   // TODO: Récupérer l'organizationId depuis le contexte utilisateur/session
   // Pour l'instant, on utilise l'ID hardcodé de l'organisation de test
@@ -73,6 +79,8 @@ export default function JournalPage() {
         company: task.assignee.company
       } : { name: "Non assigné", avatar: "?", company: "" },
       project: task.projectName || "Projet non défini",
+      projectId: task.projectId, // Garder l'ID du projet pour l'édition
+      assigneeUserId: task.assigneeUserId || "", // Garder l'ID de l'assigné pour l'édition
       dueDate: task.dueDate || new Date().toISOString().split('T')[0],
       createdAt: task.createdAt,
       // S'assurer que tags est toujours un tableau
@@ -213,6 +221,39 @@ export default function JournalPage() {
     status: "todo" as "todo" | "in-progress" | "review" | "done",
   })
 
+  // États pour le formulaire d'édition de tâche
+  const [isEditTaskDialogOpen, setIsEditTaskDialogOpen] = useState(false)
+  const [editingTaskId, setEditingTaskId] = useState<string | null>(null)
+  const [editTaskForm, setEditTaskForm] = useState({
+    title: "",
+    description: "",
+    projectId: "",
+    assigneeUserId: "",
+    priority: "medium" as "low" | "medium" | "high",
+    dueDate: "",
+    estimatedHours: 0,
+    status: "todo" as "todo" | "in-progress" | "review" | "done",
+  })
+
+  // Fonction pour fermer proprement le dialogue d'édition
+  const closeEditDialog = () => {
+    console.log("🔴 closeEditDialog called")
+    console.log("Before: isEditTaskDialogOpen =", isEditTaskDialogOpen, "editingTaskId =", editingTaskId)
+    setIsEditTaskDialogOpen(false)
+    setEditingTaskId(null)
+    setEditTaskForm({
+      title: "",
+      description: "",
+      projectId: "",
+      assigneeUserId: "",
+      priority: "medium",
+      dueDate: "",
+      estimatedHours: 0,
+      status: "todo",
+    })
+    console.log("After: isEditTaskDialogOpen should be false, editingTaskId should be null")
+  }
+
   const columns = [
     { id: "todo", title: "À faire", color: "bg-gray-100", count: tasks.filter((t) => t.status === "todo").length },
     {
@@ -316,20 +357,98 @@ export default function JournalPage() {
     router.push(`/journal/${taskId}`)
   }
 
-  // TODO: Implémenter la suppression de tâche
+  // Supprimer une tâche
   const handleDeleteTask = async (taskId: string, e: React.MouseEvent) => {
     e.stopPropagation()
-    if (confirm("Êtes-vous sûr de vouloir supprimer cette tâche ?")) {
-      // const { deleteTask } = useTasks() sera nécessaire
-      // await deleteTask(taskId)
-      alert("Fonctionnalité de suppression à implémenter")
+    
+    if (!confirm("Êtes-vous sûr de vouloir supprimer cette tâche ? Cette action est irréversible.")) {
+      return
+    }
+
+    try {
+      const result = await deleteTask(taskId)
+      if (!result.success) {
+        alert(`❌ Erreur lors de la suppression : ${result.error}`)
+      }
+      // La suppression de l'interface se fait automatiquement via useTasks
+    } catch (error) {
+      console.error("Erreur suppression tâche:", error)
+      alert("❌ Erreur lors de la suppression de la tâche")
     }
   }
 
-  // TODO: Implémenter la modification de tâche
+  // Ouvrir le dialogue d'édition avec les données de la tâche
   const handleEditTask = (taskId: string, e: React.MouseEvent) => {
     e.stopPropagation()
-    alert(`Édition de la tâche ${taskId} - À implémenter`)
+    console.log("🟢 handleEditTask called with taskId:", taskId)
+    
+    // Trouver la tâche dans la liste
+    const taskToEdit = tasks.find(t => t.id === taskId)
+    if (!taskToEdit) {
+      alert("Tâche non trouvée")
+      return
+    }
+    
+    console.log("Task found:", taskToEdit.title)
+    
+    // Remplir le formulaire avec les données existantes
+    setEditTaskForm({
+      title: taskToEdit.title,
+      description: taskToEdit.description,
+      projectId: taskToEdit.projectId, // Utiliser l'ID du projet directement
+      assigneeUserId: taskToEdit.assigneeUserId || "", // Utiliser l'ID de l'assigné directement
+      priority: taskToEdit.priority,
+      dueDate: taskToEdit.dueDate,
+      estimatedHours: taskToEdit.estimatedHours,
+      status: taskToEdit.status,
+    })
+    
+    setEditingTaskId(taskId)
+    setIsEditTaskDialogOpen(true)
+    console.log("🟢 Dialog opened - isEditTaskDialogOpen =", true, "editingTaskId =", taskId)
+  }
+
+  // Sauvegarder les modifications de la tâche
+  const handleSaveTaskEdit = async () => {
+    console.log("🟡 handleSaveTaskEdit called for taskId:", editingTaskId)
+    if (!editingTaskId) return
+    
+    // Validation
+    if (!editTaskForm.title.trim()) {
+      alert("Le titre de la tâche est obligatoire")
+      return
+    }
+    
+    if (!editTaskForm.projectId) {
+      alert("Veuillez sélectionner un projet")
+      return
+    }
+
+    try {
+      console.log("🟡 Calling updateTask API...")
+      const result = await updateTask(editingTaskId, {
+        title: editTaskForm.title,
+        description: editTaskForm.description || undefined,
+        status: editTaskForm.status,
+        priority: editTaskForm.priority,
+        assigneeUserId: editTaskForm.assigneeUserId || undefined,
+        dueDate: editTaskForm.dueDate || undefined,
+        estimatedHours: editTaskForm.estimatedHours,
+        tags: [], // TODO: Gérer les tags
+      })
+
+      console.log("🟡 updateTask result:", result)
+      if (result.success) {
+        console.log("🟡 Success! Calling closeEditDialog...")
+        closeEditDialog()
+        // La mise à jour de l'interface se fait automatiquement via useTasks
+      } else {
+        alert(`❌ Erreur lors de la modification : ${result.error}`)
+      }
+    } catch (error) {
+      console.error("Erreur modification tâche:", error)
+      alert("❌ Erreur lors de la modification de la tâche")
+    }
   }
 
   // TODO: Implémenter l'export des tâches
@@ -376,8 +495,7 @@ export default function JournalPage() {
           status: "todo",
         })
         setIsNewTaskDialogOpen(false)
-        // Afficher un message de succès (optionnel avec react-toastify plus tard)
-        alert("✅ Tâche créée avec succès !")
+        // La tâche apparaît automatiquement via useTasks
       } else {
         alert(`❌ Erreur lors de la création : ${result.error}`)
       }
@@ -552,6 +670,168 @@ export default function JournalPage() {
             </Button>
           </div>
         </div>
+
+        {/* Édition de tâche - Modal personnalisé sans Radix UI */}
+        {isEditTaskDialogOpen && (
+          <div 
+            className="fixed inset-0 z-50 flex items-center justify-center"
+            onClick={(e) => {
+              console.log("🔵 Modal background clicked")
+              if (e.target === e.currentTarget) {
+                closeEditDialog()
+              }
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Escape") {
+                console.log("🔵 Escape pressed")
+                closeEditDialog()
+              }
+            }}
+            tabIndex={0}
+          >
+            {/* Modal content */}
+            <div 
+              className="bg-white rounded-lg shadow-lg p-6 max-w-lg w-full mx-4"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="mb-4">
+                <h2 className="text-lg font-semibold">Modifier la tâche</h2>
+                <p className="text-sm text-gray-500">Modifiez les informations de la tâche</p>
+              </div>
+            <div className="space-y-4 max-h-[70vh] overflow-y-auto">
+              <div>
+                <Label htmlFor="editTaskTitle">Titre de la tâche *</Label>
+                <Input 
+                  id="editTaskTitle" 
+                  placeholder="Titre de la tâche..." 
+                  value={editTaskForm.title}
+                  onChange={(e) => setEditTaskForm(prev => ({ ...prev, title: e.target.value }))}
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="editTaskDescription">Description</Label>
+                <Textarea 
+                  id="editTaskDescription" 
+                  placeholder="Description détaillée..." 
+                  rows={3}
+                  value={editTaskForm.description}
+                  onChange={(e) => setEditTaskForm(prev => ({ ...prev, description: e.target.value }))}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="editTaskProject">Projet *</Label>
+                  <Select 
+                    value={editTaskForm.projectId} 
+                    onValueChange={(value) => setEditTaskForm(prev => ({ ...prev, projectId: value }))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Sélectionner un projet" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {projects.map(project => (
+                        <SelectItem key={project.id} value={project.id}>
+                          {project.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label htmlFor="editTaskAssignee">Assigné à</Label>
+                  <Select 
+                    value={editTaskForm.assigneeUserId || "unassigned"} 
+                    onValueChange={(value) => setEditTaskForm(prev => ({ 
+                      ...prev, 
+                      assigneeUserId: value === "unassigned" ? "" : value 
+                    }))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Non assigné" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="unassigned">Non assigné</SelectItem>
+                      <SelectItem value="user-test">Utilisateur Test</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-4 gap-4">
+                <div>
+                  <Label htmlFor="editTaskStatus">Statut</Label>
+                  <Select 
+                    value={editTaskForm.status} 
+                    onValueChange={(value: "todo" | "in-progress" | "review" | "done") => setEditTaskForm(prev => ({ ...prev, status: value }))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="todo">À faire</SelectItem>
+                      <SelectItem value="in-progress">En cours</SelectItem>
+                      <SelectItem value="review">En révision</SelectItem>
+                      <SelectItem value="done">Terminé</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label htmlFor="editTaskPriority">Priorité</Label>
+                  <Select 
+                    value={editTaskForm.priority} 
+                    onValueChange={(value: "low" | "medium" | "high") => setEditTaskForm(prev => ({ ...prev, priority: value }))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="high">Haute</SelectItem>
+                      <SelectItem value="medium">Moyenne</SelectItem>
+                      <SelectItem value="low">Basse</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label htmlFor="editTaskDueDate">Échéance</Label>
+                  <Input 
+                    id="editTaskDueDate" 
+                    type="date"
+                    value={editTaskForm.dueDate}
+                    onChange={(e) => setEditTaskForm(prev => ({ ...prev, dueDate: e.target.value }))}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="editTaskHours">Heures estimées</Label>
+                  <Input 
+                    id="editTaskHours" 
+                    type="number" 
+                    placeholder="8"
+                    value={editTaskForm.estimatedHours}
+                    onChange={(e) => setEditTaskForm(prev => ({ ...prev, estimatedHours: parseInt(e.target.value) || 0 }))}
+                  />
+                </div>
+              </div>
+
+              <div className="flex justify-end space-x-2 pt-4">
+                <Button 
+                  variant="outline" 
+                  onClick={closeEditDialog}
+                >
+                  Annuler
+                </Button>
+                <Button 
+                  onClick={handleSaveTaskEdit}
+                  disabled={!editTaskForm.title.trim() || !editTaskForm.projectId}
+                >
+                  Sauvegarder
+                </Button>
+              </div>
+            </div>
+            </div>
+          </div>
+        )}
 
         {/* Filters */}
         <div className="mb-6 p-4 bg-white rounded-lg border space-y-4">
