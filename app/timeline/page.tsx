@@ -68,7 +68,7 @@ export default function TimelinePage() {
   })
 
   // API hooks
-  const { projects, loading: loadingProjects } = useProjects("y1dz7q6fj91e3cf0i0p7t67d") // Real org ID
+  const { projects, loading: loadingProjects, deleteProject } = useProjects("y1dz7q6fj91e3cf0i0p7t67d") // Real org ID
   const api = useApi()
   const searchParams = useSearchParams()
 
@@ -94,6 +94,43 @@ export default function TimelinePage() {
 
   const triggerFileInput = () => {
     fileInputRef.current?.click()
+  }
+
+  // Fonction pour supprimer le projet
+  const handleDeleteProject = async () => {
+    if (!selectedProject) {
+      alert("Aucun projet sélectionné")
+      return
+    }
+
+    const currentProject = projects.find(p => p.id === selectedProject)
+    if (!currentProject) return
+
+    console.log("🔴 Tentative de suppression du projet:", currentProject.name, "ID:", selectedProject)
+
+    if (!confirm(`Êtes-vous sûr de vouloir supprimer le projet "${currentProject.name}" ? Cette action est irréversible et supprimera toutes les phases associées.`)) {
+      console.log("🔴 Suppression annulée par l'utilisateur")
+      return
+    }
+
+    try {
+      console.log("🔴 Appel de deleteProject avec ID:", selectedProject)
+      const result = await deleteProject(selectedProject)
+      
+      console.log("🔴 Résultat de deleteProject:", result)
+      
+      if (result) {
+        console.log("✅ Projet supprimé avec succès, redirection vers dashboard")
+        // Rediriger vers le dashboard après suppression avec refresh
+        window.location.href = '/dashboard'
+      } else {
+        console.error("❌ deleteProject a retourné false")
+        alert("❌ Erreur lors de la suppression du projet")
+      }
+    } catch (error) {
+      console.error("❌ Erreur suppression projet:", error)
+      alert("❌ Erreur lors de la suppression du projet")
+    }
   }
 
   // Load phases when project changes
@@ -360,6 +397,15 @@ export default function TimelinePage() {
                 <Button variant="outline" size="sm" className="flex items-center space-x-2">
                   <Settings className="h-4 w-4" />
                   <span>Configuration</span>
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="flex items-center space-x-2 text-red-600 hover:text-red-700 hover:bg-red-50"
+                  onClick={handleDeleteProject}
+                >
+                  <Trash2 className="h-4 w-4" />
+                  <span>Supprimer</span>
                 </Button>
               </div>
             )}

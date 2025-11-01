@@ -7,7 +7,9 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Calendar, FileText, Users, Clock, AlertCircle, TrendingUp, Plus, Eye, Camera, Edit3 } from "lucide-react"
 import Link from "next/link"
 import { Navbar } from "@/components/navbar"
-import { useState, useRef } from "react"
+import { useState, useRef, useMemo } from "react"
+import { useProjects } from "@/hooks/use-projects"
+import { Label } from "@/components/ui/label"
 
 
 export default function DashboardPage() {
@@ -20,6 +22,14 @@ export default function DashboardPage() {
 
       // Function to trigger file input
       const fileInputRefs = useRef<{ [key: number]: HTMLInputElement | null }>({});
+
+      // États pour le formulaire de nouveau projet
+      const [isNewProjectDialogOpen, setIsNewProjectDialogOpen] = useState(false)
+      const [newProjectForm, setNewProjectForm] = useState({
+        name: "",
+        clientName: "",
+        startDate: new Date().toISOString().split('T')[0],
+      })
 
       // Function to handle thumbnail upload
       const handleThumbnailChange = (projectId: number, event: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,48 +68,71 @@ export default function DashboardPage() {
         return `${years} an${years > 1 ? 's' : ''}${remainingMonths > 0 ? ` et ${remainingMonths} mois` : ''}`
       }
     }
-  const projects = [
-    {
-      id: 1,
-      name: "Résidence Les Jardins",
-      client: "SCI Les Jardins",
-      progress: 65,
-      status: "En cours",
-      currentPhase: "APD",
-      startDate: "2023-10-15",
-      team: [
-        { name: "Jean Dupont", role: "Architecte", initials: "JD" },
-        { name: "Marie Leroy", role: "Ingénieur", initials: "ML" },
-        { name: "Paul Leroy", role: "Dessinateur", initials: "PL" }
-      ],
-    },
-    {
-      id: 2,
-      name: "Bureaux Tech Center",
-      client: "Tech Corp",
-      progress: 30,
-      status: "En cours",
-      currentPhase: "APS",
-      startDate: "2023-10-15",
-      team: [
-        { name: "Jean Dupont", role: "Architecte", initials: "JD" },
-        { name: "Marie Leroy", role: "Ingénieur", initials: "ML" }
-      ],
-    },
-    {
-      id: 3,
-      name: "Villa Moderne",
-      client: "M. et Mme Durand",
-      progress: 90,
-      status: "Validation",
-      currentPhase: "EXE",
-      startDate: "2023-10-15",
-      team: [
-        { name: "Paul Leroy", role: "Dessinateur", initials: "PL" },
-        { name: "Marie Leroy", role: "Ingénieur", initials: "ML" }
-      ],
-    },
-  ]
+    
+    // Récupérer les projets dynamiquement
+    const organizationId = "y1dz7q6fj91e3cf0i0p7t67d"
+    const { projects: dbProjects, createProject } = useProjects(organizationId)
+    
+    // Fonction pour fermer le dialogue
+    const closeNewProjectDialog = () => {
+      setIsNewProjectDialogOpen(false)
+      setNewProjectForm({
+        name: "",
+        clientName: "",
+        startDate: new Date().toISOString().split('T')[0],
+      })
+    }
+
+     // Fonction pour créer un nouveau projet
+     const handleCreateProject = async () => {
+       if (!newProjectForm.name.trim()) {
+         alert("Le nom du projet est obligatoire")
+         return
+       }
+
+       const projectData = {
+         name: newProjectForm.name.trim(),
+         clientName: newProjectForm.clientName.trim() || "Client",
+         organizationId: organizationId,
+         startDate: newProjectForm.startDate,
+       }
+
+       console.log("🟢 Création projet avec les données:", projectData)
+
+       try {
+         const result = await createProject(projectData)
+
+         console.log("🟡 Résultat de createProject:", result)
+
+         if (result) {
+           console.log("✅ Projet créé avec succès:", result)
+           closeNewProjectDialog()
+         } else {
+           console.error("❌ La création a échoué")
+           alert("❌ Erreur lors de la création du projet")
+         }
+       } catch (error) {
+         console.error("❌ Erreur création projet:", error)
+         alert("❌ Erreur lors de la création du projet")
+       }
+     }
+
+    // Formater les projets pour l'affichage
+    const projects = useMemo(() => {
+      return dbProjects.map((project, index) => ({
+        id: index + 1,
+        projectId: project.id,
+        name: project.name,
+        client: project.clientName || "Client",
+        progress: 65, // TODO: Calculer depuis les phases
+        status: "En cours",
+        currentPhase: "APD", // TODO: Récupérer depuis les phases
+        startDate: project.startDate || new Date().toISOString().split('T')[0],
+        team: [
+          { name: "Équipe", role: "Architecte", initials: "EQ" }
+        ],
+      }))
+    }, [dbProjects])
 
   const recentDocuments = [
     { name: "Plans Facade - v2.3.dwg", project: "Résidence Les Jardins", uploadedBy: "Jean Dupont", time: "Il y a 2h" },
@@ -124,7 +157,7 @@ export default function DashboardPage() {
             <h1 className="text-3xl font-bold text-gray-900">Tableau de bord</h1>
             <p className="text-gray-600 mt-1">Vue d'ensemble de vos projets architecturaux</p>
           </div>
-          <Button>
+          <Button onClick={() => setIsNewProjectDialogOpen(true)}>
             <Plus className="h-4 w-4 mr-2" />
             Nouveau projet
           </Button>
@@ -138,8 +171,8 @@ export default function DashboardPage() {
               <TrendingUp className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">3</div>
-              <p className="text-xs text-muted-foreground">+1 ce mois</p>
+              <div className="text-2xl font-bold">{projects.length}</div>
+              <p className="text-xs text-muted-foreground">{projects.length > 0 ? "+1 ce mois" : "0 projet"}</p>
             </CardContent>
           </Card>
 
@@ -149,7 +182,7 @@ export default function DashboardPage() {
               <FileText className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">127</div>
+              <div className="text-2xl font-bold">{recentDocuments.length}</div>
               <p className="text-xs text-muted-foreground">+12 cette semaine</p>
             </CardContent>
           </Card>
@@ -240,7 +273,7 @@ export default function DashboardPage() {
                             <Badge variant={project.status === "En cours" ? "default" : "secondary"}>
                               {project.status}
                             </Badge>
-                            <Link href="/timeline">
+                            <Link href={`/timeline?project=${project.projectId}`}>
                               <Button variant="outline" size="sm">
                                 <Eye className="h-4 w-4 mr-1" />
                                 Voir
@@ -385,6 +418,81 @@ export default function DashboardPage() {
             </Card>
           </div>
         </div>
+
+        {/* Dialog pour créer un nouveau projet */}
+        {isNewProjectDialogOpen && (
+          <div 
+            className="fixed inset-0 z-50 flex items-center justify-center"
+            onClick={(e) => {
+              if (e.target === e.currentTarget) {
+                closeNewProjectDialog()
+              }
+            }}
+          >
+            {/* Modal content */}
+            <div 
+              className="bg-white rounded-lg shadow-lg p-6 max-w-lg w-full mx-4"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="mb-4">
+                <h2 className="text-lg font-semibold">Créer un nouveau projet</h2>
+                <p className="text-sm text-gray-500">Ajoutez un nouveau projet à votre portefeuille</p>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="projectName">Nom du projet *</Label>
+                  <input 
+                    id="projectName" 
+                    type="text"
+                    placeholder="Ex: Résidence Les Jardins..." 
+                    value={newProjectForm.name}
+                    onChange={(e) => setNewProjectForm(prev => ({ ...prev, name: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="clientName">Client</Label>
+                  <input 
+                    id="clientName" 
+                    type="text"
+                    placeholder="Ex: SCI Les Jardins..." 
+                    value={newProjectForm.clientName}
+                    onChange={(e) => setNewProjectForm(prev => ({ ...prev, clientName: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="startDate">Date de début</Label>
+                  <input 
+                    id="startDate" 
+                    type="date"
+                    value={newProjectForm.startDate}
+                    onChange={(e) => setNewProjectForm(prev => ({ ...prev, startDate: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+
+                <div className="flex justify-end space-x-2 pt-4">
+                  <Button 
+                    variant="outline" 
+                    onClick={closeNewProjectDialog}
+                  >
+                    Annuler
+                  </Button>
+                  <Button 
+                    onClick={handleCreateProject}
+                    disabled={!newProjectForm.name.trim()}
+                  >
+                    Créer le projet
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
     </div>
   )
