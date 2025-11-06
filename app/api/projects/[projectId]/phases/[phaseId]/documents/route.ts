@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db/connection'
-import { documents, documentVersions } from '@/lib/db/schema/documents'
-import { eq } from 'drizzle-orm'
+import { documents, documentVersions, documentSteps } from '@/lib/db/schema/documents'
+import { eq, desc } from 'drizzle-orm'
 import { z } from 'zod'
 
 // Schema validation
@@ -19,7 +19,7 @@ export async function GET(
   try {
     const { projectId, phaseId } = await params
 
-    // Get documents for this phase
+    // Get documents for this phase with their latest version info
     const phaseDocuments = await db
       .select({
         id: documents.id,
@@ -27,13 +27,31 @@ export async function GET(
         category: documents.category,
         createdAt: documents.createdAt,
         updatedAt: documents.updatedAt,
+        // Join avec documentSteps pour filtrer par phase
+        stepId: documentSteps.stepId,
+        // Join avec documentVersions pour avoir les infos du fichier
+        fileSize: documentVersions.sizeBytes,
+        uploadedAt: documentVersions.uploadedAt,
+        originalFileName: documentVersions.originalFileName,
       })
       .from(documents)
-      .where(eq(documents.phaseId, phaseId))
+      .innerJoin(documentSteps, eq(documentSteps.documentId, documents.id))
+      .leftJoin(documentVersions, eq(documentVersions.documentId, documents.id))
+      .where(eq(documentSteps.stepId, phaseId))
+      .orderBy(desc(documentVersions.uploadedAt))
+
+    // Grouper par document pour ne garder que la dernière version
+    const uniqueDocuments = phaseDocuments.reduce((acc: any[], doc) => {
+      const existingDoc = acc.find(d => d.id === doc.id)
+      if (!existingDoc) {
+        acc.push(doc)
+      }
+      return acc
+    }, [])
 
     return NextResponse.json({
       success: true,
-      data: phaseDocuments
+      data: uniqueDocuments
     })
   } catch (error) {
     console.error('Error fetching phase documents:', error)
@@ -45,6 +63,7 @@ export async function GET(
 }
 
 // POST /api/projects/[projectId]/phases/[phaseId]/documents  
+// NOTE: Cette route n'est plus utilisée, l'upload se fait via /api/upload
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ projectId: string; phaseId: string }> }
@@ -56,18 +75,24 @@ export async function POST(
     // Validate input
     const validatedData = createDocumentSchema.parse(body)
 
-    // Pour l'instant, on crée un document sans fichier réel
-    // TODO: Implémenter l'upload vers S3 plus tard
+    // Créer le document (sans phaseId car ce n'est plus dans le schéma)
     const newDocument = await db
       .insert(documents)
       .values({
         projectId,
-        phaseId,
         title: validatedData.title,
         category: validatedData.category,
         createdByUserId: 'user-test', // TODO: Récupérer l'utilisateur authentifié
       })
       .returning()
+
+    // Lier le document à la phase via documentSteps
+    await db
+      .insert(documentSteps)
+      .values({
+        documentId: newDocument[0].id,
+        stepId: phaseId,
+      })
 
     return NextResponse.json({
       success: true,

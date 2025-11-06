@@ -24,6 +24,7 @@ export const documentVersions = pgTable('document_versions', {
   s3Etag: text('s3_etag').notNull(),
   contentType: text('content_type').notNull(),
   sizeBytes: integer('size_bytes').notNull(),
+  originalFileName: text('original_file_name'), // Nom original du fichier uploadé
   uploadedByUserId: text('uploaded_by_user_id').notNull().references(() => users.id),
   uploadedAt: timestamp('uploaded_at').defaultNow().notNull(),
   isLegalArchive: boolean('is_legal_archive').default(false).notNull(),

@@ -184,21 +184,62 @@ export default function PhaseDetailPage({ params }: { params: Promise<{ phaseId:
   }
 
   const handleUploadDocument = async () => {
-    if (!uploadForm.name.trim()) return
+    if (!uploadForm.name.trim() || !selectedFile) {
+      alert("❌ Veuillez remplir tous les champs et sélectionner un fichier")
+      return
+    }
 
-    await addDocument({
-      name: uploadForm.name,
-      type: uploadForm.type || "Document",
-      status: "pending",
-      size: "0 MB",
-      lastModified: new Date().toISOString().split('T')[0],
-      comments: 0,
-      views: 0,
-    })
+    try {
+      // Mapper le type de document vers les catégories de la base de données
+      const categoryMap: Record<string, 'plan' | 'specification' | 'photo' | 'report' | 'other'> = {
+        'Plan architectural': 'plan',
+        'Façade': 'plan',
+        'Coupe': 'plan',
+        'Détail technique': 'specification',
+        'Rapport': 'report',
+      }
+      const category = categoryMap[uploadForm.type] || 'other'
 
-    setUploadForm({ name: "", type: "", description: "" })
-    setSelectedFile(null)
-    setUploadDialogOpen(false)
+      // Créer un FormData pour l'upload
+      const formData = new FormData()
+      formData.append('file', selectedFile)
+      formData.append('phaseId', phaseId)
+      formData.append('title', uploadForm.name)
+      formData.append('category', category)
+
+      // Appeler l'API d'upload
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      })
+
+      const result = await response.json()
+
+      if (result.success) {
+        // Recharger les documents via le hook
+        await addDocument({
+          name: uploadForm.name,
+          type: uploadForm.type || "Document",
+          status: "pending",
+          size: "0 MB",
+          lastModified: new Date().toISOString().split('T')[0],
+          comments: 0,
+          views: 0,
+        })
+
+        // Réinitialiser le formulaire
+        setUploadForm({ name: "", type: "", description: "" })
+        setSelectedFile(null)
+        setUploadDialogOpen(false)
+
+        alert("✅ Document uploadé avec succès !")
+      } else {
+        alert(`❌ Erreur: ${result.error}`)
+      }
+    } catch (error) {
+      console.error('❌ Erreur upload:', error)
+      alert("❌ Erreur lors de l'upload du fichier")
+    }
   }
 
   return (
@@ -515,7 +556,26 @@ export default function PhaseDetailPage({ params }: { params: Promise<{ phaseId:
                           <MessageSquare className="h-4 w-4 ml-2" />
                           <span>{doc.comments}</span>
                         </div>
-                        <Button variant="ghost" size="sm">
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={async () => {
+                            try {
+                              const response = await fetch(`/api/download/${doc.id}`)
+                              const result = await response.json()
+                              
+                              if (result.success && result.data.downloadUrl) {
+                                // Ouvrir l'URL de téléchargement dans un nouvel onglet
+                                window.open(result.data.downloadUrl, '_blank')
+                              } else {
+                                alert(`❌ Erreur: ${result.error || 'Impossible de télécharger le fichier'}`)
+                              }
+                            } catch (error) {
+                              console.error('❌ Erreur téléchargement:', error)
+                              alert("❌ Erreur lors du téléchargement")
+                            }
+                          }}
+                        >
                           <Download className="h-4 w-4" />
                         </Button>
                       </div>

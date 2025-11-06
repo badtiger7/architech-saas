@@ -73,22 +73,61 @@ export default function TimelinePage() {
   const searchParams = useSearchParams()
 
   // Project thumbnail state and functionality
-  const [projectThumbnails, setProjectThumbnails] = useState<{[key: string]: string}>({})
+  const [thumbnailSignedUrls, setThumbnailSignedUrls] = useState<Record<string, string>>({})
   const fileInputRef = useRef<HTMLInputElement | null>(null)
 
-  // Function to handle thumbnail upload
-  const handleThumbnailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (file && selectedProject) {
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        const result = e.target?.result as string
-        setProjectThumbnails(prev => ({
-          ...prev,
-          [selectedProject]: result
-        }))
+  // Charger les URLs signées pour les thumbnails
+  useEffect(() => {
+    const loadThumbnailUrls = async () => {
+      for (const project of projects) {
+        if ((project as any).thumbnailUrl) {
+          try {
+            const response = await fetch(`/api/projects/${project.id}/thumbnail/url`)
+            const result = await response.json()
+            
+            if (result.success && result.data.signedUrl) {
+              setThumbnailSignedUrls(prev => ({
+                ...prev,
+                [project.id]: result.data.signedUrl
+              }))
+            }
+          } catch (error) {
+            console.error(`Erreur chargement thumbnail pour ${project.id}:`, error)
+          }
+        }
       }
-      reader.readAsDataURL(file)
+    }
+    
+    loadThumbnailUrls()
+  }, [projects])
+
+  // Function to handle thumbnail upload
+  const handleThumbnailChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file || !selectedProject) return
+
+    try {
+      // Créer un FormData pour l'upload
+      const formData = new FormData()
+      formData.append('thumbnail', file)
+
+      // Appeler l'API d'upload
+      const response = await fetch(`/api/projects/${selectedProject}/thumbnail`, {
+        method: 'POST',
+        body: formData,
+      })
+
+      const result = await response.json()
+
+      if (result.success) {
+        // Recharger la page pour afficher la nouvelle thumbnail
+        window.location.reload()
+      } else {
+        alert(`❌ Erreur: ${result.error}`)
+      }
+    } catch (error) {
+      console.error('❌ Erreur upload thumbnail:', error)
+      alert("❌ Erreur lors de l'upload de la photo")
     }
   }
 
@@ -289,9 +328,9 @@ export default function TimelinePage() {
                   className="w-16 h-16 rounded-lg overflow-hidden cursor-pointer bg-muted flex items-center justify-center"
                   onClick={triggerFileInput}
                 >
-                  {projectThumbnails[selectedProject] ? (
+                  {thumbnailSignedUrls[selectedProject] ? (
                     <img 
-                      src={projectThumbnails[selectedProject]} 
+                      src={thumbnailSignedUrls[selectedProject]} 
                       alt="Project thumbnail" 
                       className="w-full h-full object-cover"
                     />

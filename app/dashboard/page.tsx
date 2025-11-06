@@ -7,19 +7,12 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Calendar, FileText, Users, Clock, AlertCircle, TrendingUp, Plus, Eye, Camera, Edit3 } from "lucide-react"
 import Link from "next/link"
 import { Navbar } from "@/components/navbar"
-import { useState, useRef, useMemo } from "react"
+import { useState, useRef, useMemo, useEffect } from "react"
 import { useProjects } from "@/hooks/use-projects"
 import { Label } from "@/components/ui/label"
 
 
 export default function DashboardPage() {
-
-    const [projectThumbnails, setProjectThumbnails] = useState<{[key: number]: string}>({
-      1: "/placeholder.jpg", // Default placeholder
-      2: "/placeholder.jpg",
-      3: "/placeholder.jpg"
-    })
-
       // Function to trigger file input
       const fileInputRefs = useRef<{ [key: number]: HTMLInputElement | null }>({});
 
@@ -32,18 +25,32 @@ export default function DashboardPage() {
       })
 
       // Function to handle thumbnail upload
-      const handleThumbnailChange = (projectId: number, event: React.ChangeEvent<HTMLInputElement>) => {
+      const handleThumbnailChange = async (projectRealId: string, event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0]
-        if (file) {
-          const reader = new FileReader()
-          reader.onload = (e) => {
-            const result = e.target?.result as string
-            setProjectThumbnails(prev => ({
-              ...prev,
-              [projectId]: result
-            }))
+        if (!file) return
+
+        try {
+          // Créer un FormData pour l'upload
+          const formData = new FormData()
+          formData.append('thumbnail', file)
+
+          // Appeler l'API d'upload
+          const response = await fetch(`/api/projects/${projectRealId}/thumbnail`, {
+            method: 'POST',
+            body: formData,
+          })
+
+          const result = await response.json()
+
+          if (result.success) {
+            // Recharger les projets pour afficher la nouvelle thumbnail
+            window.location.reload()
+          } else {
+            alert(`❌ Erreur: ${result.error}`)
           }
-          reader.readAsDataURL(file)
+        } catch (error) {
+          console.error('❌ Erreur upload thumbnail:', error)
+          alert("❌ Erreur lors de l'upload de la photo")
         }
       }
 
@@ -72,6 +79,9 @@ export default function DashboardPage() {
     // Récupérer les projets dynamiquement
     const organizationId = "y1dz7q6fj91e3cf0i0p7t67d"
     const { projects: dbProjects, createProject } = useProjects(organizationId)
+    
+    // State pour stocker les URLs signées des thumbnails
+    const [thumbnailSignedUrls, setThumbnailSignedUrls] = useState<Record<string, string>>({})
     
     // Fonction pour fermer le dialogue
     const closeNewProjectDialog = () => {
@@ -117,6 +127,31 @@ export default function DashboardPage() {
        }
      }
 
+    // Charger les URLs signées pour les thumbnails
+    useEffect(() => {
+      const loadThumbnailUrls = async () => {
+        for (const project of dbProjects) {
+          if ((project as any).thumbnailUrl) {
+            try {
+              const response = await fetch(`/api/projects/${project.id}/thumbnail/url`)
+              const result = await response.json()
+              
+              if (result.success && result.data.signedUrl) {
+                setThumbnailSignedUrls(prev => ({
+                  ...prev,
+                  [project.id]: result.data.signedUrl
+                }))
+              }
+            } catch (error) {
+              console.error(`Erreur chargement thumbnail pour ${project.id}:`, error)
+            }
+          }
+        }
+      }
+      
+      loadThumbnailUrls()
+    }, [dbProjects])
+
     // Formater les projets pour l'affichage
     const projects = useMemo(() => {
       return dbProjects.map((project, index) => ({
@@ -128,11 +163,12 @@ export default function DashboardPage() {
         status: "En cours",
         currentPhase: "APD", // TODO: Récupérer depuis les phases
         startDate: project.startDate || new Date().toISOString().split('T')[0],
+        thumbnail: thumbnailSignedUrls[project.id] || null, // ✅ Utiliser l'URL signée
         team: [
           { name: "Équipe", role: "Architecte", initials: "EQ" }
         ],
       }))
-    }, [dbProjects])
+    }, [dbProjects, thumbnailSignedUrls])
 
   const recentDocuments = [
     { name: "Plans Facade - v2.3.dwg", project: "Résidence Les Jardins", uploadedBy: "Jean Dupont", time: "Il y a 2h" },
@@ -224,8 +260,8 @@ export default function DashboardPage() {
                     {/* Hidden file input for each project */}
                     <input
                       type="file"
-                      ref={(el) => fileInputRefs.current[project.id] = el}
-                      onChange={(e) => handleThumbnailChange(project.id, e)}
+                      ref={(el) => { fileInputRefs.current[project.id] = el }}
+                      onChange={(e) => handleThumbnailChange(project.projectId, e)}
                       accept="image/*"
                       style={{ display: 'none' }}
                     />
@@ -234,9 +270,9 @@ export default function DashboardPage() {
                       {/* Project Thumbnail */}
                       <div className="relative group">
                         <div className="w-20 h-20 rounded-lg overflow-hidden bg-gray-100 border-2 border-dashed border-gray-300 flex items-center justify-center">
-                          {projectThumbnails[project.id] ? (
+                          {project.thumbnail ? (
                             <img 
-                              src={projectThumbnails[project.id]} 
+                              src={project.thumbnail} 
                               alt={`Miniature ${project.name}`}
                               className="w-full h-full object-cover"
                             />

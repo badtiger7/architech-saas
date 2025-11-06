@@ -34,6 +34,7 @@ export async function GET(request: NextRequest) {
         status: projects.status,
         startDate: projects.startDate,
         endDate: projects.endDate,
+        thumbnailUrl: projects.thumbnailUrl, // ✅ Ajouter thumbnailUrl
         createdAt: projects.createdAt,
         updatedAt: projects.updatedAt,
       })

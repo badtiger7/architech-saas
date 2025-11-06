@@ -103,47 +103,36 @@ export function usePhase(phaseId: string) {
         
         setPhase(realPhase)
         
-        // Mock documents for this specific phase - different for each phase
-        const mockDocuments: PhaseDocument[] = [
-          {
-            id: `doc-${phaseId}-1`,
-            name: `${foundPhase.name} - Plan Principal.pdf`,
-            type: 'Plan architectural',
-            status: foundPhase.orderIndex < 2 ? 'validated' : foundPhase.orderIndex === 2 ? 'in-review' : 'pending',
-            size: '2.4 MB',
-            lastModified: '2024-03-20',
-            validator: foundPhase.orderIndex < 2 ? 'Marie Dubois' : undefined,
-            comments: foundPhase.orderIndex + 1,
-            views: (foundPhase.orderIndex + 1) * 4,
-          },
-          {
-            id: `doc-${phaseId}-2`,
-            name: `${foundPhase.name} - Façades.dwg`,
-            type: 'Façade',
-            status: foundPhase.orderIndex < 1 ? 'validated' : foundPhase.orderIndex <= 2 ? 'in-review' : 'pending',
-            size: '1.8 MB',
-            lastModified: '2024-03-19',
-            validator: foundPhase.orderIndex < 1 ? 'Jean Martin' : undefined,
-            comments: Math.max(0, foundPhase.orderIndex),
-            views: foundPhase.orderIndex * 3,
+        // ✅ Charger les VRAIS documents depuis la base de données
+        try {
+          const docsResponse = await fetch(`/api/projects/${projectId}/phases/${phaseId}/documents`)
+          const docsData = await docsResponse.json()
+          
+          if (docsData.success && docsData.data) {
+            // Convertir les documents de la BDD au format PhaseDocument
+            const realDocuments: PhaseDocument[] = docsData.data.map((doc: any) => ({
+              id: doc.id,
+              name: doc.title,
+              type: doc.category === 'plan' ? 'Plan architectural' : 
+                    doc.category === 'specification' ? 'Spécification' :
+                    doc.category === 'photo' ? 'Photo' :
+                    doc.category === 'report' ? 'Rapport' : 'Autre',
+              status: 'pending' as const, // TODO: ajouter un vrai statut dans la BDD
+              size: doc.fileSize ? `${(doc.fileSize / 1024 / 1024).toFixed(1)} MB` : '0 MB',
+              lastModified: doc.uploadedAt ? new Date(doc.uploadedAt).toLocaleDateString('fr-FR') : '-',
+              comments: 0, // TODO: compter les vrais commentaires
+              views: 0, // TODO: compter les vraies vues
+            }))
+            
+            setDocuments(realDocuments)
+          } else {
+            // Pas de documents pour cette phase
+            setDocuments([])
           }
-        ]
-        
-        // Add more documents for later phases
-        if (foundPhase.orderIndex >= 2) {
-          mockDocuments.push({
-            id: `doc-${phaseId}-3`,
-            name: `${foundPhase.name} - Détails Techniques.pdf`,
-            type: 'Détail technique',
-            status: 'pending',
-            size: '3.2 MB',
-            lastModified: '2024-03-21',
-            comments: 0,
-            views: 1,
-          })
+        } catch (docError) {
+          console.error('Erreur chargement documents:', docError)
+          setDocuments([])
         }
-        
-        setDocuments(mockDocuments)
         
       } catch (apiError) {
 
@@ -212,19 +201,15 @@ export function usePhase(phaseId: string) {
     }
   }
 
-  // Add document (mock)
+  // Add document - recharge les documents après l'ajout
   const addDocument = async (document: Omit<PhaseDocument, 'id'>) => {
     try {
       setError(null)
       
-      const newDoc: PhaseDocument = {
-        ...document,
-        id: `doc-${Date.now()}`,
-      }
+      // Recharger tous les documents depuis la BDD
+      await fetchPhase()
       
-      setDocuments(prev => [...prev, newDoc])
-      
-      return { success: true, data: newDoc }
+      return { success: true }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erreur lors de l\'ajout du document')
       return { success: false, error: err instanceof Error ? err.message : 'Erreur' }

@@ -10,6 +10,7 @@ export const projects = pgTable('projects', {
   status: text('status').notNull(), // 'active', 'completed', 'on_hold', 'cancelled'
   startDate: date('start_date'),
   endDate: date('end_date'),
+  thumbnailUrl: text('thumbnail_url'), // URL de la photo de profil du projet stockée dans R2
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 })
