@@ -44,31 +44,12 @@ export async function POST(request: NextRequest) {
       },
       properties: {
         Email: {
-          title: [
-            {
-              text: {
-                content: email,
-              },
-            },
-          ],
+          email: email,
         },
-        'Date d\'inscription': {
+        Date: {
           date: {
             start: new Date().toISOString(),
           },
-        },
-        Status: {
-          select: {
-            name: 'Nouveau',
-          },
-        },
-        'Variante A/B': {
-          select: {
-            name: variant,
-          },
-        },
-        'Kit demandé': {
-          checkbox: wantsLeadMagnet,
         },
       },
     })
