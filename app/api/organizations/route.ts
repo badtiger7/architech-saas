@@ -4,6 +4,9 @@ import { organizations } from '@/lib/db/schema'
 import { eq } from 'drizzle-orm'
 import { z } from 'zod'
 
+// Mark route as dynamic to prevent static analysis during build
+export const dynamic = 'force-dynamic'
+
 // Schema validation
 const createOrganizationSchema = z.object({
   name: z.string().min(1, 'Organization name is required'),
