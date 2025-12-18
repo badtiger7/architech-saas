@@ -16,6 +16,7 @@
     "@aws-sdk/client-s3": "^3.922.0",
     "@aws-sdk/s3-request-presigner": "^3.922.0",
     "@hookform/resolvers": "^3.9.1",
+    "@notionhq/client": "^5.6.0",
     "@paralleldrive/cuid2": "^2.2.2",
     "@radix-ui/react-accordion": "latest",
     "@radix-ui/react-alert-dialog": "latest",
