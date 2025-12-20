@@ -100,7 +100,7 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* HERO SECTION - Nike Style Minimal */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden py-12 md:py-0">
         {/* Geometric Background Elements */}
         <div className="absolute inset-0">
           <div className="absolute top-0 right-0 w-[600px] h-[600px] border-l-2 border-t-2 border-black/5"></div>
@@ -108,11 +108,13 @@ export default function LandingPage() {
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[1px] bg-gradient-to-r from-transparent via-black/5 to-transparent"></div>
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-6 md:px-12 lg:px-16 w-full py-12 md:py-0">
-          <div className="grid lg:grid-cols-2 gap-12 md:gap-16 lg:gap-24 items-center">
+        <div className="relative max-w-7xl mx-auto px-6 md:px-12 lg:px-16 w-full">
+          {/* Mobile: Single column, Desktop: Two columns */}
+          <div className="flex flex-col lg:grid lg:grid-cols-2 gap-12 md:gap-16 lg:gap-24 items-center">
             
-            {/* Left Column - Typography */}
-            <div className="space-y-8 md:space-y-8 lg:space-y-12 text-center md:text-left">
+            {/* Left Column - Typography (Mobile: Full width, Desktop: Left) */}
+            <div className="w-full lg:w-auto space-y-8 md:space-y-8 lg:space-y-12 text-center lg:text-left">
+              {/* Title Section */}
               <div className="space-y-6 md:space-y-6">
                 <div className="inline-block">
                   <span className="text-sm md:text-sm font-medium tracking-[0.2em] uppercase text-black/60">Maroc</span>
@@ -123,23 +125,26 @@ export default function LandingPage() {
                   <span className="block text-black">TECH</span>
                 </h1>
                 
-                <div className="w-20 md:w-24 h-1 bg-black mx-auto md:mx-0"></div>
+                <div className="w-20 md:w-24 h-1 bg-black mx-auto lg:mx-0"></div>
               </div>
 
-              <p className="text-xl md:text-2xl lg:text-3xl font-light text-black/70 leading-relaxed max-w-xl mx-auto md:mx-0">
-                La plateforme 100% marocaine qui transforme la gestion de vos projets immobiliers.
-              </p>
+              {/* Text paragraphs - Hidden on mobile here, shown below form */}
+              <div className="hidden lg:block space-y-6">
+                <p className="text-xl md:text-2xl lg:text-3xl font-light text-black/70 leading-relaxed max-w-xl">
+                  La plateforme 100% marocaine qui transforme la gestion de vos projets immobiliers.
+                </p>
 
-              <p className="text-lg md:text-lg text-black/50 font-light max-w-lg leading-relaxed mx-auto md:mx-0">
-                Conçue pour les architectes et promoteurs qui exigent précision, efficacité et excellence.
-              </p>
+                <p className="text-lg md:text-lg text-black/50 font-light max-w-lg leading-relaxed">
+                  Conçue pour les architectes et promoteurs qui exigent précision, efficacité et excellence.
+                </p>
+              </div>
             </div>
 
-            {/* Right Column - Form */}
-            <div className="lg:pl-8 w-full max-w-md mx-auto md:max-w-none md:mx-0">
+            {/* Form - Between title and text on mobile, Right on desktop */}
+            <div className="lg:pl-8 w-full max-w-md mx-auto lg:max-w-none lg:mx-0">
               {isSuccess ? (
-                <div className="bg-black text-white p-8 md:p-12 space-y-5 md:space-y-6 text-center md:text-left">
-                  <CheckCircle2 className="w-10 h-10 md:w-12 md:h-12 mx-auto md:mx-0" />
+                <div className="bg-black text-white p-8 md:p-12 space-y-5 md:space-y-6 text-center lg:text-left">
+                  <CheckCircle2 className="w-10 h-10 md:w-12 md:h-12 mx-auto lg:mx-0" />
                   <h2 className="text-3xl md:text-3xl font-bold">Merci.</h2>
                   <p className="text-white/80 text-base md:text-lg">
                     Vous recevrez nos nouveautés dès qu'Architech sera prêt.
@@ -156,7 +161,7 @@ export default function LandingPage() {
                       type="email"
                       id="email"
                       name="email"
-                      placeholder="Email professionnel"
+                      placeholder="Votre Email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
@@ -189,30 +194,26 @@ export default function LandingPage() {
                     <div 
                       role="alert" 
                       aria-live="polite" 
-                      className="text-sm text-red-600 font-medium text-center md:text-left"
+                      className="text-sm text-red-600 font-medium text-center"
                       id="email-error"
                     >
                       {error}
                     </div>
                   )}
-
-                  <label className="flex items-start gap-3 md:gap-3 cursor-pointer group">
-                    <input
-                      type="checkbox"
-                      checked={wantsLeadMagnet}
-                      onChange={(e) => {
-                        setWantsLeadMagnet(e.target.checked)
-                        trackEvent('lead_magnet_toggle', { checked: e.target.checked, variant })
-                      }}
-                      className="mt-0.5 w-4 h-4 rounded-none border-2 border-black/20 text-black focus:ring-0 focus:ring-offset-0 cursor-pointer flex-shrink-0"
-                    />
-                    <span className="text-sm md:text-sm text-black/60 font-light leading-relaxed">
-                      Je souhaite recevoir des ressources exclusives pour architectes et promoteurs
-                    </span>
-                  </label>
                 </form>
               )}
             </div>
+          </div>
+
+          {/* Text paragraphs - Shown below form on mobile only */}
+          <div className="lg:hidden mt-12 space-y-6 text-center">
+            <p className="text-xl md:text-2xl font-light text-black/70 leading-relaxed max-w-xl mx-auto">
+              La plateforme 100% marocaine qui transforme la gestion de vos projets immobiliers.
+            </p>
+
+            <p className="text-lg text-black/50 font-light max-w-lg leading-relaxed mx-auto">
+              Conçue pour les architectes et promoteurs qui exigent précision, efficacité et excellence.
+            </p>
           </div>
         </div>
       </section>

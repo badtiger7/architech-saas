@@ -2,7 +2,7 @@ import { z } from 'zod'
 import { useMemo } from 'react'
 
 // Base API configuration
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
 
 // Types for API responses
 export interface ApiResponse<T> {
