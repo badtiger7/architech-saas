@@ -41,16 +41,16 @@ export function Navbar() {
   ]
 
   return (
-    <nav className="border-b-2 border-primary sticky top-0 z-40 bg-background shadow-sm">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link href="/dashboard" className="flex items-center space-x-2">
-            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center shadow-sm">
-              <span className="text-primary-foreground font-bold text-sm">A</span>
+    <nav className="border-b-2 border-black/10 sticky top-0 z-40 bg-white">
+      <div className="max-w-7xl mx-auto px-4 md:px-12 lg:px-16">
+        <div className="flex items-center justify-between h-16 md:h-20">
+          {/* Logo - Nike Style */}
+          <Link href="/dashboard" className="flex items-center space-x-3 group">
+            <div className="w-8 h-8 md:w-10 md:h-10 border-2 border-black flex items-center justify-center group-hover:bg-black transition-all">
+              <span className="text-black group-hover:text-white font-black text-sm md:text-base transition-colors">A</span>
             </div>
-            <span className="text-xl font-bold text-secondary">
-              Architech
+            <span className="text-xl md:text-2xl font-black tracking-tighter text-black">
+              ARCHITECH
             </span>
           </Link>
 
@@ -62,14 +62,14 @@ export function Navbar() {
               return (
                 <Link key={item.name} href={item.href}>
                   <Button 
-                    variant={isActive ? "default" : "ghost"} 
-                    className={`flex items-center space-x-2 hover:shadow-sm transition-all ${
+                    variant="ghost"
+                    className={`rounded-none border-2 transition-all font-medium tracking-wide text-sm px-4 py-2 h-auto ${
                       isActive 
-                        ? "bg-primary text-primary-foreground hover:bg-primary/90" 
-                        : "text-secondary hover:bg-accent hover:text-accent-foreground"
+                        ? "bg-black text-white border-black hover:bg-black/90" 
+                        : "text-black/60 border-transparent hover:border-black/20 hover:text-black hover:bg-transparent"
                     }`}
                   >
-                    <Icon className="h-4 w-4" />
+                    <Icon className="h-4 w-4 mr-2" />
                     <span>{item.name}</span>
                   </Button>
                 </Link>
@@ -78,16 +78,16 @@ export function Navbar() {
           </div>
 
           {/* Right side */}
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 md:space-x-3">
             {/* Notifications */}
             <Link href="/notifications">
               <Button 
                 variant="ghost" 
                 size="sm" 
-                className="relative text-secondary hover:bg-accent hover:text-accent-foreground transition-all"
+                className="relative rounded-none border-2 border-transparent hover:border-black/20 text-black/60 hover:text-black transition-all h-10 w-10 p-0"
               >
-                <Bell className="h-4 w-4" />
-                <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs bg-primary text-primary-foreground border-0">
+                <Bell className="h-4 w-4 md:h-5 md:w-5" />
+                <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs bg-black text-white border-2 border-black rounded-none">
                   3
                 </Badge>
               </Button>
@@ -98,46 +98,46 @@ export function Navbar() {
               <DropdownMenuTrigger asChild>
                 <Button 
                   variant="ghost" 
-                  className="relative h-8 w-8 rounded-full text-secondary hover:bg-accent hover:text-accent-foreground transition-all"
+                  className="relative h-10 w-10 rounded-none border-2 border-transparent hover:border-black/20 p-0 transition-all"
                 >
-                  <Avatar className="h-8 w-8 border-2 border-primary">
+                  <Avatar className="h-10 w-10 border-2 border-black/10 rounded-none">
                     <AvatarImage src="/placeholder-user.jpg" alt="@username" />
-                    <AvatarFallback className="bg-primary text-primary-foreground font-medium">
+                    <AvatarFallback className="bg-black text-white font-black rounded-none">
                       JD
                     </AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent 
-                className="w-56 bg-card border-2 border-primary shadow-lg" 
+                className="w-56 bg-white border-2 border-black shadow-lg rounded-none" 
                 align="end" 
                 forceMount
               >
                 <DropdownMenuLabel className="font-normal">
                   <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none text-secondary">
+                    <p className="text-sm font-black leading-none text-black">
                       Jean Dupont
                     </p>
-                    <p className="text-xs leading-none text-tertiary">
+                    <p className="text-xs leading-none text-black/50 font-light">
                       jean.dupont@architech.com
                     </p>
                   </div>
                 </DropdownMenuLabel>
-                <DropdownMenuSeparator className="bg-primary/30" />
+                <DropdownMenuSeparator className="bg-black/10" />
                 <Link href="/settings">
-                  <DropdownMenuItem className="text-secondary hover:bg-accent hover:text-accent-foreground transition-all">
+                  <DropdownMenuItem className="text-black/70 hover:bg-black hover:text-white transition-all rounded-none cursor-pointer">
                     <User className="mr-2 h-4 w-4" />
                     <span>Profil</span>
                   </DropdownMenuItem>
                 </Link>
                 <Link href="/settings">
-                  <DropdownMenuItem className="text-secondary hover:bg-accent hover:text-accent-foreground transition-all">
+                  <DropdownMenuItem className="text-black/70 hover:bg-black hover:text-white transition-all rounded-none cursor-pointer">
                     <Settings className="mr-2 h-4 w-4" />
                     <span>Paramètres</span>
                   </DropdownMenuItem>
                 </Link>
-                <DropdownMenuSeparator className="bg-primary/30" />
-                <DropdownMenuItem className="text-secondary hover:bg-accent hover:text-accent-foreground transition-all">
+                <DropdownMenuSeparator className="bg-black/10" />
+                <DropdownMenuItem className="text-black/70 hover:bg-black hover:text-white transition-all rounded-none cursor-pointer">
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>Se déconnecter</span>
                 </DropdownMenuItem>
@@ -150,27 +150,27 @@ export function Navbar() {
                 <Button 
                   variant="ghost" 
                   size="sm" 
-                  className="md:hidden text-secondary hover:bg-accent hover:text-accent-foreground transition-all"
+                  className="md:hidden rounded-none border-2 border-transparent hover:border-black/20 text-black/60 hover:text-black transition-all h-10 w-10 p-0"
                 >
                   <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
               <SheetContent 
                 side="right" 
-                className="w-64 bg-card border-l-2 border-primary"
+                className="w-64 bg-white border-l-2 border-black rounded-none"
               >
-                <div className="flex flex-col space-y-4 mt-8">
+                <div className="flex flex-col space-y-2 mt-8">
                   {navigation.map((item) => {
                     const Icon = item.icon
                     const isActive = pathname === item.href
                     return (
                       <Link key={item.name} href={item.href} onClick={() => setIsOpen(false)}>
                         <Button 
-                          variant={isActive ? "default" : "ghost"} 
-                          className={`w-full justify-start hover:shadow-sm transition-all ${
+                          variant="ghost"
+                          className={`w-full justify-start rounded-none border-2 transition-all font-medium tracking-wide ${
                             isActive 
-                              ? "bg-primary text-primary-foreground hover:bg-primary/90" 
-                              : "text-secondary hover:bg-accent hover:text-accent-foreground"
+                              ? "bg-black text-white border-black hover:bg-black/90" 
+                              : "text-black/60 border-transparent hover:border-black/20 hover:text-black hover:bg-transparent"
                           }`}
                         >
                           <Icon className="h-4 w-4 mr-2" />

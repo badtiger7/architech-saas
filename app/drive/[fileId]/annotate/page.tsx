@@ -45,27 +45,28 @@ export default function AnnotatePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
       <Navbar />
 
-      <div className="flex items-center justify-between p-4 bg-white border-b">
+      <div className="flex items-center justify-between p-4 md:p-6 bg-white border-b-2 border-black/10">
         <div className="flex items-center space-x-4">
-          <Button variant="ghost" onClick={() => router.back()}>
+          <Button variant="ghost" onClick={() => router.back()} className="rounded-none border-2 border-black/20 hover:bg-black hover:text-white hover:border-black transition-all">
             <ArrowLeft className="h-4 w-4 mr-2" />
             Retour
           </Button>
-          <h1 className="text-lg font-medium">Annoter - Plans Facade - v2.3.dwg</h1>
+          <h1 className="text-lg md:text-xl font-black tracking-tighter text-black">Annoter - Plans Facade - v2.3.dwg</h1>
         </div>
 
         <div className="flex items-center space-x-2">
           <Button
             variant={isAddingAnnotation ? "default" : "outline"}
             onClick={() => setIsAddingAnnotation(!isAddingAnnotation)}
+            className={isAddingAnnotation ? "bg-black text-white rounded-none border-2 border-black font-medium tracking-wide" : "rounded-none border-2 border-black/20 hover:bg-black hover:text-white hover:border-black transition-all font-medium tracking-wide"}
           >
             <Plus className="h-4 w-4 mr-2" />
             {isAddingAnnotation ? "Annuler" : "Ajouter annotation"}
           </Button>
-          <Button disabled>
+          <Button disabled className="bg-black/50 text-white rounded-none border-2 border-black/20 font-medium tracking-wide">
             <Save className="h-4 w-4 mr-2" />
             Sauvegarder
           </Button>
@@ -74,9 +75,9 @@ export default function AnnotatePage() {
 
       <div className="flex h-[calc(100vh-140px)]">
         {/* Main canvas */}
-        <div className="flex-1 p-4">
+        <div className="flex-1 p-4 md:p-6">
           <div
-            className="relative bg-white rounded-lg shadow-lg h-full flex items-center justify-center cursor-crosshair"
+            className="relative bg-white border-2 border-black/10 h-full flex items-center justify-center cursor-crosshair"
             onClick={handleImageClick}
           >
             <img
@@ -89,7 +90,7 @@ export default function AnnotatePage() {
             {annotations.map((annotation) => (
               <div
                 key={annotation.id}
-                className="absolute w-6 h-6 bg-red-500 rounded-full flex items-center justify-center text-white text-xs font-bold cursor-pointer hover:bg-red-600 transition-colors"
+                className="absolute w-6 h-6 bg-black border-2 border-white flex items-center justify-center text-white text-xs font-black cursor-pointer hover:bg-black/80 transition-all"
                 style={{
                   left: `${annotation.x}%`,
                   top: `${annotation.y}%`,
@@ -104,41 +105,40 @@ export default function AnnotatePage() {
         </div>
 
         {/* Sidebar */}
-        <div className="w-80 p-4 bg-white border-l">
-          <div className="space-y-4">
+        <div className="w-80 p-4 md:p-6 bg-white border-l-2 border-black/10">
+          <div className="space-y-4 md:space-y-6">
             <div className="flex items-center space-x-2">
-              <MessageSquare className="h-5 w-5" />
-              <h2 className="text-lg font-medium">Annotations ({annotations.length})</h2>
+              <MessageSquare className="h-5 w-5 text-black/60" />
+              <h2 className="text-lg md:text-xl font-black tracking-tighter text-black">Annotations</h2>
+              <span className="px-2 py-1 border-2 border-black/20 text-black text-xs font-medium">
+                {annotations.length}
+              </span>
             </div>
 
             {isAddingAnnotation && (
-              <Card className="border-blue-200 bg-blue-50">
-                <CardContent className="p-4">
-                  <p className="text-sm text-blue-700 mb-2">
-                    Écrivez votre annotation puis cliquez sur l'image pour la placer
-                  </p>
-                  <Textarea
-                    placeholder="Votre annotation..."
-                    value={newAnnotation}
-                    onChange={(e) => setNewAnnotation(e.target.value)}
-                    className="mb-2"
-                  />
-                </CardContent>
-              </Card>
+              <div className="border-2 border-black p-4 bg-white">
+                <p className="text-sm text-black mb-3 font-light">
+                  Écrivez votre annotation puis cliquez sur l'image pour la placer
+                </p>
+                <Textarea
+                  placeholder="Votre annotation..."
+                  value={newAnnotation}
+                  onChange={(e) => setNewAnnotation(e.target.value)}
+                  className="mb-2 rounded-none border-2 border-black/10 focus:border-black transition-all bg-white text-black font-light"
+                />
+              </div>
             )}
 
             <div className="space-y-3 max-h-96 overflow-y-auto">
               {annotations.map((annotation) => (
-                <Card key={annotation.id}>
-                  <CardContent className="p-3">
-                    <div className="flex items-start space-x-2">
-                      <div className="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
-                        {annotation.id}
-                      </div>
-                      <p className="text-sm text-gray-700">{annotation.content}</p>
+                <div key={annotation.id} className="border-2 border-black/10 p-3">
+                  <div className="flex items-start space-x-2">
+                    <div className="w-5 h-5 bg-black text-white flex items-center justify-center text-xs font-black flex-shrink-0">
+                      {annotation.id}
                     </div>
-                  </CardContent>
-                </Card>
+                    <p className="text-sm text-black/60 font-light">{annotation.content}</p>
+                  </div>
+                </div>
               ))}
             </div>
           </div>

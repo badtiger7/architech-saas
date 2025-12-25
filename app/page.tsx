@@ -21,63 +21,67 @@ import Link from "next/link"
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-white">
+      {/* Geometric Background Elements */}
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] border-l-2 border-t-2 border-black/5"></div>
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] border-r-2 border-b-2 border-black/5"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[1px] bg-gradient-to-r from-transparent via-black/5 to-transparent"></div>
+      </div>
+
       {/* Header */}
-      <header className="border-b bg-white/95 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-              <span className="text-white font-bold text-lg">A</span>
+      <header className="border-b-2 border-black/10 sticky top-0 z-50 bg-white">
+        <div className="max-w-7xl mx-auto px-4 md:px-12 lg:px-16">
+          <div className="flex items-center justify-between h-16 md:h-20">
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 md:w-10 md:h-10 border-2 border-black flex items-center justify-center">
+                <span className="text-black font-black text-sm md:text-base">A</span>
+              </div>
+              <span className="text-xl md:text-2xl font-black tracking-tighter text-black">
+                ARCHITECH
+              </span>
             </div>
-            <span className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
-              Architech
-            </span>
+            <nav className="hidden md:flex items-center space-x-6">
+              <Link href="#features" className="text-black/60 hover:text-black transition-colors font-medium tracking-wide text-sm">
+                Fonctionnalités
+              </Link>
+              <Link href="#testimonials" className="text-black/60 hover:text-black transition-colors font-medium tracking-wide text-sm">
+                Témoignages
+              </Link>
+              <Link href="#pricing" className="text-black/60 hover:text-black transition-colors font-medium tracking-wide text-sm">
+                Tarifs
+              </Link>
+            </nav>
+            <Link href="/auth">
+              <Button className="bg-black text-white hover:bg-black/90 rounded-none border-2 border-black font-medium tracking-wide text-sm px-6 h-10">
+                Se connecter
+              </Button>
+            </Link>
           </div>
-          <nav className="hidden md:flex items-center space-x-8">
-            <Link href="#features" className="text-gray-600 hover:text-blue-600 transition-colors font-medium">
-              Fonctionnalités
-            </Link>
-            <Link href="#testimonials" className="text-gray-600 hover:text-blue-600 transition-colors font-medium">
-              Témoignages
-            </Link>
-            <Link href="#pricing" className="text-gray-600 hover:text-blue-600 transition-colors font-medium">
-              Tarifs
-            </Link>
-          </nav>
-          <Link href="/auth">
-            <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg">
-              Se connecter
-            </Button>
-          </Link>
         </div>
       </header>
 
       {/* Hero Section */}
       <section className="relative overflow-hidden">
-        {/* Background Elements */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-purple-50"></div>
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-gradient-to-r from-blue-400/20 to-purple-400/20 rounded-full blur-3xl"></div>
-
-        <div className="relative container mx-auto px-4 py-24 text-center">
-          <Badge
-            className="mb-6 bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700 border-blue-200 px-4 py-2"
-            variant="secondary"
-          >
-            <Sparkles className="w-4 h-4 mr-2" />
-            Nouveau : Timeline collaborative en temps réel
-          </Badge>
-
-          <h1 className="text-6xl md:text-7xl font-bold mb-6">
-            <span className="bg-gradient-to-r from-gray-900 via-blue-900 to-purple-900 bg-clip-text text-transparent">
-              Architech
+        <div className="relative max-w-7xl mx-auto px-4 md:px-12 lg:px-16 py-16 md:py-24 text-center">
+          <div className="mb-6 inline-block">
+            <span className="text-xs md:text-sm font-medium tracking-[0.2em] uppercase text-black/60 px-4 py-2 border-2 border-black/10">
+              Nouveau : Timeline collaborative en temps réel
             </span>
-          </h1>
+          </div>
 
-          <p className="text-2xl md:text-3xl text-gray-700 mb-4 font-light">L'outil de gestion pensé pour les</p>
-          <p className="text-2xl md:text-3xl font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-8">
+          <h1 className="text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black leading-[0.9] tracking-tighter mb-6">
+            <span className="block text-black">ARCHI</span>
+            <span className="block text-black">TECH</span>
+          </h1>
+          
+          <div className="w-20 md:w-32 h-1 bg-black mx-auto mb-8"></div>
+
+          <p className="text-xl md:text-2xl lg:text-3xl text-black/70 mb-4 font-light">L'outil de gestion pensé pour les</p>
+          <p className="text-2xl md:text-3xl lg:text-4xl font-black tracking-tighter text-black mb-8">
             architectes exigeants
           </p>
 
-          <p className="text-xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-base md:text-lg lg:text-xl text-black/60 mb-12 max-w-3xl mx-auto leading-relaxed font-light">
             Transformez votre gestion de projets architecturaux avec notre plateforme tout-en-un de documentation,
             collaboration, suivi et validation
           </p>
@@ -86,7 +90,7 @@ export default function HomePage() {
             <Link href="/auth">
               <Button
                 size="lg"
-                className="text-lg px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
+                className="bg-black text-white hover:bg-black/90 rounded-none border-2 border-black text-base md:text-lg font-medium tracking-wide px-8 py-6 h-auto transition-all"
               >
                 Créer un projet
                 <ArrowRight className="ml-2 h-5 w-5" />
@@ -95,7 +99,7 @@ export default function HomePage() {
             <Button
               size="lg"
               variant="outline"
-              className="text-lg px-8 py-4 border-2 hover:bg-gray-50 transition-all duration-300 bg-transparent"
+              className="rounded-none border-2 border-black/20 hover:bg-black hover:text-white hover:border-black text-base md:text-lg font-medium tracking-wide px-8 py-6 h-auto transition-all"
             >
               <Play className="mr-2 h-5 w-5" />
               Voir la démo
@@ -104,110 +108,92 @@ export default function HomePage() {
 
           {/* Hero Dashboard Preview */}
           <div className="relative max-w-6xl mx-auto">
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-2xl blur-2xl transform rotate-1"></div>
-            <div className="relative bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
-              <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b flex items-center space-x-2">
-                <div className="w-3 h-3 bg-red-400 rounded-full"></div>
-                <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
-                <div className="w-3 h-3 bg-green-400 rounded-full"></div>
-                <div className="ml-4 text-sm text-gray-600 font-medium">Architech Dashboard</div>
+            <div className="relative bg-white border-2 border-black/10 overflow-hidden">
+              <div className="bg-white px-6 py-4 border-b-2 border-black/10 flex items-center space-x-2">
+                <div className="w-3 h-3 bg-black/20"></div>
+                <div className="w-3 h-3 bg-black/20"></div>
+                <div className="w-3 h-3 bg-black/20"></div>
+                <div className="ml-4 text-sm text-black/60 font-medium">Architech Dashboard</div>
               </div>
 
               <div className="p-8">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
-                    <CardHeader className="pb-3">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-black/10">
+                  <div className="bg-white p-6 border-2 border-transparent hover:border-black/10 transition-all">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-sm font-bold text-black uppercase tracking-wide">Timeline Projet</h3>
+                      <div className="w-2 h-2 bg-black"></div>
+                    </div>
+                    <div className="space-y-3">
                       <div className="flex items-center justify-between">
-                        <CardTitle className="text-sm font-semibold text-gray-700">Timeline Projet</CardTitle>
-                        <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                        <div className="flex items-center space-x-3">
+                          <CheckCircle className="h-4 w-4 text-black" />
+                          <span className="text-sm font-medium text-black">Esquisse</span>
+                        </div>
+                        <span className="text-xs px-2 py-1 border-2 border-black/20 text-black font-medium">100%</span>
                       </div>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-3">
-                        <div className="flex items-center space-x-3">
-                          <CheckCircle className="h-4 w-4 text-green-500" />
-                          <span className="text-sm font-medium">Esquisse</span>
-                          <Badge variant="secondary" className="text-xs bg-green-100 text-green-700">
-                            100%
-                          </Badge>
-                        </div>
-                        <div className="flex items-center space-x-3">
-                          <Clock className="h-4 w-4 text-blue-500 animate-spin" />
-                          <span className="text-sm font-medium">APS</span>
-                          <Badge variant="secondary" className="text-xs bg-blue-100 text-blue-700">
-                            65%
-                          </Badge>
-                        </div>
-                        <div className="flex items-center space-x-3">
-                          <div className="h-4 w-4 rounded-full border-2 border-gray-300" />
-                          <span className="text-sm text-gray-500">APD</span>
-                          <Badge variant="outline" className="text-xs">
-                            En attente
-                          </Badge>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
-                    <CardHeader className="pb-3">
                       <div className="flex items-center justify-between">
-                        <CardTitle className="text-sm font-semibold text-gray-700">Documents</CardTitle>
-                        <Badge variant="secondary" className="text-xs bg-purple-100 text-purple-700">
-                          +3 nouveaux
-                        </Badge>
+                        <div className="flex items-center space-x-3">
+                          <Clock className="h-4 w-4 text-black/60" />
+                          <span className="text-sm font-medium text-black">APS</span>
+                        </div>
+                        <span className="text-xs px-2 py-1 border-2 border-black/20 text-black font-medium">65%</span>
                       </div>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-3">
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm font-medium">Plans.dwg</span>
-                          <Badge className="text-xs bg-orange-100 text-orange-700">Annoté</Badge>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-3">
+                          <div className="h-4 w-4 border-2 border-black/20"></div>
+                          <span className="text-sm text-black/60">APD</span>
                         </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm font-medium">Facade.pdf</span>
-                          <Badge variant="outline" className="text-xs">
-                            En cours
-                          </Badge>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm font-medium">Structure.xlsx</span>
-                          <Badge className="text-xs bg-green-100 text-green-700">Validé</Badge>
-                        </div>
+                        <span className="text-xs px-2 py-1 border-2 border-black/20 text-black/60 font-medium">En attente</span>
                       </div>
-                    </CardContent>
-                  </Card>
+                    </div>
+                  </div>
 
-                  <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
-                    <CardHeader className="pb-3">
-                      <CardTitle className="text-sm font-semibold text-gray-700">Équipe</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-3">
-                        <div className="flex -space-x-2 mb-3">
-                          <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white text-xs font-semibold border-2 border-white">
-                            JD
-                          </div>
-                          <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center text-white text-xs font-semibold border-2 border-white">
-                            ML
-                          </div>
-                          <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center text-white text-xs font-semibold border-2 border-white">
-                            PL
-                          </div>
-                          <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center text-white text-xs font-semibold border-2 border-white">
-                            +5
-                          </div>
+                  <div className="bg-white p-6 border-2 border-transparent hover:border-black/10 transition-all">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-sm font-bold text-black uppercase tracking-wide">Documents</h3>
+                      <span className="text-xs px-2 py-1 border-2 border-black/20 text-black font-medium">+3 nouveaux</span>
+                    </div>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium text-black">Plans.dwg</span>
+                        <span className="text-xs px-2 py-1 bg-black text-white font-medium">Annoté</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium text-black">Facade.pdf</span>
+                        <span className="text-xs px-2 py-1 border-2 border-black/20 text-black font-medium">En cours</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium text-black">Structure.xlsx</span>
+                        <span className="text-xs px-2 py-1 border-2 border-black/20 text-black font-medium">Validé</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-white p-6 border-2 border-transparent hover:border-black/10 transition-all">
+                    <div className="mb-4">
+                      <h3 className="text-sm font-bold text-black uppercase tracking-wide">Équipe</h3>
+                    </div>
+                    <div className="space-y-3">
+                      <div className="flex -space-x-2 mb-3">
+                        <div className="w-8 h-8 border-2 border-black bg-black text-white flex items-center justify-center text-xs font-black">
+                          JD
                         </div>
-                        <div className="text-xs text-gray-500">8 collaborateurs actifs</div>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div
-                            className="bg-gradient-to-r from-green-400 to-blue-500 h-2 rounded-full"
-                            style={{ width: "75%" }}
-                          ></div>
+                        <div className="w-8 h-8 border-2 border-black bg-black text-white flex items-center justify-center text-xs font-black">
+                          ML
+                        </div>
+                        <div className="w-8 h-8 border-2 border-black bg-black text-white flex items-center justify-center text-xs font-black">
+                          PL
+                        </div>
+                        <div className="w-8 h-8 border-2 border-black/20 bg-white text-black flex items-center justify-center text-xs font-black">
+                          +5
                         </div>
                       </div>
-                    </CardContent>
-                  </Card>
+                      <div className="text-xs text-black/50 font-light">8 collaborateurs actifs</div>
+                      <div className="h-1 bg-black/10 w-full">
+                        <div className="h-full bg-black" style={{ width: "75%" }}></div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -216,123 +202,106 @@ export default function HomePage() {
       </section>
 
       {/* Benefits Section */}
-      <section className="py-24 bg-gradient-to-b from-white to-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
-              Pourquoi choisir Architech ?
+      <section id="features" className="py-16 md:py-24 lg:py-32 border-t border-black/10">
+        <div className="max-w-7xl mx-auto px-4 md:px-12 lg:px-16">
+          <div className="text-center mb-12 md:mb-16">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter mb-6 text-black">
+              Pourquoi choisir
+              <br />
+              Architech ?
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <div className="w-24 md:w-32 h-1 bg-black mx-auto mb-6"></div>
+            <p className="text-lg md:text-xl text-black/60 max-w-3xl mx-auto font-light">
               Découvrez comment notre plateforme révolutionne la gestion de projets architecturaux
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Card className="text-center border-0 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 bg-gradient-to-br from-white to-blue-50">
-              <CardHeader className="pb-4">
-                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
-                  <Zap className="h-8 w-8 text-white" />
-                </div>
-                <CardTitle className="text-2xl font-bold text-gray-900">Gain de temps</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 text-lg leading-relaxed">
-                  Automatisez vos workflows et réduisez les tâches répétitives de 60% grâce à notre IA intégrée
-                </p>
-                <div className="mt-6 flex items-center justify-center space-x-2 text-sm text-blue-600 font-semibold">
-                  <TrendingUp className="w-4 h-4" />
-                  <span>+60% d'efficacité</span>
-                </div>
-              </CardContent>
-            </Card>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-black/10">
+            <div className="bg-white p-8 md:p-12 border-2 border-transparent hover:border-black/10 transition-all group">
+              <div className="w-16 h-16 border-2 border-black/10 flex items-center justify-center mb-6 group-hover:border-black group-hover:bg-black transition-all">
+                <Zap className="h-8 w-8 text-black/60 group-hover:text-white transition-colors" />
+              </div>
+              <h3 className="text-2xl md:text-3xl font-black tracking-tighter text-black mb-4">Gain de temps</h3>
+              <p className="text-black/60 text-base md:text-lg leading-relaxed mb-6 font-light">
+                Automatisez vos workflows et réduisez les tâches répétitives de 60% grâce à notre IA intégrée
+              </p>
+              <div className="flex items-center space-x-2 text-sm text-black font-medium">
+                <TrendingUp className="w-4 h-4" />
+                <span>+60% d'efficacité</span>
+              </div>
+            </div>
 
-            <Card className="text-center border-0 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 bg-gradient-to-br from-white to-purple-50">
-              <CardHeader className="pb-4">
-                <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
-                  <FileText className="h-8 w-8 text-white" />
-                </div>
-                <CardTitle className="text-2xl font-bold text-gray-900">Centralisation totale</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 text-lg leading-relaxed">
-                  Tous vos documents au même endroit avec versioning intelligent et annotations collaboratives
-                </p>
-                <div className="mt-6 flex items-center justify-center space-x-2 text-sm text-purple-600 font-semibold">
-                  <Shield className="w-4 h-4" />
-                  <span>100% sécurisé</span>
-                </div>
-              </CardContent>
-            </Card>
+            <div className="bg-white p-8 md:p-12 border-2 border-transparent hover:border-black/10 transition-all group">
+              <div className="w-16 h-16 border-2 border-black/10 flex items-center justify-center mb-6 group-hover:border-black group-hover:bg-black transition-all">
+                <FileText className="h-8 w-8 text-black/60 group-hover:text-white transition-colors" />
+              </div>
+              <h3 className="text-2xl md:text-3xl font-black tracking-tighter text-black mb-4">Centralisation totale</h3>
+              <p className="text-black/60 text-base md:text-lg leading-relaxed mb-6 font-light">
+                Tous vos documents au même endroit avec versioning intelligent et annotations collaboratives
+              </p>
+              <div className="flex items-center space-x-2 text-sm text-black font-medium">
+                <Shield className="w-4 h-4" />
+                <span>100% sécurisé</span>
+              </div>
+            </div>
 
-            <Card className="text-center border-0 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 bg-gradient-to-br from-white to-green-50">
-              <CardHeader className="pb-4">
-                <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
-                  <Users className="h-8 w-8 text-white" />
-                </div>
-                <CardTitle className="text-2xl font-bold text-gray-900">Collaboration fluide</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 text-lg leading-relaxed">
-                  Travaillez en temps réel avec vos équipes et intervenants, où qu'ils soient
-                </p>
-                <div className="mt-6 flex items-center justify-center space-x-2 text-sm text-green-600 font-semibold">
-                  <Globe className="w-4 h-4" />
-                  <span>Temps réel</span>
-                </div>
-              </CardContent>
-            </Card>
+            <div className="bg-white p-8 md:p-12 border-2 border-transparent hover:border-black/10 transition-all group">
+              <div className="w-16 h-16 border-2 border-black/10 flex items-center justify-center mb-6 group-hover:border-black group-hover:bg-black transition-all">
+                <Users className="h-8 w-8 text-black/60 group-hover:text-white transition-colors" />
+              </div>
+              <h3 className="text-2xl md:text-3xl font-black tracking-tighter text-black mb-4">Collaboration fluide</h3>
+              <p className="text-black/60 text-base md:text-lg leading-relaxed mb-6 font-light">
+                Travaillez en temps réel avec vos équipes et intervenants, où qu'ils soient
+              </p>
+              <div className="flex items-center space-x-2 text-sm text-black font-medium">
+                <Globe className="w-4 h-4" />
+                <span>Temps réel</span>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* How it works */}
-      <section className="py-24 bg-gradient-to-br from-gray-50 to-white">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+      <section className="py-16 md:py-24 lg:py-32 border-t border-black/10 bg-black text-white">
+        <div className="max-w-7xl mx-auto px-4 md:px-12 lg:px-16">
+          <div className="text-center mb-12 md:mb-16">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter mb-6">
               Comment ça marche
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <div className="w-24 md:w-32 h-1 bg-white mx-auto mb-6"></div>
+            <p className="text-lg md:text-xl text-white/70 max-w-3xl mx-auto font-light">
               Trois étapes simples pour révolutionner votre gestion de projets
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            <div className="text-center group">
-              <div className="relative mb-8">
-                <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-3xl flex items-center justify-center text-white text-3xl font-bold mx-auto shadow-2xl group-hover:scale-110 transition-transform duration-300">
-                  1
-                </div>
-                <div className="absolute -inset-4 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+            <div className="text-center">
+              <div className="w-20 h-20 border-2 border-white/20 flex items-center justify-center text-white text-3xl md:text-4xl font-black mb-8 mx-auto hover:bg-white hover:text-black transition-all cursor-pointer">
+                01
               </div>
-              <h3 className="text-2xl font-bold mb-4 text-gray-900">Créez votre projet</h3>
-              <p className="text-gray-600 text-lg leading-relaxed">
+              <h3 className="text-2xl md:text-3xl font-black tracking-tighter mb-4">Créez votre projet</h3>
+              <p className="text-white/70 text-base md:text-lg leading-relaxed font-light">
                 Définissez les étapes de votre timeline personnalisée et invitez votre équipe en quelques clics
               </p>
             </div>
 
-            <div className="text-center group">
-              <div className="relative mb-8">
-                <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-purple-600 rounded-3xl flex items-center justify-center text-white text-3xl font-bold mx-auto shadow-2xl group-hover:scale-110 transition-transform duration-300">
-                  2
-                </div>
-                <div className="absolute -inset-4 bg-gradient-to-br from-purple-400/20 to-pink-400/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div className="text-center">
+              <div className="w-20 h-20 border-2 border-white/20 flex items-center justify-center text-white text-3xl md:text-4xl font-black mb-8 mx-auto hover:bg-white hover:text-black transition-all cursor-pointer">
+                02
               </div>
-              <h3 className="text-2xl font-bold mb-4 text-gray-900">Collaborez en temps réel</h3>
-              <p className="text-gray-600 text-lg leading-relaxed">
+              <h3 className="text-2xl md:text-3xl font-black tracking-tighter mb-4">Collaborez en temps réel</h3>
+              <p className="text-white/70 text-base md:text-lg leading-relaxed font-light">
                 Partagez documents, annotations et suivez l'avancement avec une synchronisation instantanée
               </p>
             </div>
 
-            <div className="text-center group">
-              <div className="relative mb-8">
-                <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-green-600 rounded-3xl flex items-center justify-center text-white text-3xl font-bold mx-auto shadow-2xl group-hover:scale-110 transition-transform duration-300">
-                  3
-                </div>
-                <div className="absolute -inset-4 bg-gradient-to-br from-green-400/20 to-blue-400/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div className="text-center">
+              <div className="w-20 h-20 border-2 border-white/20 flex items-center justify-center text-white text-3xl md:text-4xl font-black mb-8 mx-auto hover:bg-white hover:text-black transition-all cursor-pointer">
+                03
               </div>
-              <h3 className="text-2xl font-bold mb-4 text-gray-900">Validez et livrez</h3>
-              <p className="text-gray-600 text-lg leading-relaxed">
+              <h3 className="text-2xl md:text-3xl font-black tracking-tighter mb-4">Validez et livrez</h3>
+              <p className="text-white/70 text-base md:text-lg leading-relaxed font-light">
                 Archivez automatiquement, générez vos livrables et célébrez la réussite de votre projet
               </p>
             </div>
@@ -341,132 +310,116 @@ export default function HomePage() {
       </section>
 
       {/* Testimonials */}
-      <section id="testimonials" className="py-24 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
-              Ils nous font confiance
+      <section id="testimonials" className="py-16 md:py-24 lg:py-32 border-t border-black/10">
+        <div className="max-w-7xl mx-auto px-4 md:px-12 lg:px-16">
+          <div className="text-center mb-12 md:mb-16">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter mb-6 text-black">
+              Ils nous font
+              <br />
+              confiance
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <div className="w-24 md:w-32 h-1 bg-black mx-auto mb-6"></div>
+            <p className="text-lg md:text-xl text-black/60 max-w-3xl mx-auto font-light">
               Plus de 500 agences d'architecture utilisent déjà Architech
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <Card className="border-0 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 bg-gradient-to-br from-white to-blue-50">
-              <CardHeader>
-                <div className="flex items-center space-x-1 mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                  ))}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-black/10">
+            <div className="bg-white p-8 md:p-10 border-2 border-transparent hover:border-black/10 transition-all">
+              <div className="flex items-center space-x-1 mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="h-4 w-4 fill-black text-black" />
+                ))}
+              </div>
+              <div className="flex items-center space-x-3 mb-6">
+                <div className="w-12 h-12 border-2 border-black bg-black text-white flex items-center justify-center font-black">
+                  MA
                 </div>
-                <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold">
-                    MA
-                  </div>
-                  <div>
-                    <CardTitle className="text-lg text-gray-900">Agence Martin & Associés</CardTitle>
-                    <p className="text-sm text-gray-500">Paris, France</p>
-                  </div>
+                <div>
+                  <h4 className="text-lg font-black text-black">Agence Martin & Associés</h4>
+                  <p className="text-sm text-black/50 font-light">Paris, France</p>
                 </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-700 text-lg leading-relaxed mb-4">
-                  "Architech a révolutionné notre façon de gérer les projets. Le gain de temps est énorme sur la
-                  documentation et la collaboration."
-                </p>
-                <div className="flex items-center justify-between">
-                  <p className="text-sm text-gray-600 font-medium">- Jean Martin, Architecte</p>
-                  <Award className="w-5 h-5 text-yellow-500" />
-                </div>
-              </CardContent>
-            </Card>
+              </div>
+              <p className="text-black/70 text-base md:text-lg leading-relaxed mb-4 font-light">
+                "Architech a révolutionné notre façon de gérer les projets. Le gain de temps est énorme sur la
+                documentation et la collaboration."
+              </p>
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-black/60 font-medium">- Jean Martin, Architecte</p>
+                <Award className="w-5 h-5 text-black/40" />
+              </div>
+            </div>
 
-            <Card className="border-0 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 bg-gradient-to-br from-white to-purple-50">
-              <CardHeader>
-                <div className="flex items-center space-x-1 mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                  ))}
+            <div className="bg-white p-8 md:p-10 border-2 border-transparent hover:border-black/10 transition-all">
+              <div className="flex items-center space-x-1 mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="h-4 w-4 fill-black text-black" />
+                ))}
+              </div>
+              <div className="flex items-center space-x-3 mb-6">
+                <div className="w-12 h-12 border-2 border-black bg-black text-white flex items-center justify-center font-black">
+                  BD
                 </div>
-                <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold">
-                    BD
-                  </div>
-                  <div>
-                    <CardTitle className="text-lg text-gray-900">Bureau d'études Dupont</CardTitle>
-                    <p className="text-sm text-gray-500">Lyon, France</p>
-                  </div>
+                <div>
+                  <h4 className="text-lg font-black text-black">Bureau d'études Dupont</h4>
+                  <p className="text-sm text-black/50 font-light">Lyon, France</p>
                 </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-700 text-lg leading-relaxed mb-4">
-                  "La timeline collaborative nous permet de mieux coordonner avec les architectes. Interface intuitive
-                  et puissante !"
-                </p>
-                <div className="flex items-center justify-between">
-                  <p className="text-sm text-gray-600 font-medium">- Marie Dupont, Ingénieur</p>
-                  <Award className="w-5 h-5 text-yellow-500" />
-                </div>
-              </CardContent>
-            </Card>
+              </div>
+              <p className="text-black/70 text-base md:text-lg leading-relaxed mb-4 font-light">
+                "La timeline collaborative nous permet de mieux coordonner avec les architectes. Interface intuitive
+                et puissante !"
+              </p>
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-black/60 font-medium">- Marie Dupont, Ingénieur</p>
+                <Award className="w-5 h-5 text-black/40" />
+              </div>
+            </div>
 
-            <Card className="border-0 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 bg-gradient-to-br from-white to-green-50">
-              <CardHeader>
-                <div className="flex items-center space-x-1 mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                  ))}
+            <div className="bg-white p-8 md:p-10 border-2 border-transparent hover:border-black/10 transition-all">
+              <div className="flex items-center space-x-1 mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="h-4 w-4 fill-black text-black" />
+                ))}
+              </div>
+              <div className="flex items-center space-x-3 mb-6">
+                <div className="w-12 h-12 border-2 border-black bg-black text-white flex items-center justify-center font-black">
+                  AM
                 </div>
-                <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center text-white font-bold">
-                    AM
-                  </div>
-                  <div>
-                    <CardTitle className="text-lg text-gray-900">Atelier Architecture Moderne</CardTitle>
-                    <p className="text-sm text-gray-500">Marseille, France</p>
-                  </div>
+                <div>
+                  <h4 className="text-lg font-black text-black">Atelier Architecture Moderne</h4>
+                  <p className="text-sm text-black/50 font-light">Marseille, France</p>
                 </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-700 text-lg leading-relaxed mb-4">
-                  "Les annotations en temps réel ont transformé notre collaboration avec les clients. Résultats
-                  spectaculaires !"
-                </p>
-                <div className="flex items-center justify-between">
-                  <p className="text-sm text-gray-600 font-medium">- Paul Leroy, Architecte</p>
-                  <Award className="w-5 h-5 text-yellow-500" />
-                </div>
-              </CardContent>
-            </Card>
+              </div>
+              <p className="text-black/70 text-base md:text-lg leading-relaxed mb-4 font-light">
+                "Les annotations en temps réel ont transformé notre collaboration avec les clients. Résultats
+                spectaculaires !"
+              </p>
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-black/60 font-medium">- Paul Leroy, Architecte</p>
+                <Award className="w-5 h-5 text-black/40" />
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800 text-white relative overflow-hidden">
-        <div
-          className="absolute inset-0 opacity-20"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fillRule='evenodd'%3E%3Cg fill='%23ffffff' fillOpacity='0.1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          }}
-        ></div>
-        <div className="relative container mx-auto px-4 text-center">
-          <h2 className="text-4xl md:text-6xl font-bold mb-6">
+      <section className="py-16 md:py-24 lg:py-32 bg-black text-white border-t border-black/10">
+        <div className="max-w-7xl mx-auto px-4 md:px-12 lg:px-16 text-center">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter mb-6">
             Prêt à transformer votre
             <br />
-            <span className="bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">
-              gestion de projets ?
-            </span>
+            gestion de projets ?
           </h2>
-          <p className="text-xl md:text-2xl mb-12 opacity-90 max-w-3xl mx-auto leading-relaxed">
+          <div className="w-24 md:w-32 h-1 bg-white mx-auto mb-8"></div>
+          <p className="text-xl md:text-2xl mb-12 text-white/70 max-w-3xl mx-auto leading-relaxed font-light">
             Rejoignez plus de 500 agences d'architecture qui utilisent Architech pour révolutionner leur workflow
           </p>
-          <div className="flex flex-col sm:flex-row gap-6 justify-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
             <Link href="/auth">
               <Button
                 size="lg"
-                className="text-lg px-10 py-4 bg-white text-blue-600 hover:bg-gray-100 shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-105 font-semibold"
+                className="bg-white text-black hover:bg-white/90 rounded-none border-2 border-white text-base md:text-lg font-medium tracking-wide px-10 py-6 h-auto transition-all"
               >
                 Commencer gratuitement
                 <ArrowRight className="ml-2 h-5 w-5" />
@@ -475,81 +428,81 @@ export default function HomePage() {
             <Button
               size="lg"
               variant="outline"
-              className="text-lg px-10 py-4 border-2 border-white text-white hover:bg-white hover:text-blue-600 transition-all duration-300 font-semibold bg-transparent"
+              className="rounded-none border-2 border-white/20 text-white hover:bg-white hover:text-black hover:border-white text-base md:text-lg font-medium tracking-wide px-10 py-6 h-auto transition-all"
             >
               <Play className="mr-2 h-5 w-5" />
               Voir la démo
             </Button>
           </div>
 
-          <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center border-t border-white/10 pt-16">
             <div>
-              <div className="text-3xl font-bold mb-2">500+</div>
-              <div className="text-sm opacity-80">Agences clientes</div>
+              <div className="text-3xl md:text-4xl font-black mb-2">500+</div>
+              <div className="text-sm text-white/60 font-light">Agences clientes</div>
             </div>
             <div>
-              <div className="text-3xl font-bold mb-2">10k+</div>
-              <div className="text-sm opacity-80">Projets gérés</div>
+              <div className="text-3xl md:text-4xl font-black mb-2">10k+</div>
+              <div className="text-sm text-white/60 font-light">Projets gérés</div>
             </div>
             <div>
-              <div className="text-3xl font-bold mb-2">99.9%</div>
-              <div className="text-sm opacity-80">Uptime</div>
+              <div className="text-3xl md:text-4xl font-black mb-2">99.9%</div>
+              <div className="text-sm text-white/60 font-light">Uptime</div>
             </div>
             <div>
-              <div className="text-3xl font-bold mb-2">24/7</div>
-              <div className="text-sm opacity-80">Support</div>
+              <div className="text-3xl md:text-4xl font-black mb-2">24/7</div>
+              <div className="text-sm text-white/60 font-light">Support</div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-16">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
+      <footer className="border-t border-black/10 py-12 md:py-16 px-4 md:px-12 lg:px-16">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-8 md:gap-12 mb-12">
             <div className="md:col-span-2">
               <div className="flex items-center space-x-3 mb-6">
-                <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-                  <span className="text-white font-bold text-lg">A</span>
+                <div className="w-10 h-10 border-2 border-black flex items-center justify-center">
+                  <span className="text-black font-black text-lg">A</span>
                 </div>
-                <span className="text-2xl font-bold">Architech</span>
+                <span className="text-2xl font-black tracking-tighter text-black">ARCHITECH</span>
               </div>
-              <p className="text-gray-400 text-lg leading-relaxed mb-6 max-w-md">
+              <p className="text-black/60 text-base leading-relaxed mb-6 max-w-md font-light">
                 L'outil de gestion pensé pour les architectes exigeants. Transformez votre workflow dès aujourd'hui.
               </p>
-              <div className="flex space-x-4">
-                <div className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-gray-700 transition-colors cursor-pointer">
-                  <span className="text-sm font-bold">f</span>
+              <div className="flex space-x-2">
+                <div className="w-10 h-10 border-2 border-black/20 hover:border-black hover:bg-black hover:text-white flex items-center justify-center transition-all cursor-pointer">
+                  <span className="text-sm font-black">f</span>
                 </div>
-                <div className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-gray-700 transition-colors cursor-pointer">
-                  <span className="text-sm font-bold">t</span>
+                <div className="w-10 h-10 border-2 border-black/20 hover:border-black hover:bg-black hover:text-white flex items-center justify-center transition-all cursor-pointer">
+                  <span className="text-sm font-black">t</span>
                 </div>
-                <div className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-gray-700 transition-colors cursor-pointer">
-                  <span className="text-sm font-bold">in</span>
+                <div className="w-10 h-10 border-2 border-black/20 hover:border-black hover:bg-black hover:text-white flex items-center justify-center transition-all cursor-pointer">
+                  <span className="text-xs font-black">in</span>
                 </div>
               </div>
             </div>
 
             <div>
-              <h3 className="font-bold text-lg mb-6 text-white">Produit</h3>
-              <ul className="space-y-3 text-gray-400">
+              <h3 className="font-black text-lg mb-6 text-black uppercase tracking-wide">Produit</h3>
+              <ul className="space-y-3 text-black/60">
                 <li>
-                  <Link href="#" className="hover:text-white transition-colors">
+                  <Link href="#" className="hover:text-black transition-colors font-light">
                     Fonctionnalités
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="hover:text-white transition-colors">
+                  <Link href="#" className="hover:text-black transition-colors font-light">
                     Tarifs
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="hover:text-white transition-colors">
+                  <Link href="#" className="hover:text-black transition-colors font-light">
                     Sécurité
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="hover:text-white transition-colors">
+                  <Link href="#" className="hover:text-black transition-colors font-light">
                     API
                   </Link>
                 </li>
@@ -557,25 +510,25 @@ export default function HomePage() {
             </div>
 
             <div>
-              <h3 className="font-bold text-lg mb-6 text-white">Support</h3>
-              <ul className="space-y-3 text-gray-400">
+              <h3 className="font-black text-lg mb-6 text-black uppercase tracking-wide">Support</h3>
+              <ul className="space-y-3 text-black/60">
                 <li>
-                  <Link href="#" className="hover:text-white transition-colors">
+                  <Link href="#" className="hover:text-black transition-colors font-light">
                     Documentation
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="hover:text-white transition-colors">
+                  <Link href="#" className="hover:text-black transition-colors font-light">
                     Contact
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="hover:text-white transition-colors">
+                  <Link href="#" className="hover:text-black transition-colors font-light">
                     Formation
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="hover:text-white transition-colors">
+                  <Link href="#" className="hover:text-black transition-colors font-light">
                     Communauté
                   </Link>
                 </li>
@@ -583,25 +536,25 @@ export default function HomePage() {
             </div>
 
             <div>
-              <h3 className="font-bold text-lg mb-6 text-white">Entreprise</h3>
-              <ul className="space-y-3 text-gray-400">
+              <h3 className="font-black text-lg mb-6 text-black uppercase tracking-wide">Entreprise</h3>
+              <ul className="space-y-3 text-black/60">
                 <li>
-                  <Link href="#" className="hover:text-white transition-colors">
+                  <Link href="#" className="hover:text-black transition-colors font-light">
                     À propos
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="hover:text-white transition-colors">
+                  <Link href="#" className="hover:text-black transition-colors font-light">
                     Carrières
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="hover:text-white transition-colors">
+                  <Link href="#" className="hover:text-black transition-colors font-light">
                     Presse
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="hover:text-white transition-colors">
+                  <Link href="#" className="hover:text-black transition-colors font-light">
                     Partenaires
                   </Link>
                 </li>
@@ -609,16 +562,16 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row items-center justify-between">
-            <p className="text-gray-400">&copy; 2024 Architech. Tous droits réservés.</p>
+          <div className="border-t border-black/10 pt-8 flex flex-col md:flex-row items-center justify-between">
+            <p className="text-black/50 font-light">&copy; 2025 Architech. Tous droits réservés.</p>
             <div className="flex space-x-6 mt-4 md:mt-0">
-              <Link href="#" className="text-gray-400 hover:text-white transition-colors">
+              <Link href="#" className="text-black/50 hover:text-black transition-colors font-light">
                 Mentions légales
               </Link>
-              <Link href="#" className="text-gray-400 hover:text-white transition-colors">
+              <Link href="#" className="text-black/50 hover:text-black transition-colors font-light">
                 Confidentialité
               </Link>
-              <Link href="#" className="text-gray-400 hover:text-white transition-colors">
+              <Link href="#" className="text-black/50 hover:text-black transition-colors font-light">
                 Cookies
               </Link>
             </div>

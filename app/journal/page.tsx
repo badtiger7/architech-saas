@@ -255,32 +255,30 @@ export default function JournalPage() {
   }
 
   const columns = [
-    { id: "todo", title: "À faire", color: "bg-gray-100", count: tasks.filter((t) => t.status === "todo").length },
+    { id: "todo", title: "À faire", count: tasks.filter((t) => t.status === "todo").length },
     {
       id: "in-progress",
       title: "En cours",
-      color: "bg-blue-50",
       count: tasks.filter((t) => t.status === "in-progress").length,
     },
     {
       id: "review",
       title: "En révision",
-      color: "bg-yellow-50",
       count: tasks.filter((t) => t.status === "review").length,
     },
-    { id: "done", title: "Terminé", color: "bg-green-50", count: tasks.filter((t) => t.status === "done").length },
+    { id: "done", title: "Terminé", count: tasks.filter((t) => t.status === "done").length },
   ]
 
-  const getPriorityColor = (priority: string) => {
+  const getPriorityBadge = (priority: string) => {
     switch (priority) {
       case "high":
-        return "text-red-600 bg-red-100"
+        return <span className="px-2 py-1 border-2 border-black text-black text-xs font-medium uppercase tracking-wide">Haute</span>
       case "medium":
-        return "text-yellow-600 bg-yellow-100"
+        return <span className="px-2 py-1 border-2 border-black/20 text-black text-xs font-medium uppercase tracking-wide">Moyenne</span>
       case "low":
-        return "text-green-600 bg-green-100"
+        return <span className="px-2 py-1 border-2 border-black/10 text-black/60 text-xs font-medium uppercase tracking-wide">Basse</span>
       default:
-        return "text-gray-600 bg-gray-100"
+        return <span className="px-2 py-1 border-2 border-black/10 text-black/60 text-xs font-medium uppercase tracking-wide">-</span>
     }
   }
 
@@ -514,12 +512,12 @@ export default function JournalPage() {
   // Afficher un loader pendant le chargement
   if (loading && dbTasks.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-white">
         <Navbar />
         <div className="flex items-center justify-center h-screen">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-            <p className="text-gray-600">Chargement des tâches...</p>
+            <div className="animate-spin rounded-full h-12 w-12 border-2 border-t-black border-r-black/20 border-b-black/20 border-l-black/20 mx-auto mb-4"></div>
+            <p className="text-black/60 font-light">Chargement des tâches...</p>
           </div>
         </div>
       </div>
@@ -527,48 +525,63 @@ export default function JournalPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
+      {/* Geometric Background Elements */}
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] border-l-2 border-t-2 border-black/5"></div>
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] border-r-2 border-b-2 border-black/5"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[1px] bg-gradient-to-r from-transparent via-black/5 to-transparent"></div>
+      </div>
+
       <Navbar />
 
-      <main className="container mx-auto px-4 py-8">
+      <main className="relative max-w-7xl mx-auto px-4 md:px-12 lg:px-16 py-8 md:py-12">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 space-y-4 sm:space-y-0">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 md:mb-12 space-y-4 sm:space-y-0 border-b-2 border-black/10 pb-6">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Journal de Chantier</h1>
-            <p className="text-gray-600 mt-1 text-sm sm:text-base">Gestion des tâches et suivi des projets</p>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter mb-2 text-black">
+              JOURNAL
+              <br />
+              DE CHANTIER
+            </h1>
+            <div className="w-16 md:w-24 h-1 bg-black mb-4"></div>
+            <p className="text-base md:text-lg text-black/60 font-light">Gestion des tâches et suivi des projets</p>
           </div>
           <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
             <Dialog open={isNewTaskDialogOpen} onOpenChange={setIsNewTaskDialogOpen}>
               <DialogTrigger asChild>
-                <Button className="w-full sm:w-auto">
+                <Button className="w-full sm:w-auto bg-black text-white hover:bg-black/90 rounded-none border-2 border-black font-medium tracking-wide">
                   <Plus className="h-4 w-4 mr-2" />
                   Nouvelle tâche
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-w-2xl">
+              <DialogContent className="max-w-2xl rounded-none border-2 border-black">
                 <DialogHeader>
-                  <DialogTitle>Créer une nouvelle tâche</DialogTitle>
-                  <DialogDescription>Ajoutez une nouvelle tâche à votre projet</DialogDescription>
+                  <DialogTitle className="font-black tracking-tighter text-black">Créer une nouvelle tâche</DialogTitle>
+                  <div className="w-12 h-1 bg-black mb-4"></div>
+                  <DialogDescription className="text-black/60 font-light">Ajoutez une nouvelle tâche à votre projet</DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4">
                   <div>
-                    <Label htmlFor="taskTitle">Titre de la tâche *</Label>
+                    <Label htmlFor="taskTitle" className="text-sm font-medium text-black uppercase tracking-wide">Titre de la tâche *</Label>
                     <Input 
                       id="taskTitle" 
                       placeholder="Titre de la tâche..." 
                       value={newTaskForm.title}
                       onChange={(e) => setNewTaskForm(prev => ({ ...prev, title: e.target.value }))}
+                      className="rounded-none border-2 border-black/10 focus:border-black transition-all bg-white text-black font-light"
                     />
                   </div>
 
                   <div>
-                    <Label htmlFor="taskDescription">Description</Label>
+                    <Label htmlFor="taskDescription" className="text-sm font-medium text-black uppercase tracking-wide">Description</Label>
                     <Textarea 
                       id="taskDescription" 
                       placeholder="Description détaillée..." 
                       rows={3}
                       value={newTaskForm.description}
                       onChange={(e) => setNewTaskForm(prev => ({ ...prev, description: e.target.value }))}
+                      className="rounded-none border-2 border-black/10 focus:border-black transition-all bg-white text-black font-light"
                     />
                   </div>
 
@@ -579,12 +592,12 @@ export default function JournalPage() {
                         value={newTaskForm.projectId} 
                         onValueChange={(value) => setNewTaskForm(prev => ({ ...prev, projectId: value }))}
                       >
-                        <SelectTrigger>
+                        <SelectTrigger className="rounded-none border-2 border-black/10 focus:border-black">
                           <SelectValue placeholder="Sélectionner un projet" />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="rounded-none border-2 border-black">
                           {projects.map(project => (
-                            <SelectItem key={project.id} value={project.id}>
+                            <SelectItem key={project.id} value={project.id} className="rounded-none hover:bg-black hover:text-white">
                               {project.name}
                             </SelectItem>
                           ))}
@@ -600,13 +613,12 @@ export default function JournalPage() {
                           assigneeUserId: value === "unassigned" ? "" : value 
                         }))}
                       >
-                        <SelectTrigger>
+                        <SelectTrigger className="rounded-none border-2 border-black/10 focus:border-black">
                           <SelectValue placeholder="Non assigné" />
                         </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="unassigned">Non assigné</SelectItem>
-                          {/* TODO: Remplacer par une vraie API users - Pour l'instant on utilise l'ID de test */}
-                          <SelectItem value="user-test">Utilisateur Test</SelectItem>
+                        <SelectContent className="rounded-none border-2 border-black">
+                          <SelectItem value="unassigned" className="rounded-none hover:bg-black hover:text-white">Non assigné</SelectItem>
+                          <SelectItem value="user-test" className="rounded-none hover:bg-black hover:text-white">Utilisateur Test</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -614,44 +626,46 @@ export default function JournalPage() {
 
                   <div className="grid grid-cols-3 gap-4">
                     <div>
-                      <Label htmlFor="taskPriority">Priorité</Label>
+                      <Label htmlFor="taskPriority" className="text-sm font-medium text-black uppercase tracking-wide">Priorité</Label>
                       <Select 
                         value={newTaskForm.priority} 
                         onValueChange={(value: "low" | "medium" | "high") => setNewTaskForm(prev => ({ ...prev, priority: value }))}
                       >
-                        <SelectTrigger>
+                        <SelectTrigger className="rounded-none border-2 border-black/10 focus:border-black">
                           <SelectValue placeholder="Priorité" />
                         </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="high">Haute</SelectItem>
-                          <SelectItem value="medium">Moyenne</SelectItem>
-                          <SelectItem value="low">Basse</SelectItem>
+                        <SelectContent className="rounded-none border-2 border-black">
+                          <SelectItem value="high" className="rounded-none hover:bg-black hover:text-white">Haute</SelectItem>
+                          <SelectItem value="medium" className="rounded-none hover:bg-black hover:text-white">Moyenne</SelectItem>
+                          <SelectItem value="low" className="rounded-none hover:bg-black hover:text-white">Basse</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                     <div>
-                      <Label htmlFor="taskDueDate">Échéance</Label>
+                      <Label htmlFor="taskDueDate" className="text-sm font-medium text-black uppercase tracking-wide">Échéance</Label>
                       <Input 
                         id="taskDueDate" 
                         type="date"
                         value={newTaskForm.dueDate}
                         onChange={(e) => setNewTaskForm(prev => ({ ...prev, dueDate: e.target.value }))}
+                        className="rounded-none border-2 border-black/10 focus:border-black transition-all bg-white text-black font-light"
                       />
                     </div>
                     <div>
-                      <Label htmlFor="taskHours">Heures estimées</Label>
+                      <Label htmlFor="taskHours" className="text-sm font-medium text-black uppercase tracking-wide">Heures estimées</Label>
                       <Input 
                         id="taskHours" 
                         type="number" 
                         placeholder="8"
                         value={newTaskForm.estimatedHours}
                         onChange={(e) => setNewTaskForm(prev => ({ ...prev, estimatedHours: parseInt(e.target.value) || 0 }))}
+                        className="rounded-none border-2 border-black/10 focus:border-black transition-all bg-white text-black font-light"
                       />
                     </div>
                   </div>
 
                   <Button 
-                    className="w-full" 
+                    className="w-full bg-black text-white hover:bg-black/90 rounded-none border-2 border-black font-medium tracking-wide" 
                     onClick={handleCreateTask}
                     disabled={!newTaskForm.title.trim() || !newTaskForm.projectId}
                   >
@@ -662,7 +676,7 @@ export default function JournalPage() {
             </Dialog>
             <Button 
               variant="outline" 
-              className="w-full sm:w-auto bg-transparent"
+              className="w-full sm:w-auto rounded-none border-2 border-black/20 hover:bg-black hover:text-white hover:border-black transition-all font-medium tracking-wide"
               onClick={handleExport}
             >
               <Download className="h-4 w-4 mr-2" />
@@ -691,32 +705,35 @@ export default function JournalPage() {
           >
             {/* Modal content */}
             <div 
-              className="bg-white rounded-lg shadow-lg p-6 max-w-lg w-full mx-4"
+              className="bg-white border-2 border-black p-6 md:p-8 max-w-lg w-full mx-4"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="mb-4">
-                <h2 className="text-lg font-semibold">Modifier la tâche</h2>
-                <p className="text-sm text-gray-500">Modifiez les informations de la tâche</p>
+              <div className="mb-6">
+                <h2 className="text-2xl md:text-3xl font-black tracking-tighter text-black mb-2">Modifier la tâche</h2>
+                <div className="w-12 h-1 bg-black mb-4"></div>
+                <p className="text-sm text-black/60 font-light">Modifiez les informations de la tâche</p>
               </div>
             <div className="space-y-4 max-h-[70vh] overflow-y-auto">
               <div>
-                <Label htmlFor="editTaskTitle">Titre de la tâche *</Label>
+                <Label htmlFor="editTaskTitle" className="text-sm font-medium text-black uppercase tracking-wide">Titre de la tâche *</Label>
                 <Input 
                   id="editTaskTitle" 
                   placeholder="Titre de la tâche..." 
                   value={editTaskForm.title}
                   onChange={(e) => setEditTaskForm(prev => ({ ...prev, title: e.target.value }))}
+                  className="rounded-none border-2 border-black/10 focus:border-black transition-all bg-white text-black font-light"
                 />
               </div>
 
               <div>
-                <Label htmlFor="editTaskDescription">Description</Label>
+                <Label htmlFor="editTaskDescription" className="text-sm font-medium text-black uppercase tracking-wide">Description</Label>
                 <Textarea 
                   id="editTaskDescription" 
                   placeholder="Description détaillée..." 
                   rows={3}
                   value={editTaskForm.description}
                   onChange={(e) => setEditTaskForm(prev => ({ ...prev, description: e.target.value }))}
+                  className="rounded-none border-2 border-black/10 focus:border-black transition-all bg-white text-black font-light"
                 />
               </div>
 
@@ -727,12 +744,12 @@ export default function JournalPage() {
                     value={editTaskForm.projectId} 
                     onValueChange={(value) => setEditTaskForm(prev => ({ ...prev, projectId: value }))}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="rounded-none border-2 border-black/10 focus:border-black">
                       <SelectValue placeholder="Sélectionner un projet" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="rounded-none border-2 border-black">
                       {projects.map(project => (
-                        <SelectItem key={project.id} value={project.id}>
+                        <SelectItem key={project.id} value={project.id} className="rounded-none hover:bg-black hover:text-white">
                           {project.name}
                         </SelectItem>
                       ))}
@@ -740,7 +757,7 @@ export default function JournalPage() {
                   </Select>
                 </div>
                 <div>
-                  <Label htmlFor="editTaskAssignee">Assigné à</Label>
+                  <Label htmlFor="editTaskAssignee" className="text-sm font-medium text-black uppercase tracking-wide">Assigné à</Label>
                   <Select 
                     value={editTaskForm.assigneeUserId || "unassigned"} 
                     onValueChange={(value) => setEditTaskForm(prev => ({ 
@@ -748,12 +765,12 @@ export default function JournalPage() {
                       assigneeUserId: value === "unassigned" ? "" : value 
                     }))}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="rounded-none border-2 border-black/10 focus:border-black">
                       <SelectValue placeholder="Non assigné" />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="unassigned">Non assigné</SelectItem>
-                      <SelectItem value="user-test">Utilisateur Test</SelectItem>
+                    <SelectContent className="rounded-none border-2 border-black">
+                      <SelectItem value="unassigned" className="rounded-none hover:bg-black hover:text-white">Non assigné</SelectItem>
+                      <SelectItem value="user-test" className="rounded-none hover:bg-black hover:text-white">Utilisateur Test</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -761,69 +778,73 @@ export default function JournalPage() {
 
               <div className="grid grid-cols-4 gap-4">
                 <div>
-                  <Label htmlFor="editTaskStatus">Statut</Label>
+                  <Label htmlFor="editTaskStatus" className="text-sm font-medium text-black uppercase tracking-wide">Statut</Label>
                   <Select 
                     value={editTaskForm.status} 
                     onValueChange={(value: "todo" | "in-progress" | "review" | "done") => setEditTaskForm(prev => ({ ...prev, status: value }))}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="rounded-none border-2 border-black/10 focus:border-black">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="todo">À faire</SelectItem>
-                      <SelectItem value="in-progress">En cours</SelectItem>
-                      <SelectItem value="review">En révision</SelectItem>
-                      <SelectItem value="done">Terminé</SelectItem>
+                    <SelectContent className="rounded-none border-2 border-black">
+                      <SelectItem value="todo" className="rounded-none hover:bg-black hover:text-white">À faire</SelectItem>
+                      <SelectItem value="in-progress" className="rounded-none hover:bg-black hover:text-white">En cours</SelectItem>
+                      <SelectItem value="review" className="rounded-none hover:bg-black hover:text-white">En révision</SelectItem>
+                      <SelectItem value="done" className="rounded-none hover:bg-black hover:text-white">Terminé</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div>
-                  <Label htmlFor="editTaskPriority">Priorité</Label>
+                  <Label htmlFor="editTaskPriority" className="text-sm font-medium text-black uppercase tracking-wide">Priorité</Label>
                   <Select 
                     value={editTaskForm.priority} 
                     onValueChange={(value: "low" | "medium" | "high") => setEditTaskForm(prev => ({ ...prev, priority: value }))}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="rounded-none border-2 border-black/10 focus:border-black">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="high">Haute</SelectItem>
-                      <SelectItem value="medium">Moyenne</SelectItem>
-                      <SelectItem value="low">Basse</SelectItem>
+                    <SelectContent className="rounded-none border-2 border-black">
+                      <SelectItem value="high" className="rounded-none hover:bg-black hover:text-white">Haute</SelectItem>
+                      <SelectItem value="medium" className="rounded-none hover:bg-black hover:text-white">Moyenne</SelectItem>
+                      <SelectItem value="low" className="rounded-none hover:bg-black hover:text-white">Basse</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div>
-                  <Label htmlFor="editTaskDueDate">Échéance</Label>
+                  <Label htmlFor="editTaskDueDate" className="text-sm font-medium text-black uppercase tracking-wide">Échéance</Label>
                   <Input 
                     id="editTaskDueDate" 
                     type="date"
                     value={editTaskForm.dueDate}
                     onChange={(e) => setEditTaskForm(prev => ({ ...prev, dueDate: e.target.value }))}
+                    className="rounded-none border-2 border-black/10 focus:border-black transition-all bg-white text-black font-light"
                   />
                 </div>
                 <div>
-                  <Label htmlFor="editTaskHours">Heures estimées</Label>
+                  <Label htmlFor="editTaskHours" className="text-sm font-medium text-black uppercase tracking-wide">Heures estimées</Label>
                   <Input 
                     id="editTaskHours" 
                     type="number" 
                     placeholder="8"
                     value={editTaskForm.estimatedHours}
                     onChange={(e) => setEditTaskForm(prev => ({ ...prev, estimatedHours: parseInt(e.target.value) || 0 }))}
+                    className="rounded-none border-2 border-black/10 focus:border-black transition-all bg-white text-black font-light"
                   />
                 </div>
               </div>
 
-              <div className="flex justify-end space-x-2 pt-4">
+              <div className="flex justify-end space-x-3 pt-4 border-t border-black/10">
                 <Button 
                   variant="outline" 
                   onClick={closeEditDialog}
+                  className="rounded-none border-2 border-black/20 hover:bg-black hover:text-white hover:border-black transition-all"
                 >
                   Annuler
                 </Button>
                 <Button 
                   onClick={handleSaveTaskEdit}
                   disabled={!editTaskForm.title.trim() || !editTaskForm.projectId}
+                  className="bg-black text-white hover:bg-black/90 rounded-none border-2 border-black font-medium tracking-wide disabled:opacity-50"
                 >
                   Sauvegarder
                 </Button>
@@ -834,28 +855,27 @@ export default function JournalPage() {
         )}
 
         {/* Filters */}
-        <div className="mb-6 p-4 bg-white rounded-lg border space-y-4">
+        <div className="mb-8 md:mb-12 p-6 border-2 border-black/10 space-y-4">
           <div className="flex flex-col lg:flex-row lg:items-center justify-between space-y-4 lg:space-y-0">
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-black/40 h-4 w-4" />
                 <Input 
                   placeholder="Rechercher des tâches..." 
-                  className="pl-10 w-full sm:w-64"
+                  className="pl-10 w-full sm:w-64 rounded-none border-2 border-black/10 focus:border-black transition-all bg-white text-black font-light"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
 
               <Select value={selectedProject} onValueChange={setSelectedProject}>
-                <SelectTrigger className="w-full sm:w-48">
+                <SelectTrigger className="w-full sm:w-48 rounded-none border-2 border-black/10 focus:border-black">
                   <SelectValue placeholder="Tous les projets" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Tous les projets</SelectItem>
-                  {/* Générer dynamiquement la liste des projets uniques depuis les tâches */}
+                <SelectContent className="rounded-none border-2 border-black">
+                  <SelectItem value="all" className="rounded-none hover:bg-black hover:text-white">Tous les projets</SelectItem>
                   {Array.from(new Set(tasks.map(t => t.project))).sort().map(project => (
-                    <SelectItem key={project} value={project}>
+                    <SelectItem key={project} value={project} className="rounded-none hover:bg-black hover:text-white">
                       {project}
                     </SelectItem>
                   ))}
@@ -863,14 +883,13 @@ export default function JournalPage() {
               </Select>
 
               <Select value={selectedAssignee} onValueChange={setSelectedAssignee}>
-                <SelectTrigger className="w-full sm:w-48">
+                <SelectTrigger className="w-full sm:w-48 rounded-none border-2 border-black/10 focus:border-black">
                   <SelectValue placeholder="Toutes les personnes" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Toutes les personnes</SelectItem>
-                  {/* Générer dynamiquement la liste des assignés uniques depuis les tâches */}
+                <SelectContent className="rounded-none border-2 border-black">
+                  <SelectItem value="all" className="rounded-none hover:bg-black hover:text-white">Toutes les personnes</SelectItem>
                   {Array.from(new Set(tasks.map(t => t.assignee.name).filter(name => name !== "Non assigné"))).sort().map(assignee => (
-                    <SelectItem key={assignee} value={assignee}>
+                    <SelectItem key={assignee} value={assignee} className="rounded-none hover:bg-black hover:text-white">
                       {assignee}
                     </SelectItem>
                   ))}
@@ -878,7 +897,7 @@ export default function JournalPage() {
               </Select>
             </div>
 
-            <div className="flex items-center space-x-2 text-sm text-gray-600">
+            <div className="flex items-center space-x-2 text-sm text-black/60 font-light">
               <span>{filteredTasks.length} tâches</span>
               <span>•</span>
               <span>{filteredTasks.filter((t) => t.status === "done").length} terminées</span>
@@ -887,45 +906,42 @@ export default function JournalPage() {
         </div>
 
         {/* Kanban Board */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-black/10 mb-8 md:mb-12">
           {columns.map((column) => (
-            <div key={column.id} className="flex flex-col">
+            <div key={column.id} className="flex flex-col bg-white">
               {/* Column Header */}
-              <div className={`${column.color} rounded-t-lg p-3 sm:p-4 border-b`}>
+              <div className="p-4 md:p-6 border-b-2 border-black/10 bg-white">
                 <div className="flex items-center justify-between">
-                  <h3 className="font-semibold text-gray-900 text-sm sm:text-base">{column.title}</h3>
-                  <Badge variant="secondary" className="text-xs">
+                  <h3 className="font-black text-black text-base md:text-lg tracking-tighter uppercase">{column.title}</h3>
+                  <span className="px-2 py-1 border-2 border-black/20 text-black text-xs font-medium">
                     {column.count}
-                  </Badge>
+                  </span>
                 </div>
               </div>
 
               {/* Column Content */}
               <div
-                className={`${column.color} rounded-b-lg p-3 sm:p-4 min-h-[400px] sm:min-h-[600px] space-y-3`}
+                className="p-3 sm:p-4 md:p-6 min-h-[400px] sm:min-h-[600px] space-y-3 bg-white"
                 onDragOver={handleDragOver}
                 onDrop={(e) => handleDrop(e, column.id)}
               >
                 {getTasksByStatus(column.id).map((task) => (
-                  <Card
+                  <div
                     key={task.id}
-                    className="bg-white hover:shadow-md transition-all cursor-pointer group border-l-4 border-l-transparent hover:border-l-blue-500"
+                    className="bg-white border-2 border-black/10 hover:border-black/20 transition-all cursor-pointer group"
                     draggable
                     onDragStart={(e) => handleDragStart(e, task.id)}
                     onClick={(e) => handleTaskClick(task.id, e)}
                   >
-                    <CardContent className="p-3 sm:p-4">
+                    <div className="p-4 md:p-5">
                       {/* Task Header */}
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex items-center space-x-2">
-                          <Badge className={`text-xs ${getPriorityColor(task.priority)}`}>
-                            {getPriorityIcon(task.priority)}
-                            <span className="ml-1 capitalize">{task.priority}</span>
-                          </Badge>
+                          {getPriorityBadge(task.priority)}
                           {isOverdue(task.dueDate) && task.status !== "done" && (
-                            <Badge variant="destructive" className="text-xs">
+                            <span className="px-2 py-1 border-2 border-black text-black text-xs font-medium uppercase tracking-wide">
                               En retard
-                            </Badge>
+                            </span>
                           )}
                         </div>
                         <div className="flex items-center space-x-1">
@@ -935,26 +951,32 @@ export default function JournalPage() {
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                className="opacity-0 group-hover:opacity-100 transition-opacity"
+                                className="opacity-0 group-hover:opacity-100 transition-opacity rounded-none border-2 border-transparent hover:border-black/20 h-8 w-8 p-0"
                                 onClick={(e) => e.stopPropagation()}
                               >
-                                <MoreVertical className="h-4 w-4" />
+                                <MoreVertical className="h-4 w-4 text-black/60" />
                               </Button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem onClick={(e) => {
-                                e.stopPropagation()
-                                router.push(`/journal/${task.id}`)
-                              }}>
+                            <DropdownMenuContent align="end" className="rounded-none border-2 border-black">
+                              <DropdownMenuItem 
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  router.push(`/journal/${task.id}`)
+                                }}
+                                className="rounded-none hover:bg-black hover:text-white"
+                              >
                                 <Eye className="mr-2 h-4 w-4" />
                                 Voir détails
                               </DropdownMenuItem>
-                              <DropdownMenuItem onClick={(e) => handleEditTask(task.id, e)}>
+                              <DropdownMenuItem 
+                                onClick={(e) => handleEditTask(task.id, e)}
+                                className="rounded-none hover:bg-black hover:text-white"
+                              >
                                 <Edit className="mr-2 h-4 w-4" />
                                 Modifier
                               </DropdownMenuItem>
                               <DropdownMenuItem 
-                                className="text-red-600"
+                                className="text-black rounded-none hover:bg-black hover:text-white"
                                 onClick={(e) => handleDeleteTask(task.id, e)}
                               >
                                 <Trash2 className="mr-2 h-4 w-4" />
@@ -966,27 +988,27 @@ export default function JournalPage() {
                       </div>
 
                       {/* Task Title & Description */}
-                      <h4 className="font-medium text-gray-900 mb-2 line-clamp-2">{task.title}</h4>
-                      <p className="text-sm text-gray-600 mb-3 line-clamp-2">{task.description}</p>
+                      <h4 className="font-black text-black mb-2 line-clamp-2 text-base">{task.title}</h4>
+                      <p className="text-sm text-black/60 mb-3 line-clamp-2 font-light">{task.description}</p>
 
                       {/* Tags */}
                       {task.tags.length > 0 && (
-                        <div className="flex flex-wrap gap-1 mb-3">
+                        <div className="flex flex-wrap gap-2 mb-3">
                           {task.tags.map((tag, index) => (
-                            <Badge key={index} variant="outline" className="text-xs">
+                            <span key={index} className="px-2 py-1 border-2 border-black/10 text-black/60 text-xs font-medium uppercase tracking-wide">
                               {tag}
-                            </Badge>
+                            </span>
                           ))}
                         </div>
                       )}
 
                       {/* Project */}
-                      <div className="text-xs text-gray-500 mb-3">
+                      <div className="text-xs text-black/50 mb-3 font-light">
                         <span className="font-medium">{task.project}</span>
                       </div>
 
                       {/* Task Meta */}
-                      <div className="flex items-center justify-between text-xs text-gray-500 mb-3">
+                      <div className="flex items-center justify-between text-xs text-black/50 mb-3 font-light">
                         <div className="flex items-center space-x-3">
                           {task.comments > 0 && (
                             <div className="flex items-center space-x-1">
@@ -1009,17 +1031,15 @@ export default function JournalPage() {
 
                       {/* Due Date */}
                       <div className="flex items-center justify-between">
-                        <div
-                          className={`text-xs ${isOverdue(task.dueDate) && task.status !== "done" ? "text-red-600 font-medium" : "text-gray-500"}`}
-                        >
+                        <div className={`text-xs font-light ${isOverdue(task.dueDate) && task.status !== "done" ? "text-black font-medium" : "text-black/60"}`}>
                           <Calendar className="h-3 w-3 inline mr-1" />
                           {new Date(task.dueDate).toLocaleDateString("fr-FR")}
                         </div>
 
                         {/* Assignee */}
                         <div className="flex items-center space-x-2">
-                          <Avatar className="w-6 h-6">
-                            <AvatarFallback className="text-xs bg-blue-100 text-blue-700">
+                          <Avatar className="w-6 h-6 border-2 border-black/10 rounded-none">
+                            <AvatarFallback className="text-xs bg-black text-white rounded-none font-black">
                               {task.assignee.avatar}
                             </AvatarFallback>
                           </Avatar>
@@ -1028,21 +1048,21 @@ export default function JournalPage() {
 
                       {/* Completion indicator for done tasks */}
                       {task.status === "done" && task.completedAt && (
-                        <div className="mt-3 pt-3 border-t border-green-200">
-                          <div className="flex items-center space-x-2 text-xs text-green-600">
+                        <div className="mt-3 pt-3 border-t border-black/10">
+                          <div className="flex items-center space-x-2 text-xs text-black/60 font-light">
                             <CheckCircle className="h-3 w-3" />
                             <span>Terminé le {new Date(task.completedAt).toLocaleDateString("fr-FR")}</span>
                           </div>
                         </div>
                       )}
-                    </CardContent>
-                  </Card>
+                    </div>
+                  </div>
                 ))}
 
                 {/* Add Task Button */}
                 <Button
                   variant="ghost"
-                  className="w-full border-2 border-dashed border-gray-300 bg-white/50 hover:bg-white/80 h-12"
+                  className="w-full border-2 border-dashed border-black/20 hover:border-black hover:bg-black hover:text-white transition-all h-12 rounded-none font-medium tracking-wide"
                   onClick={() => openTaskDialog(column.id)}
                 >
                   <Plus className="h-4 w-4 mr-2" />
@@ -1054,58 +1074,50 @@ export default function JournalPage() {
         </div>
 
         {/* Statistics */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Tâches totales</CardTitle>
-              <FileText className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{tasks.length}</div>
-              <p className="text-xs text-muted-foreground">
-                {tasks.filter((t) => t.status === "done").length} terminées
-              </p>
-            </CardContent>
-          </Card>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-black/10">
+          <div className="bg-white p-6 md:p-8 border-2 border-transparent hover:border-black/10 transition-all group">
+            <div className="flex items-center justify-between mb-4">
+              <span className="text-xs md:text-sm font-medium text-black/60 uppercase tracking-wide">Tâches totales</span>
+              <FileText className="h-4 w-4 md:h-5 md:w-5 text-black/40 group-hover:text-black transition-colors" />
+            </div>
+            <div className="text-3xl md:text-4xl font-black text-black tracking-tighter">{tasks.length}</div>
+            <p className="text-xs text-black/50 font-light mt-2">
+              {tasks.filter((t) => t.status === "done").length} terminées
+            </p>
+          </div>
 
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">En cours</CardTitle>
-              <Clock className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{tasks.filter((t) => t.status === "in-progress").length}</div>
-              <p className="text-xs text-muted-foreground">
-                {tasks.filter((t) => t.status === "review").length} en révision
-              </p>
-            </CardContent>
-          </Card>
+          <div className="bg-white p-6 md:p-8 border-2 border-transparent hover:border-black/10 transition-all group">
+            <div className="flex items-center justify-between mb-4">
+              <span className="text-xs md:text-sm font-medium text-black/60 uppercase tracking-wide">En cours</span>
+              <Clock className="h-4 w-4 md:h-5 md:w-5 text-black/40 group-hover:text-black transition-colors" />
+            </div>
+            <div className="text-3xl md:text-4xl font-black text-black tracking-tighter">{tasks.filter((t) => t.status === "in-progress").length}</div>
+            <p className="text-xs text-black/50 font-light mt-2">
+              {tasks.filter((t) => t.status === "review").length} en révision
+            </p>
+          </div>
 
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">En retard</CardTitle>
-              <AlertCircle className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-red-600">
-                {tasks.filter((t) => isOverdue(t.dueDate) && t.status !== "done").length}
-              </div>
-              <p className="text-xs text-muted-foreground">Nécessitent attention</p>
-            </CardContent>
-          </Card>
+          <div className="bg-white p-6 md:p-8 border-2 border-transparent hover:border-black/10 transition-all group">
+            <div className="flex items-center justify-between mb-4">
+              <span className="text-xs md:text-sm font-medium text-black/60 uppercase tracking-wide">En retard</span>
+              <AlertCircle className="h-4 w-4 md:h-5 md:w-5 text-black/40 group-hover:text-black transition-colors" />
+            </div>
+            <div className="text-3xl md:text-4xl font-black text-black tracking-tighter">
+              {tasks.filter((t) => isOverdue(t.dueDate) && t.status !== "done").length}
+            </div>
+            <p className="text-xs text-black/50 font-light mt-2">Nécessitent attention</p>
+          </div>
 
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Heures estimées</CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {tasks.filter((t) => t.status !== "done").reduce((acc, task) => acc + task.estimatedHours, 0)}h
-              </div>
-              <p className="text-xs text-muted-foreground">Travail restant</p>
-            </CardContent>
-          </Card>
+          <div className="bg-white p-6 md:p-8 border-2 border-transparent hover:border-black/10 transition-all group">
+            <div className="flex items-center justify-between mb-4">
+              <span className="text-xs md:text-sm font-medium text-black/60 uppercase tracking-wide">Heures estimées</span>
+              <Users className="h-4 w-4 md:h-5 md:w-5 text-black/40 group-hover:text-black transition-colors" />
+            </div>
+            <div className="text-3xl md:text-4xl font-black text-black tracking-tighter">
+              {tasks.filter((t) => t.status !== "done").reduce((acc, task) => acc + task.estimatedHours, 0)}h
+            </div>
+            <p className="text-xs text-black/50 font-light mt-2">Travail restant</p>
+          </div>
         </div>
       </main>
     </div>
