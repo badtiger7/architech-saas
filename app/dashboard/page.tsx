@@ -328,19 +328,19 @@ export default function DashboardPage() {
                       {/* Project Details Grid */}
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5 mb-5 pb-5 border-b border-sand-200">
                         <div>
-                          <p className="text-xs text-sand-600 font-light uppercase tracking-wide mb-1">Phase actuelle</p>
+                          <p className="text-xs text-black/60 font-light uppercase tracking-wide mb-1">Phase actuelle</p>
                           <p className="text-sm font-medium text-black">{project.currentPhase}</p>
                         </div>
                         <div>
-                          <p className="text-xs text-sand-600 font-light uppercase tracking-wide mb-1">Date de début</p>
+                          <p className="text-xs text-black/60 font-light uppercase tracking-wide mb-1">Date de début</p>
                           <p className="text-sm font-medium text-black">{project.startDate}</p>
                         </div>
                         <div>
-                          <p className="text-xs text-sand-600 font-light uppercase tracking-wide mb-1">Commencé il y a</p>      
+                          <p className="text-xs text-black/60 font-light uppercase tracking-wide mb-1">Commencé il y a</p>      
                           <p className="text-sm font-medium text-black">{calculateProjectDuration(project.startDate)}</p>
                         </div>
                         <div>
-                          <p className="text-xs text-sand-600 font-light uppercase tracking-wide mb-1">Équipe</p>
+                          <p className="text-xs text-black/60 font-light uppercase tracking-wide mb-1">Équipe</p>
                           <div className="flex flex-wrap gap-2 mt-1">
                             {project.team.map((member, index) => (
                               <div 
@@ -362,7 +362,7 @@ export default function DashboardPage() {
                       {/* Progress */}
                       <div>
                         <div className="flex items-center justify-between mb-2">
-                          <span className="text-xs text-sand-600 font-light uppercase tracking-wide">Progression</span>
+                          <span className="text-xs text-black/60 font-light uppercase tracking-wide">Progression</span>
                           <span className="text-sm font-black text-black">{project.progress}%</span>
                         </div>
                         <div className="h-1.5 bg-sand-100 w-full rounded-full overflow-hidden">

@@ -523,63 +523,63 @@ export default function TimelinePage() {
                           router.push(url)
                         }}
                       >
-                        <div className="flex items-start space-x-6">
+                        <div className="flex items-start space-x-4">
                           {/* Timeline connector */}
                           <div className="flex flex-col items-center flex-shrink-0">
-                            <div className={`w-4 h-4 border-2 ${
-                              phase.status === 'completed' ? 'bg-black border-black' :
-                              phase.status === 'in-progress' ? 'border-black bg-black' :
-                              phase.status === 'blocked' ? 'border-black bg-white' :
-                              'border-black/20 bg-white'
+                            <div className={`w-3 h-3 border-2 rounded-full ${
+                              phase.status === 'completed' ? 'bg-sand-500 border-sand-500' :
+                              phase.status === 'in-progress' ? 'border-sand-500 bg-sand-500' :
+                              phase.status === 'blocked' ? 'border-sand-300 bg-white' :
+                              'border-sand-200 bg-white'
                             }`}></div>
                             {index < phases.length - 1 && (
-                              <div className="w-0.5 h-20 bg-black/10 mt-2"></div>
+                              <div className="w-0.5 h-16 bg-sand-200 mt-2"></div>
                             )}
                           </div>
 
                           {/* Content */}
                           <div className="flex-1 min-w-0">
-                            <div className="flex items-center justify-between mb-4">
-                              <h3 className="text-xl md:text-2xl font-black tracking-tighter text-black">{phase.name}</h3>
+                            <div className="flex items-center justify-between mb-3">
+                              <h3 className="text-lg md:text-xl font-black tracking-tighter text-black">{phase.name}</h3>
                               <div className="flex items-center space-x-2">
                                 {getStatusBadge(phase.status)}
-                                <ChevronRight className="h-5 w-5 text-black/40" />
+                                <ChevronRight className="h-4 w-4 text-sand-400" />
                               </div>
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6 pb-6 border-b border-black/10">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4 pb-4 border-b border-sand-200">
                               <div>
-                                <p className="text-xs text-black/50 font-light uppercase tracking-wide mb-1">Progression</p>
+                                <p className="text-xs text-sand-600 font-light uppercase tracking-wide mb-1">Progression</p>
                                 <div className="flex items-center space-x-2">
-                                  <div className="flex-1 h-1 bg-black/10">
-                                    <div className="h-full bg-black" style={{ width: `${phase.progressRatio}%` }}></div>
+                                  <div className="flex-1 h-1 bg-sand-100 rounded-full">
+                                    <div className="h-full bg-sand-500 rounded-full" style={{ width: `${phase.progressRatio}%` }}></div>
                                   </div>
-                                  <span className="text-sm font-black text-black">{phase.progressRatio}%</span>
+                                  <span className="text-xs font-black text-black">{phase.progressRatio}%</span>
                                 </div>
                               </div>
                               <div>
-                                <p className="text-xs text-black/50 font-light uppercase tracking-wide mb-1">Début</p>
+                                <p className="text-xs text-sand-600 font-light uppercase tracking-wide mb-1">Début</p>
                                 <p className="text-sm font-medium text-black">
                                   {formatDateForDisplay(phase.startDate)}
                                 </p>
                               </div>
                               <div>
-                                <p className="text-xs text-black/50 font-light uppercase tracking-wide mb-1">Ordre</p>
+                                <p className="text-xs text-sand-600 font-light uppercase tracking-wide mb-1">Ordre</p>
                                 <p className="text-sm font-medium text-black">Phase {phase.orderIndex + 1}</p>
                               </div>
                             </div>
 
-                            <div className="flex items-center space-x-6 text-sm text-black/60 font-light">
-                              <div className="flex items-center space-x-2">
-                                <FileText className="h-4 w-4" />
+                            <div className="flex items-center space-x-4 text-xs text-sand-600 font-light">
+                              <div className="flex items-center space-x-1.5">
+                                <FileText className="h-3.5 w-3.5" />
                                 <span>0 documents</span>
                               </div>
-                              <div className="flex items-center space-x-2">
-                                <Users className="h-4 w-4" />
+                              <div className="flex items-center space-x-1.5">
+                                <Users className="h-3.5 w-3.5" />
                                 <span>0 collaborateurs</span>
                               </div>
-                              <div className="flex items-center space-x-2">
-                                <MessageSquare className="h-4 w-4" />
+                              <div className="flex items-center space-x-1.5">
+                                <MessageSquare className="h-3.5 w-3.5" />
                                 <span>0 commentaires</span>
                               </div>
                             </div>
@@ -593,25 +593,25 @@ export default function TimelinePage() {
             </div>
 
             {/* Sidebar */}
-            <div className="bg-white p-6 md:p-8 lg:p-12 space-y-8">
+            <div className="bg-white p-5 md:p-6 space-y-6">
               {/* Project Info */}
               {currentProject && (
                 <div>
-                  <h3 className="text-xl md:text-2xl font-black tracking-tighter text-black mb-4">Informations Projet</h3>
-                  <div className="w-12 md:w-16 h-1 bg-black mb-6"></div>
-                  <div className="space-y-6">
+                  <h3 className="text-base md:text-lg font-black tracking-tighter text-black mb-2">Informations Projet</h3>
+                  <div className="w-12 h-0.5 bg-sand-500 mb-4"></div>
+                  <div className="space-y-4">
                     <div>
-                      <p className="text-xs text-black/50 font-light uppercase tracking-wide mb-1">Client</p>
-                      <p className="font-medium text-black">{currentProject.clientName}</p>
+                      <p className="text-xs text-sand-600 font-light uppercase tracking-wide mb-1">Client</p>
+                      <p className="text-sm font-medium text-black">{currentProject.clientName}</p>
                     </div>
                     <div>
-                      <p className="text-xs text-black/50 font-light uppercase tracking-wide mb-1">Statut</p>
-                      <div className="px-3 py-1 border-2 border-black/20 text-black text-xs font-medium uppercase tracking-wide inline-block">
+                      <p className="text-xs text-sand-600 font-light uppercase tracking-wide mb-1">Statut</p>
+                      <div className="px-2.5 py-1 border border-sand-200 bg-sand-50 text-sand-700 text-xs font-medium uppercase tracking-wide inline-block rounded-md">
                         {currentProject.status}
                       </div>
                     </div>
                     <div>
-                      <p className="text-xs text-black/50 font-light uppercase tracking-wide mb-1">Créé le</p>
+                      <p className="text-xs text-sand-600 font-light uppercase tracking-wide mb-1">Créé le</p>
                       <p className="text-sm font-medium text-black">
                         {new Date(currentProject.createdAt).toLocaleDateString('fr-FR')}
                       </p>
@@ -622,18 +622,18 @@ export default function TimelinePage() {
 
               {/* Quick Actions */}
               <div>
-                <h3 className="text-xl md:text-2xl font-black tracking-tighter text-black mb-4">Actions Rapides</h3>
-                <div className="w-12 md:w-16 h-1 bg-black mb-6"></div>
-                <div className="space-y-3">
-                  <Button variant="outline" className="w-full justify-start rounded-lg border-2 border-black/20 hover:bg-black hover:text-white hover:border-black transition-all">
+                <h3 className="text-base md:text-lg font-black tracking-tighter text-black mb-2">Actions Rapides</h3>
+                <div className="w-12 h-0.5 bg-sand-500 mb-4"></div>
+                <div className="space-y-2">
+                  <Button variant="outline" className="w-full justify-start rounded-lg border-2 border-sand-200 hover:bg-sand-500 hover:text-white hover:border-sand-500 transition-all text-sm h-9">
                     <FileText className="h-4 w-4 mr-2" />
                     Ajouter un document
                   </Button>
-                  <Button variant="outline" className="w-full justify-start rounded-lg border-2 border-black/20 hover:bg-black hover:text-white hover:border-black transition-all">
+                  <Button variant="outline" className="w-full justify-start rounded-lg border-2 border-sand-200 hover:bg-sand-500 hover:text-white hover:border-sand-500 transition-all text-sm h-9">
                     <Users className="h-4 w-4 mr-2" />
                     Inviter un collaborateur
                   </Button>
-                  <Button variant="outline" className="w-full justify-start rounded-lg border-2 border-black/20 hover:bg-black hover:text-white hover:border-black transition-all">
+                  <Button variant="outline" className="w-full justify-start rounded-lg border-2 border-sand-200 hover:bg-sand-500 hover:text-white hover:border-sand-500 transition-all text-sm h-9">
                     <Calendar className="h-4 w-4 mr-2" />
                     Planifier une réunion
                   </Button>

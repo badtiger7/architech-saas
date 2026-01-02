@@ -156,20 +156,20 @@ export default function ArchivePage() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "En cours":
-        return <span className="px-3 py-1.5 bg-black text-white text-xs font-medium uppercase tracking-wide rounded-md">En cours</span>
+        return <span className="px-2.5 py-1 bg-sand-500 text-white text-xs font-medium uppercase tracking-wide rounded-md">En cours</span>
       case "Terminé":
-        return <span className="px-3 py-1.5 border border-black/10 bg-black/5 text-black text-xs font-medium uppercase tracking-wide rounded-md">Terminé</span>
+        return <span className="px-2.5 py-1 border border-sand-200 bg-sand-50 text-sand-700 text-xs font-medium uppercase tracking-wide rounded-md">Terminé</span>
       case "En attente":
-        return <span className="px-3 py-1.5 border border-black/10 bg-black/5 text-black/60 text-xs font-medium uppercase tracking-wide rounded-md">En attente</span>
+        return <span className="px-2.5 py-1 border border-sand-200 bg-sand-50 text-sand-600 text-xs font-medium uppercase tracking-wide rounded-md">En attente</span>
       case "Suspendu":
-        return <span className="px-3 py-1.5 border border-black text-black text-xs font-medium uppercase tracking-wide rounded-md">Suspendu</span>
+        return <span className="px-2.5 py-1 border border-sand-300 bg-sand-100 text-sand-800 text-xs font-medium uppercase tracking-wide rounded-md">Suspendu</span>
       default:
-        return <span className="px-3 py-1.5 border border-black/10 bg-black/5 text-black/60 text-xs font-medium uppercase tracking-wide rounded-md">{status}</span>
+        return <span className="px-2.5 py-1 border border-sand-200 bg-sand-50 text-sand-600 text-xs font-medium uppercase tracking-wide rounded-md">{status}</span>
     }
   }
 
   const getProgressColor = (progress: number) => {
-    return "bg-black"
+    return "bg-sand-500"
   }
 
   const totalStats = {
@@ -203,49 +203,49 @@ export default function ArchivePage() {
 
         {/* Statistiques globales */}
         <div className="grid grid-cols-1 md:grid-cols-5 gap-6 md:gap-8 mb-8 md:mb-10">
-          <div className="bg-white p-6 md:p-7 border border-black/5 hover:border-black/10 transition-all group rounded-xl">
+          <div className="bg-white p-5 md:p-6 border border-sand-200 hover:border-sand-300 transition-all group rounded-xl">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs md:text-sm text-black/60 uppercase tracking-wide mb-1">Projets totaux</p>
                 <p className="text-2xl md:text-3xl font-black text-black tracking-tighter">{totalStats.totalProjects}</p>
               </div>
-              <Building2 className="h-6 w-6 md:h-8 md:w-8 text-black/40 group-hover:text-black transition-colors" />
+              <Building2 className="h-5 w-5 md:h-6 md:w-6 text-sand-400 group-hover:text-sand-600 transition-colors" />
             </div>
           </div>
-          <div className="bg-white p-6 md:p-7 border border-black/5 hover:border-black/10 transition-all group rounded-xl">
+          <div className="bg-white p-5 md:p-6 border border-sand-200 hover:border-sand-300 transition-all group rounded-xl">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs md:text-sm text-black/60 uppercase tracking-wide mb-1">En cours</p>
                 <p className="text-2xl md:text-3xl font-black text-black tracking-tighter">{totalStats.activeProjects}</p>
               </div>
-              <Clock className="h-6 w-6 md:h-8 md:w-8 text-black/40 group-hover:text-black transition-colors" />
+              <Clock className="h-5 w-5 md:h-6 md:w-6 text-sand-400 group-hover:text-sand-600 transition-colors" />
             </div>
           </div>
-          <div className="bg-white p-6 md:p-7 border border-black/5 hover:border-black/10 transition-all group rounded-xl">
+          <div className="bg-white p-5 md:p-6 border border-sand-200 hover:border-sand-300 transition-all group rounded-xl">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs md:text-sm text-black/60 uppercase tracking-wide mb-1">Terminés</p>
                 <p className="text-2xl md:text-3xl font-black text-black tracking-tighter">{totalStats.completedProjects}</p>
               </div>
-              <CheckCircle className="h-6 w-6 md:h-8 md:w-8 text-black/40 group-hover:text-black transition-colors" />
+              <CheckCircle className="h-5 w-5 md:h-6 md:w-6 text-sand-400 group-hover:text-sand-600 transition-colors" />
             </div>
           </div>
-          <div className="bg-white p-6 md:p-7 border border-black/5 hover:border-black/10 transition-all group rounded-xl">
+          <div className="bg-white p-5 md:p-6 border border-sand-200 hover:border-sand-300 transition-all group rounded-xl">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs md:text-sm text-black/60 uppercase tracking-wide mb-1">Documents</p>
                 <p className="text-2xl md:text-3xl font-black text-black tracking-tighter">{totalStats.totalDocuments}</p>
               </div>
-              <FileText className="h-6 w-6 md:h-8 md:w-8 text-black/40 group-hover:text-black transition-colors" />
+              <FileText className="h-5 w-5 md:h-6 md:w-6 text-sand-400 group-hover:text-sand-600 transition-colors" />
             </div>
           </div>
-          <div className="bg-white p-6 md:p-7 border border-black/5 hover:border-black/10 transition-all group rounded-xl">
+          <div className="bg-white p-5 md:p-6 border border-sand-200 hover:border-sand-300 transition-all group rounded-xl">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs md:text-sm text-black/60 uppercase tracking-wide mb-1">Versions</p>
                 <p className="text-2xl md:text-3xl font-black text-black tracking-tighter">{totalStats.totalVersions}</p>
               </div>
-              <History className="h-6 w-6 md:h-8 md:w-8 text-black/40 group-hover:text-black transition-colors" />
+              <History className="h-5 w-5 md:h-6 md:w-6 text-sand-400 group-hover:text-sand-600 transition-colors" />
             </div>
           </div>
         </div>
@@ -260,25 +260,25 @@ export default function ArchivePage() {
                 </div>
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-3">
                   <div className="relative">
-                    <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-black/40 h-4 w-4" />
+                    <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-sand-400 h-4 w-4" />
                     <Input
                       placeholder="Rechercher..."
-                      className="pl-10 w-full sm:w-64 h-10 rounded-lg border-2 border-black/10 focus:border-black transition-all bg-white text-black font-light text-sm"
+                      className="pl-10 w-full sm:w-64 h-10 rounded-lg border-2 border-sand-200 focus:border-sand-500 transition-all bg-white text-black font-light text-sm"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />
                   </div>
                   <Select value={filterStatus} onValueChange={setFilterStatus}>
-                    <SelectTrigger className="w-full sm:w-40 lg:w-48 h-10 rounded-lg border-2 border-black/10 focus:border-black text-sm">
+                    <SelectTrigger className="w-full sm:w-40 lg:w-48 h-10 rounded-lg border-2 border-sand-200 focus:border-sand-500 text-sm [&>svg]:text-sand-600">
                       <Filter className="h-4 w-4 mr-2" />
                       <SelectValue placeholder="Statut" />
                     </SelectTrigger>
-                    <SelectContent className="rounded-lg border border-black/10 shadow-lg">
-                      <SelectItem value="all" className="rounded-lg hover:bg-black hover:text-white transition-colors duration-150">Tous les statuts</SelectItem>
-                      <SelectItem value="En cours" className="rounded-lg hover:bg-black hover:text-white transition-colors duration-150">En cours</SelectItem>
-                      <SelectItem value="Terminé" className="rounded-lg hover:bg-black hover:text-white transition-colors duration-150">Terminé</SelectItem>
-                      <SelectItem value="En attente" className="rounded-lg hover:bg-black hover:text-white transition-colors duration-150">En attente</SelectItem>
-                      <SelectItem value="Suspendu" className="rounded-lg hover:bg-black hover:text-white transition-colors duration-150">Suspendu</SelectItem>
+                    <SelectContent className="rounded-lg border-2 border-sand-200 shadow-lg">
+                      <SelectItem value="all" className="rounded-lg hover:bg-sand-500 hover:text-white transition-colors duration-150">Tous les statuts</SelectItem>
+                      <SelectItem value="En cours" className="rounded-lg hover:bg-sand-500 hover:text-white transition-colors duration-150">En cours</SelectItem>
+                      <SelectItem value="Terminé" className="rounded-lg hover:bg-sand-500 hover:text-white transition-colors duration-150">Terminé</SelectItem>
+                      <SelectItem value="En attente" className="rounded-lg hover:bg-sand-500 hover:text-white transition-colors duration-150">En attente</SelectItem>
+                      <SelectItem value="Suspendu" className="rounded-lg hover:bg-sand-500 hover:text-white transition-colors duration-150">Suspendu</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -288,7 +288,7 @@ export default function ArchivePage() {
               {filteredProjects.map((project) => (
                 <div
                   key={project.id}
-                  className="border border-black/5 p-6 md:p-8 hover:border-black/20 cursor-pointer transition-all duration-200 group rounded-xl"
+                  className="border border-sand-200 p-5 md:p-6 hover:border-sand-300 cursor-pointer transition-all duration-200 group rounded-xl shadow-sm hover:shadow-md"
                   onClick={() => router.push(`/archive/${project.id}`)}
                 >
                   <div className="flex items-start justify-between mb-5">
@@ -317,17 +317,17 @@ export default function ArchivePage() {
                   </div>
 
                   {/* Barre de progression */}
-                  <div className="mb-5">
-                    <div className="w-full bg-black/5 h-1.5">
+                  <div className="mb-4">
+                    <div className="w-full bg-sand-100 h-1.5 rounded-full">
                       <div
-                        className={`h-1.5 transition-all duration-300 ${getProgressColor(project.progress)}`}
+                        className={`h-1.5 transition-all duration-300 rounded-full ${getProgressColor(project.progress)}`}
                         style={{ width: `${project.progress}%` }}
                       ></div>
                     </div>
                   </div>
 
                   {/* Informations supplémentaires */}
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between text-sm md:text-base text-black/50 font-light gap-3 pt-4 border-t border-black/5">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between text-sm md:text-base text-black/60 font-light gap-3 pt-4 border-t border-sand-200">
                     <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
                       <div className="flex items-center space-x-2">
                         <Calendar className="h-4 w-4" />
@@ -348,47 +348,50 @@ export default function ArchivePage() {
               ))}
 
               {filteredProjects.length === 0 && (
-                <div className="text-center py-12 md:py-16 border border-black/10 p-8">
-                  <Building2 className="h-16 w-16 text-black/40 mx-auto mb-4" />
-                  <p className="text-black font-medium text-lg mb-2">Aucun projet trouvé</p>
-                  <p className="text-black/50 font-light">Essayez de modifier vos critères de recherche</p>
+                <div className="text-center py-12 md:py-16 border-2 border-sand-200 p-8 rounded-xl bg-sand-50/50">
+                  <Building2 className="h-14 w-14 text-sand-400 mx-auto mb-3" />
+                  <p className="text-black font-medium text-base mb-1.5">Aucun projet trouvé</p>
+                  <p className="text-sand-600 font-light text-sm">Essayez de modifier vos critères de recherche</p>
                 </div>
               )}
             </div>
           </div>
 
           {/* Sidebar avec activité récente */}
-          <div className="lg:col-span-4 bg-white p-6 md:p-8 space-y-8 lg:order-last order-first rounded-xl">
+          <div className="lg:col-span-4 bg-white p-5 md:p-6 space-y-6 lg:order-last order-first rounded-xl">
             <div>
-              <h3 className="text-lg md:text-xl font-black tracking-tighter text-black mb-4">Activité récente</h3>
-              <p className="text-sm text-black/60 font-light mb-6">Dernières actions sur les documents</p>
-              <div className="space-y-5 md:space-y-6">
+              <h3 className="text-base md:text-lg font-black tracking-tighter text-black mb-2">Activité récente</h3>
+              <div className="w-12 h-0.5 bg-sand-500 mb-3"></div>
+              <p className="text-xs text-sand-600 font-light mb-4">Dernières actions sur les documents</p>
+              <div className="space-y-4">
                 {activities.map((activity) => (
-                  <div key={activity.id} className="flex items-start space-x-3 pb-5 border-b border-black/5 last:border-0">
+                  <div key={activity.id} className="flex items-start space-x-3 pb-4 border-b border-sand-200 last:border-0">
                     <div className="flex-shrink-0 mt-1">
-                      {activity.action === "Téléchargement" && <Download className="h-4 w-4 text-black/60" />}
-                      {activity.action === "Consultation" && <Eye className="h-4 w-4 text-black/60" />}
-                      {activity.action === "Validation" && <CheckCircle className="h-4 w-4 text-black/60" />}
-                      {activity.action === "Upload" && <FileText className="h-4 w-4 text-black/60" />}
-                      {activity.action === "Archivage" && <Archive className="h-4 w-4 text-black/60" />}
+                      <div className="w-6 h-6 flex items-center justify-center rounded-full bg-sand-50 border border-sand-200">
+                        {activity.action === "Téléchargement" && <Download className="h-3.5 w-3.5 text-sand-400" />}
+                        {activity.action === "Consultation" && <Eye className="h-3.5 w-3.5 text-sand-400" />}
+                        {activity.action === "Validation" && <CheckCircle className="h-3.5 w-3.5 text-sand-400" />}
+                        {activity.action === "Upload" && <FileText className="h-3.5 w-3.5 text-sand-400" />}
+                        {activity.action === "Archivage" && <Archive className="h-3.5 w-3.5 text-sand-400" />}
+                      </div>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-black mb-1">{activity.action}</p>
-                      <p className="text-sm text-black/60 truncate font-light">{activity.document}</p>
-                      <div className="flex items-center space-x-2 mt-2">
-                        <Avatar className="w-6 h-6 border border-black/10 rounded-full">
-                          <AvatarFallback className="text-xs bg-black text-white rounded-full font-black">
+                      <p className="text-sm font-medium text-black mb-0.5">{activity.action}</p>
+                      <p className="text-xs text-sand-600 truncate font-light mb-1">{activity.document}</p>
+                      <div className="flex items-center space-x-2 mt-1.5">
+                        <Avatar className="w-5 h-5 border border-sand-200 rounded-full">
+                          <AvatarFallback className="text-xs bg-sand-500 text-white rounded-full font-black">
                             {activity.user
                               .split(" ")
                               .map((n) => n[0])
                               .join("")}
                           </AvatarFallback>
                         </Avatar>
-                        <span className="text-xs text-black/50 font-light">{activity.user}</span>
-                        <span className="text-xs text-black/30">•</span>
-                        <span className="text-xs text-black/50 font-light">{activity.time}</span>
+                        <span className="text-xs text-sand-600 font-light">{activity.user}</span>
+                        <span className="text-xs text-sand-400">•</span>
+                        <span className="text-xs text-sand-500 font-light">{activity.time}</span>
                       </div>
-                      <p className="text-xs text-black/40 font-light mt-1">{activity.project}</p>
+                      <p className="text-xs text-sand-500 font-light mt-1">{activity.project}</p>
                     </div>
                   </div>
                 ))}
@@ -397,17 +400,18 @@ export default function ArchivePage() {
 
             {/* Actions rapides */}
             <div>
-              <h3 className="text-lg md:text-xl font-black tracking-tighter text-black mb-4">Actions rapides</h3>
+              <h3 className="text-base md:text-lg font-black tracking-tighter text-black mb-2">Actions rapides</h3>
+              <div className="w-12 h-0.5 bg-sand-500 mb-4"></div>
               <div className="space-y-2">
-                <Button variant="outline" className="w-full justify-start rounded-lg border border-black/10 hover:bg-black hover:text-white hover:border-black transition-all duration-200 font-medium tracking-wide px-4 hover:scale-[1.02] bg-white" disabled>
+                <Button variant="outline" className="w-full justify-start rounded-lg border-2 border-sand-200 hover:bg-sand-500 hover:text-white hover:border-sand-500 transition-all duration-200 font-medium tracking-wide px-4 hover:scale-[1.02] bg-white text-sm h-9" disabled>
                   <Archive className="h-4 w-4 mr-2" />
                   Archiver automatiquement
                 </Button>
-                <Button variant="outline" className="w-full justify-start rounded-lg border border-black/10 hover:bg-black hover:text-white hover:border-black transition-all duration-200 font-medium tracking-wide px-4 hover:scale-[1.02] bg-white" disabled>
+                <Button variant="outline" className="w-full justify-start rounded-lg border-2 border-sand-200 hover:bg-sand-500 hover:text-white hover:border-sand-500 transition-all duration-200 font-medium tracking-wide px-4 hover:scale-[1.02] bg-white text-sm h-9" disabled>
                   <Download className="h-4 w-4 mr-2" />
                   Exporter l'historique
                 </Button>
-                <Button variant="outline" className="w-full justify-start rounded-lg border border-black/10 hover:bg-black hover:text-white hover:border-black transition-all duration-200 font-medium tracking-wide px-4 hover:scale-[1.02] bg-white" disabled>
+                <Button variant="outline" className="w-full justify-start rounded-lg border-2 border-sand-200 hover:bg-sand-500 hover:text-white hover:border-sand-500 transition-all duration-200 font-medium tracking-wide px-4 hover:scale-[1.02] bg-white text-sm h-9" disabled>
                   <Clock className="h-4 w-4 mr-2" />
                   Planifier archivage
                 </Button>
