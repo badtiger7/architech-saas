@@ -68,11 +68,11 @@ export default function SettingsPage() {
 
   const getPermissionBadge = (permissions: string[]) => {
     if (permissions.includes("admin")) {
-      return <Badge className="bg-red-100 text-red-800">Administrateur</Badge>
+      return <Badge className="bg-sand-500 text-white rounded-md">Administrateur</Badge>
     } else if (permissions.includes("write")) {
-      return <Badge className="bg-blue-100 text-blue-800">Écriture</Badge>
+      return <Badge className="border border-sand-200 bg-sand-50 text-sand-700 rounded-md">Écriture</Badge>
     } else {
-      return <Badge variant="secondary">Lecture seule</Badge>
+      return <Badge variant="secondary" className="border border-sand-200 bg-sand-50 text-sand-600 rounded-md">Lecture seule</Badge>
     }
   }
 
@@ -82,9 +82,9 @@ export default function SettingsPage() {
 
       <main className="container mx-auto px-4 py-8">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="font-caveat text-5xl md:text-6xl font-bold text-gray-900">Paramètres</h1>
-          <p className="text-gray-600 mt-1">Gérez votre profil et vos préférences</p>
+        <div className="mb-8 border-b-2 border-sand-200 pb-6">
+          <h1 className="font-caveat text-5xl md:text-6xl font-bold text-black mb-2">Paramètres</h1>
+          <p className="text-sand-600 font-light">Gérez votre profil et vos préférences</p>
         </div>
 
         <Tabs defaultValue="profile" className="space-y-6">
@@ -179,7 +179,7 @@ export default function SettingsPage() {
                       </div>
                     </div>
 
-                    <Button>Sauvegarder les modifications</Button>
+                    <Button className="bg-sand-500 text-white hover:bg-sand-600 rounded-lg border-2 border-sand-500">Sauvegarder les modifications</Button>
                   </CardContent>
                 </Card>
               </div>
@@ -201,10 +201,10 @@ export default function SettingsPage() {
                       </Avatar>
                     </div>
                     <div className="space-y-2">
-                      <Button variant="outline" className="w-full bg-transparent">
+                      <Button variant="outline" className="w-full bg-transparent rounded-lg border-2 border-sand-200 hover:bg-sand-500 hover:text-white hover:border-sand-500">
                         Changer la photo
                       </Button>
-                      <Button variant="ghost" className="w-full text-red-600">
+                      <Button variant="ghost" className="w-full text-red-600 hover:bg-red-50 rounded-lg">
                         Supprimer la photo
                       </Button>
                     </div>
@@ -244,22 +244,23 @@ export default function SettingsPage() {
                   </div>
                   <Dialog>
                     <DialogTrigger asChild>
-                      <Button>
+                      <Button className="bg-sand-500 text-white hover:bg-sand-600 rounded-lg border-2 border-sand-500">
                         <Plus className="h-4 w-4 mr-2" />
                         Rejoindre un projet
                       </Button>
                     </DialogTrigger>
-                    <DialogContent>
+                    <DialogContent className="rounded-lg border-2 border-sand-200">
                       <DialogHeader>
-                        <DialogTitle>Rejoindre un projet</DialogTitle>
-                        <DialogDescription>Entrez le code d'invitation pour rejoindre un projet</DialogDescription>
+                        <DialogTitle className="font-black tracking-tighter text-black">Rejoindre un projet</DialogTitle>
+                        <div className="w-12 h-0.5 bg-sand-500 mb-3"></div>
+                        <DialogDescription className="text-sand-600 font-light">Entrez le code d'invitation pour rejoindre un projet</DialogDescription>
                       </DialogHeader>
                       <div className="space-y-4">
                         <div>
-                          <Label htmlFor="inviteCode">Code d'invitation</Label>
-                          <Input id="inviteCode" placeholder="ABC123DEF" />
+                          <Label htmlFor="inviteCode" className="text-xs font-medium text-sand-700 uppercase tracking-wide">Code d'invitation</Label>
+                          <Input id="inviteCode" placeholder="ABC123DEF" className="rounded-lg border-2 border-sand-200 focus:border-sand-500 text-sm" />
                         </div>
-                        <Button className="w-full">Rejoindre le projet</Button>
+                        <Button className="w-full bg-sand-500 text-white hover:bg-sand-600 rounded-lg border-2 border-sand-500">Rejoindre le projet</Button>
                       </div>
                     </DialogContent>
                   </Dialog>
@@ -279,11 +280,11 @@ export default function SettingsPage() {
                       </div>
                       <div className="flex items-center space-x-3">
                         {getPermissionBadge(project.permissions)}
-                        <Button variant="outline" size="sm">
+                        <Button variant="outline" size="sm" className="rounded-lg border-2 border-sand-200 hover:bg-sand-500 hover:text-white hover:border-sand-500">
                           <Edit className="h-4 w-4 mr-1" />
                           Modifier
                         </Button>
-                        <Button variant="ghost" size="sm" className="text-red-600">
+                        <Button variant="ghost" size="sm" className="text-red-600 hover:bg-red-50 rounded-lg">
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
@@ -398,7 +399,7 @@ export default function SettingsPage() {
             </div>
 
             <div className="mt-6">
-              <Button>Sauvegarder les préférences</Button>
+              <Button className="bg-sand-500 text-white hover:bg-sand-600 rounded-lg border-2 border-sand-500">Sauvegarder les préférences</Button>
             </div>
           </TabsContent>
 
@@ -434,7 +435,7 @@ export default function SettingsPage() {
                     <Input id="confirmPassword" type="password" />
                   </div>
 
-                  <Button>Changer le mot de passe</Button>
+                  <Button className="bg-sand-500 text-white hover:bg-sand-600 rounded-lg border-2 border-sand-500">Changer le mot de passe</Button>
                 </CardContent>
               </Card>
 
@@ -449,7 +450,7 @@ export default function SettingsPage() {
                       <Label>Authentification à deux facteurs</Label>
                       <p className="text-sm text-gray-500">Sécurisez votre compte avec 2FA</p>
                     </div>
-                    <Button variant="outline" size="sm">
+                    <Button variant="outline" size="sm" className="rounded-lg border-2 border-sand-200 hover:bg-sand-500 hover:text-white hover:border-sand-500">
                       Activer
                     </Button>
                   </div>
@@ -457,9 +458,9 @@ export default function SettingsPage() {
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
                       <Label>Sessions actives</Label>
-                      <p className="text-sm text-gray-500">Gérez vos sessions de connexion</p>
+                      <p className="text-sm text-sand-600 font-light">Gérez vos sessions de connexion</p>
                     </div>
-                    <Button variant="outline" size="sm">
+                    <Button variant="outline" size="sm" className="rounded-lg border-2 border-sand-200 hover:bg-sand-500 hover:text-white hover:border-sand-500">
                       Voir les sessions
                     </Button>
                   </div>
@@ -467,9 +468,9 @@ export default function SettingsPage() {
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
                       <Label>Télécharger mes données</Label>
-                      <p className="text-sm text-gray-500">Exportez toutes vos données</p>
+                      <p className="text-sm text-sand-600 font-light">Exportez toutes vos données</p>
                     </div>
-                    <Button variant="outline" size="sm">
+                    <Button variant="outline" size="sm" className="rounded-lg border-2 border-sand-200 hover:bg-sand-500 hover:text-white hover:border-sand-500">
                       Télécharger
                     </Button>
                   </div>

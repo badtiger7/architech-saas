@@ -247,56 +247,58 @@ export default function PhaseDetailPage({ params }: { params: Promise<{ phaseId:
       <Navbar />
       
       {/* Header */}
-      <div className="bg-card border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 py-6">
+      <div className="bg-white border-b-2 border-sand-200">
+        <div className="max-w-7xl mx-auto px-4 md:px-12 lg:px-16 py-5">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <Button 
                 variant="ghost" 
                 size="sm" 
                 onClick={() => projectId ? router.push(`/timeline?project=${projectId}`) : router.back()}
+                className="rounded-lg border-2 border-sand-200 hover:bg-sand-500 hover:text-white hover:border-sand-500"
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Retour à la timeline
               </Button>
               <div>
-                <h1 className="text-2xl font-bold text-foreground">{phase.name}</h1>
+                <h1 className="text-2xl font-black tracking-tighter text-black">{phase.name}</h1>
                 <div className="flex items-center space-x-2 mt-1">
-                  <Badge className={getStatusColor(phase.status)}>{phase.status}</Badge>
-                  <span className="text-sm text-muted-foreground">•</span>
-                  <span className="text-sm text-muted-foreground">Phase {phase.orderIndex + 1}</span>
+                  <Badge className={`${getStatusColor(phase.status)} rounded-md`}>{phase.status}</Badge>
+                  <span className="text-sm text-sand-600 font-light">•</span>
+                  <span className="text-sm text-sand-600 font-light">Phase {phase.orderIndex + 1}</span>
                 </div>
               </div>
             </div>
             <div className="flex items-center space-x-2">
-                                    <Button
-                        variant="outline"
-                        onClick={() => {
-                          if (isEditing) {
-                            handleSaveEdit()
-                          } else {
-                            // Initialiser le formulaire avec les valeurs actuelles
-                            setEditForm({
-                              startDate: phase.startDate || "",
-                              endDate: phase.endDate || "",
-                              description: phase.description || "",
-                            })
-                            setIsEditing(true)
-                          }
-                        }}
-                      >
-                        {isEditing ? (
-                          <>
-                            <Save className="h-4 w-4 mr-2" />
-                            Sauvegarder
-                          </>
-                        ) : (
-                          <>
-                            <Edit className="h-4 w-4 mr-2" />
-                            Modifier
-                          </>
-                        )}
-                      </Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  if (isEditing) {
+                    handleSaveEdit()
+                  } else {
+                    // Initialiser le formulaire avec les valeurs actuelles
+                    setEditForm({
+                      startDate: phase.startDate || "",
+                      endDate: phase.endDate || "",
+                      description: phase.description || "",
+                    })
+                    setIsEditing(true)
+                  }
+                }}
+                className="rounded-lg border-2 border-sand-200 hover:bg-sand-500 hover:text-white hover:border-sand-500"
+              >
+                {isEditing ? (
+                  <>
+                    <Save className="h-4 w-4 mr-2" />
+                    Sauvegarder
+                  </>
+                ) : (
+                  <>
+                    <Edit className="h-4 w-4 mr-2" />
+                    Modifier
+                  </>
+                )}
+              </Button>
             </div>
           </div>
         </div>
@@ -307,62 +309,64 @@ export default function PhaseDetailPage({ params }: { params: Promise<{ phaseId:
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
             {/* Phase Info */}
-            <Card>
+            <Card className="border border-sand-200">
               <CardHeader>
-                <CardTitle>Informations de la phase</CardTitle>
+                <CardTitle className="font-black tracking-tighter text-black">Informations de la phase</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {isEditing ? (
                   <div className="space-y-4">
                     <div>
-                      <Label htmlFor="description">Description</Label>
+                      <Label htmlFor="description" className="text-xs font-medium text-sand-700 uppercase tracking-wide">Description</Label>
                       <Textarea 
                         id="description" 
                         value={editForm.description}
                         onChange={(e) => setEditForm(prev => ({ ...prev, description: e.target.value }))}
-                        className="min-h-[100px]"
+                        className="min-h-[100px] rounded-lg border-2 border-sand-200 focus:border-sand-500 text-sm"
                         placeholder="Décrivez cette phase du projet..."
                       />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="startDate">Date de début</Label>
+                        <Label htmlFor="startDate" className="text-xs font-medium text-sand-700 uppercase tracking-wide">Date de début</Label>
                         <Input 
                           id="startDate" 
                           type="date" 
                           value={editForm.startDate}
                           onChange={(e) => setEditForm(prev => ({ ...prev, startDate: e.target.value }))}
+                          className="rounded-lg border-2 border-sand-200 focus:border-sand-500 text-sm"
                         />
                       </div>
                       <div>
-                        <Label htmlFor="endDate">Date de fin</Label>
+                        <Label htmlFor="endDate" className="text-xs font-medium text-sand-700 uppercase tracking-wide">Date de fin</Label>
                         <Input 
                           id="endDate" 
                           type="date" 
                           value={editForm.endDate}
                           onChange={(e) => setEditForm(prev => ({ ...prev, endDate: e.target.value }))}
+                          className="rounded-lg border-2 border-sand-200 focus:border-sand-500 text-sm"
                         />
                       </div>
                     </div>
                   </div>
                 ) : (
                   <>
-                    <p className="text-foreground">{phase.description || "Aucune description disponible"}</p>
+                    <p className="text-black font-light">{phase.description || "Aucune description disponible"}</p>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="flex items-center space-x-2">
-                        <Calendar className="h-4 w-4 text-muted-foreground" />
+                        <Calendar className="h-4 w-4 text-sand-400" />
                         <div>
-                          <p className="text-sm text-muted-foreground">Date de début</p>
-                          <p className="font-medium">
+                          <p className="text-xs text-black/60 font-light uppercase tracking-wide">Date de début</p>
+                          <p className="font-medium text-black">
                             {formatDateForDisplay(phase.startDate)}
                           </p>
                         </div>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <Calendar className="h-4 w-4 text-muted-foreground" />
+                        <Calendar className="h-4 w-4 text-sand-400" />
                         <div>
-                          <p className="text-sm text-muted-foreground">Date de fin</p>
-                          <p className="font-medium">
+                          <p className="text-xs text-black/60 font-light uppercase tracking-wide">Date de fin</p>
+                          <p className="font-medium text-black">
                             {formatDateForDisplay(phase.endDate || null)}
                           </p>
                         </div>
@@ -374,25 +378,25 @@ export default function PhaseDetailPage({ params }: { params: Promise<{ phaseId:
             </Card>
 
             {/* Progress */}
-            <Card>
+            <Card className="border border-sand-200">
               <CardHeader>
-                <CardTitle>Progression</CardTitle>
+                <CardTitle className="font-black tracking-tighter text-black">Progression</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium">Avancement global</span>
-                    <span className="text-sm text-muted-foreground">{phase.progressRatio}%</span>
+                    <span className="text-sm font-medium text-black">Avancement global</span>
+                    <span className="text-sm text-sand-600 font-light">{phase.progressRatio}%</span>
                   </div>
-                  <Progress value={phase.progressRatio} className="w-full" />
+                  <Progress value={phase.progressRatio} className="w-full h-1.5 bg-sand-100 [&>div]:bg-sand-500" />
                   <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div className="text-center p-3 bg-muted rounded-lg">
-                      <div className="font-semibold text-lg">{documents.filter(d => d.status === 'validated').length}</div>
-                      <div className="text-muted-foreground">Documents validés</div>
+                    <div className="text-center p-3 bg-sand-50 border border-sand-200 rounded-lg">
+                      <div className="font-black text-lg text-black">{documents.filter(d => d.status === 'validated').length}</div>
+                      <div className="text-sand-600 font-light">Documents validés</div>
                     </div>
-                    <div className="text-center p-3 bg-muted rounded-lg">
-                      <div className="font-semibold text-lg">{documents.length}</div>
-                      <div className="text-muted-foreground">Total documents</div>
+                    <div className="text-center p-3 bg-sand-50 border border-sand-200 rounded-lg">
+                      <div className="font-black text-lg text-black">{documents.length}</div>
+                      <div className="text-sand-600 font-light">Total documents</div>
                     </div>
                   </div>
                 </div>
@@ -400,66 +404,69 @@ export default function PhaseDetailPage({ params }: { params: Promise<{ phaseId:
             </Card>
 
             {/* Documents */}
-            <Card>
+            <Card className="border border-sand-200">
               <CardHeader>
                 <div className="flex items-center justify-between">
-                  <CardTitle>Documents</CardTitle>
+                  <CardTitle className="font-black tracking-tighter text-black">Documents</CardTitle>
                   <Dialog open={uploadDialogOpen} onOpenChange={setUploadDialogOpen}>
                     <DialogTrigger asChild>
-                      <Button>
+                      <Button className="bg-sand-500 text-white hover:bg-sand-600 rounded-lg border-2 border-sand-500">
                         <Upload className="h-4 w-4 mr-2" />
                         Ajouter un document
                       </Button>
                     </DialogTrigger>
-                    <DialogContent>
+                    <DialogContent className="rounded-lg border-2 border-sand-200">
                       <DialogHeader>
-                        <DialogTitle>Ajouter un document</DialogTitle>
-                        <DialogDescription>
+                        <DialogTitle className="font-black tracking-tighter text-black">Ajouter un document</DialogTitle>
+                        <div className="w-12 h-0.5 bg-sand-500 mb-3"></div>
+                        <DialogDescription className="text-sand-600 font-light">
                           Téléchargez un nouveau document pour cette phase.
                         </DialogDescription>
                       </DialogHeader>
                       <div className="space-y-4">
                         <div>
-                          <Label htmlFor="docName">Nom du document</Label>
+                          <Label htmlFor="docName" className="text-xs font-medium text-sand-700 uppercase tracking-wide">Nom du document</Label>
                           <Input
                             id="docName"
                             value={uploadForm.name}
                             onChange={(e) => setUploadForm({ ...uploadForm, name: e.target.value })}
                             placeholder="Ex: Plan de masse"
+                            className="rounded-lg border-2 border-sand-200 focus:border-sand-500 text-sm"
                           />
                         </div>
                         <div>
-                          <Label htmlFor="docType">Type de document</Label>
+                          <Label htmlFor="docType" className="text-xs font-medium text-sand-700 uppercase tracking-wide">Type de document</Label>
                           <Select
                             value={uploadForm.type}
                             onValueChange={(value) => setUploadForm({ ...uploadForm, type: value })}
                           >
-                            <SelectTrigger>
+                            <SelectTrigger className="rounded-lg border-2 border-sand-200 focus:border-sand-500">
                               <SelectValue placeholder="Sélectionner un type" />
                             </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="Plan architectural">Plan architectural</SelectItem>
-                              <SelectItem value="Façade">Façade</SelectItem>
-                              <SelectItem value="Coupe">Coupe</SelectItem>
-                              <SelectItem value="Détail technique">Détail technique</SelectItem>
-                              <SelectItem value="Rapport">Rapport</SelectItem>
+                            <SelectContent className="rounded-lg border-2 border-sand-200">
+                              <SelectItem value="Plan architectural" className="rounded-lg hover:bg-sand-500 hover:text-white">Plan architectural</SelectItem>
+                              <SelectItem value="Façade" className="rounded-lg hover:bg-sand-500 hover:text-white">Façade</SelectItem>
+                              <SelectItem value="Coupe" className="rounded-lg hover:bg-sand-500 hover:text-white">Coupe</SelectItem>
+                              <SelectItem value="Détail technique" className="rounded-lg hover:bg-sand-500 hover:text-white">Détail technique</SelectItem>
+                              <SelectItem value="Rapport" className="rounded-lg hover:bg-sand-500 hover:text-white">Rapport</SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
                         <div>
-                          <Label htmlFor="docDescription">Description</Label>
+                          <Label htmlFor="docDescription" className="text-xs font-medium text-sand-700 uppercase tracking-wide">Description</Label>
                           <Textarea
                             id="docDescription"
                             value={uploadForm.description}
                             onChange={(e) => setUploadForm({ ...uploadForm, description: e.target.value })}
                             placeholder="Description du document"
+                            className="rounded-lg border-2 border-sand-200 focus:border-sand-500 text-sm"
                           />
                         </div>
                         
                         {/* Zone de téléversement de fichier */}
                         <div>
-                          <Label>Fichier</Label>
-                          <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-primary transition-colors">
+                          <Label className="text-xs font-medium text-sand-700 uppercase tracking-wide">Fichier</Label>
+                          <div className="border-2 border-dashed border-sand-200 rounded-lg p-6 text-center hover:border-sand-400 transition-colors bg-sand-50/50">
                             <input
                               type="file"
                               id="file-upload"
@@ -512,11 +519,11 @@ export default function PhaseDetailPage({ params }: { params: Promise<{ phaseId:
                              )}
                            </div>
                          </div>
-                        <div className="flex justify-end space-x-2">
-                          <Button variant="outline" onClick={() => setUploadDialogOpen(false)}>
+                        <div className="flex justify-end space-x-2 pt-4 border-t border-sand-200">
+                          <Button variant="outline" onClick={() => setUploadDialogOpen(false)} className="rounded-lg border-2 border-sand-200 hover:bg-sand-500 hover:text-white hover:border-sand-500">
                             Annuler
                           </Button>
-                          <Button onClick={handleUploadDocument}>
+                          <Button onClick={handleUploadDocument} className="bg-sand-500 text-white hover:bg-sand-600 rounded-lg border-2 border-sand-500">
                             Ajouter
                           </Button>
                         </div>
@@ -530,13 +537,13 @@ export default function PhaseDetailPage({ params }: { params: Promise<{ phaseId:
                   {documents.map((doc) => (
                     <div
                       key={doc.id}
-                      className="flex items-center justify-between p-4 border border-border rounded-lg hover:bg-muted/50"
+                      className="flex items-center justify-between p-4 border border-sand-200 rounded-lg hover:bg-sand-50 hover:border-sand-300 transition-all"
                     >
                       <div className="flex items-center space-x-3">
-                        <FileText className="h-8 w-8 text-primary" />
+                        <FileText className="h-8 w-8 text-sand-400" />
                         <div>
-                          <h4 className="font-medium">{doc.name}</h4>
-                          <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                          <h4 className="font-medium text-black">{doc.name}</h4>
+                          <div className="flex items-center space-x-2 text-sm text-sand-600 font-light">
                             <span>{doc.type}</span>
                             <span>•</span>
                             <span>{doc.size}</span>
@@ -546,11 +553,11 @@ export default function PhaseDetailPage({ params }: { params: Promise<{ phaseId:
                         </div>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <Badge className={getStatusColor(doc.status)}>
+                        <Badge className={`${getStatusColor(doc.status)} rounded-md`}>
                           {getStatusIcon(doc.status)}
                           <span className="ml-1">{doc.status}</span>
                         </Badge>
-                        <div className="flex items-center space-x-1 text-sm text-muted-foreground">
+                        <div className="flex items-center space-x-1 text-sm text-sand-600 font-light">
                           <Eye className="h-4 w-4" />
                           <span>{doc.views}</span>
                           <MessageSquare className="h-4 w-4 ml-2" />
@@ -575,6 +582,7 @@ export default function PhaseDetailPage({ params }: { params: Promise<{ phaseId:
                               alert("❌ Erreur lors du téléchargement")
                             }
                           }}
+                          className="rounded-lg hover:bg-sand-500 hover:text-white"
                         >
                           <Download className="h-4 w-4" />
                         </Button>
@@ -595,10 +603,10 @@ export default function PhaseDetailPage({ params }: { params: Promise<{ phaseId:
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Quick Stats */}
-            <Card>
+            <Card className="border border-sand-200">
               <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Users className="h-5 w-5 mr-2" />
+                <CardTitle className="flex items-center font-black tracking-tighter text-black">
+                  <Users className="h-5 w-5 mr-2 text-sand-400" />
                   Équipe
                 </CardTitle>
               </CardHeader>
@@ -606,21 +614,21 @@ export default function PhaseDetailPage({ params }: { params: Promise<{ phaseId:
                 <div className="space-y-3">
                   {/* Mock contributors since contributors is optional */}
                   <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-primary-foreground text-sm font-medium">
+                    <div className="w-8 h-8 bg-sand-500 rounded-full flex items-center justify-center text-white text-sm font-black">
                       MD
                     </div>
                     <div>
-                      <p className="font-medium text-sm">Marie Dubois</p>
-                      <p className="text-xs text-muted-foreground">Architecte</p>
+                      <p className="font-medium text-sm text-black">Marie Dubois</p>
+                      <p className="text-xs text-sand-600 font-light">Architecte</p>
                     </div>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-secondary rounded-full flex items-center justify-center text-secondary-foreground text-sm font-medium">
+                    <div className="w-8 h-8 bg-sand-500 rounded-full flex items-center justify-center text-white text-sm font-black">
                       JM
                     </div>
                     <div>
-                      <p className="font-medium text-sm">Jean Martin</p>
-                      <p className="text-xs text-muted-foreground">Ingénieur</p>
+                      <p className="font-medium text-sm text-black">Jean Martin</p>
+                      <p className="text-xs text-sand-600 font-light">Ingénieur</p>
                     </div>
                   </div>
                 </div>
@@ -628,20 +636,20 @@ export default function PhaseDetailPage({ params }: { params: Promise<{ phaseId:
             </Card>
 
             {/* Actions */}
-            <Card>
+            <Card className="border border-sand-200">
               <CardHeader>
-                <CardTitle>Actions</CardTitle>
+                <CardTitle className="font-black tracking-tighter text-black">Actions</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
-                <Button variant="outline" className="w-full justify-start">
+                <Button variant="outline" className="w-full justify-start rounded-lg border-2 border-sand-200 hover:bg-sand-500 hover:text-white hover:border-sand-500 text-sm h-9">
                   <Share2 className="h-4 w-4 mr-2" />
                   Partager la phase
                 </Button>
-                <Button variant="outline" className="w-full justify-start">
+                <Button variant="outline" className="w-full justify-start rounded-lg border-2 border-sand-200 hover:bg-sand-500 hover:text-white hover:border-sand-500 text-sm h-9">
                   <Download className="h-4 w-4 mr-2" />
                   Télécharger tout
                 </Button>
-                <Button variant="outline" className="w-full justify-start">
+                <Button variant="outline" className="w-full justify-start rounded-lg border-2 border-sand-200 hover:bg-sand-500 hover:text-white hover:border-sand-500 text-sm h-9">
                   <MessageSquare className="h-4 w-4 mr-2" />
                   Commentaires
                 </Button>

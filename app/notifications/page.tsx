@@ -144,7 +144,7 @@ export default function NotificationsPage() {
           </div>
           <div className="flex space-x-3">
             {unreadCount > 0 && (
-              <Button variant="outline" onClick={markAllAsRead}>
+              <Button variant="outline" onClick={markAllAsRead} className="rounded-lg border-2 border-sand-200 hover:bg-sand-500 hover:text-white hover:border-sand-500">
                 <MarkAsRead className="h-4 w-4 mr-2" />
                 Tout marquer comme lu
               </Button>
@@ -205,11 +205,11 @@ export default function NotificationsPage() {
 
                           <div className="flex items-center space-x-2 ml-4">
                             {!notification.read && (
-                              <Button variant="ghost" size="sm" onClick={() => markAsRead(notification.id)}>
+                              <Button variant="ghost" size="sm" onClick={() => markAsRead(notification.id)} className="rounded-lg hover:bg-sand-500 hover:text-white">
                                 <CheckCircle className="h-4 w-4" />
                               </Button>
                             )}
-                            <Button variant="ghost" size="sm" onClick={() => deleteNotification(notification.id)}>
+                            <Button variant="ghost" size="sm" onClick={() => deleteNotification(notification.id)} className="rounded-lg hover:bg-red-50 hover:text-red-600">
                               <Trash2 className="h-4 w-4" />
                             </Button>
                           </div>
@@ -259,10 +259,10 @@ export default function NotificationsPage() {
                           </div>
 
                           <div className="flex items-center space-x-2 ml-4">
-                            <Button variant="ghost" size="sm" onClick={() => markAsRead(notification.id)}>
+                            <Button variant="ghost" size="sm" onClick={() => markAsRead(notification.id)} className="rounded-lg hover:bg-sand-500 hover:text-white">
                               <CheckCircle className="h-4 w-4" />
                             </Button>
-                            <Button variant="ghost" size="sm" onClick={() => deleteNotification(notification.id)}>
+                            <Button variant="ghost" size="sm" onClick={() => deleteNotification(notification.id)} className="rounded-lg hover:bg-red-50 hover:text-red-600">
                               <Trash2 className="h-4 w-4" />
                             </Button>
                           </div>
@@ -381,7 +381,7 @@ export default function NotificationsPage() {
             </div>
 
             <div className="mt-6">
-              <Button>Sauvegarder les préférences</Button>
+              <Button className="bg-sand-500 text-white hover:bg-sand-600 rounded-lg border-2 border-sand-500">Sauvegarder les préférences</Button>
             </div>
           </TabsContent>
         </Tabs>

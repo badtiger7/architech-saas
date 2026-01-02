@@ -291,13 +291,13 @@ export default function ProjectArchivePage() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "current":
-        return <Badge className="bg-blue-100 text-blue-800">Actuelle</Badge>
+        return <Badge className="bg-sand-500 text-white rounded-md">Actuelle</Badge>
       case "validated":
-        return <Badge className="bg-green-100 text-green-800">Validée</Badge>
+        return <Badge className="border border-sand-200 bg-sand-50 text-sand-700 rounded-md">Validée</Badge>
       case "archived":
-        return <Badge variant="secondary">Archivée</Badge>
+        return <Badge variant="secondary" className="border border-sand-200 bg-sand-50 text-sand-600 rounded-md">Archivée</Badge>
       default:
-        return <Badge variant="outline">{status}</Badge>
+        return <Badge variant="outline" className="border border-sand-200 text-sand-600 rounded-md">{status}</Badge>
     }
   }
 
@@ -335,18 +335,18 @@ export default function ProjectArchivePage() {
 
       <main className="container mx-auto px-4 py-8">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 space-y-4 sm:space-y-0">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 space-y-4 sm:space-y-0 border-b-2 border-sand-200 pb-6">
           <div className="flex items-center space-x-4">
-            <Button variant="outline" onClick={() => router.push("/archive")} className="flex items-center">
+            <Button variant="outline" onClick={() => router.push("/archive")} className="flex items-center rounded-lg border-2 border-sand-200 hover:bg-sand-500 hover:text-white hover:border-sand-500">
               <ArrowLeft className="h-4 w-4 mr-2" />
               Retour
             </Button>
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{project.name}</h1>
-              <p className="text-gray-600 mt-1 text-sm sm:text-base">{project.description}</p>
+              <h1 className="text-2xl sm:text-3xl font-black tracking-tighter text-black">{project.name}</h1>
+              <p className="text-sand-600 mt-1 text-sm sm:text-base font-light">{project.description}</p>
             </div>
           </div>
-          <div className="flex items-center space-x-2 text-sm text-gray-500">
+          <div className="flex items-center space-x-2 text-sm text-sand-600 font-light">
             <Calendar className="h-4 w-4" />
             <span>Démarré le {formatDate(project.startDate)}</span>
           </div>
@@ -354,76 +354,76 @@ export default function ProjectArchivePage() {
 
         {/* Statistiques du projet */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <Card>
-            <CardContent className="p-4">
+          <Card className="border border-sand-200">
+            <CardContent className="p-5">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Statut</p>
-                  <p className="text-lg font-semibold">{project.status}</p>
+                  <p className="text-xs text-black/60 font-light uppercase tracking-wide mb-1">Statut</p>
+                  <p className="text-lg font-black text-black">{project.status}</p>
                 </div>
-                <CheckCircle className="h-8 w-8 text-green-500" />
+                <CheckCircle className="h-6 w-6 text-sand-400" />
               </div>
             </CardContent>
           </Card>
-          <Card>
-            <CardContent className="p-4">
+          <Card className="border border-sand-200">
+            <CardContent className="p-5">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Documents</p>
-                  <p className="text-lg font-semibold">{project.totalDocuments}</p>
+                  <p className="text-xs text-black/60 font-light uppercase tracking-wide mb-1">Documents</p>
+                  <p className="text-lg font-black text-black">{project.totalDocuments}</p>
                 </div>
-                <FileText className="h-8 w-8 text-blue-500" />
+                <FileText className="h-6 w-6 text-sand-400" />
               </div>
             </CardContent>
           </Card>
-          <Card>
-            <CardContent className="p-4">
+          <Card className="border border-sand-200">
+            <CardContent className="p-5">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Versions totales</p>
-                  <p className="text-lg font-semibold">{project.totalVersions}</p>
+                  <p className="text-xs text-black/60 font-light uppercase tracking-wide mb-1">Versions totales</p>
+                  <p className="text-lg font-black text-black">{project.totalVersions}</p>
                 </div>
-                <History className="h-8 w-8 text-purple-500" />
+                <History className="h-6 w-6 text-sand-400" />
               </div>
             </CardContent>
           </Card>
-          <Card>
-            <CardContent className="p-4">
+          <Card className="border border-sand-200">
+            <CardContent className="p-5">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Dossiers</p>
-                  <p className="text-lg font-semibold">{Object.keys(documentsByFolder).length}</p>
+                  <p className="text-xs text-black/60 font-light uppercase tracking-wide mb-1">Dossiers</p>
+                  <p className="text-lg font-black text-black">{Object.keys(documentsByFolder).length}</p>
                 </div>
-                <Folder className="h-8 w-8 text-orange-500" />
+                <Folder className="h-6 w-6 text-sand-400" />
               </div>
             </CardContent>
           </Card>
         </div>
 
         {/* Filtres et recherche */}
-        <Card className="mb-8">
+        <Card className="mb-8 border border-sand-200">
           <CardHeader>
             <div className="flex flex-col lg:flex-row lg:items-center justify-between space-y-4 lg:space-y-0">
-              <CardTitle className="text-lg sm:text-xl">Documents du projet</CardTitle>
+              <CardTitle className="text-lg sm:text-xl font-black tracking-tighter text-black">Documents du projet</CardTitle>
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-2">
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-sand-400 h-4 w-4" />
                   <Input
                     placeholder="Rechercher..."
-                    className="pl-10 w-full sm:w-64"
+                    className="pl-10 w-full sm:w-64 rounded-lg border-2 border-sand-200 focus:border-sand-500 text-sm"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
                 </div>
                 <Select value={filterType} onValueChange={setFilterType}>
-                  <SelectTrigger className="w-full sm:w-40">
+                  <SelectTrigger className="w-full sm:w-40 rounded-lg border-2 border-sand-200 focus:border-sand-500 text-sm [&>svg]:text-sand-600">
                     <Filter className="h-4 w-4 mr-2" />
                     <SelectValue placeholder="Type" />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Tous les types</SelectItem>
-                    <SelectItem value="dwg">Fichiers DWG</SelectItem>
-                    <SelectItem value="pdf">Fichiers PDF</SelectItem>
+                  <SelectContent className="rounded-lg border-2 border-sand-200">
+                    <SelectItem value="all" className="rounded-lg hover:bg-sand-500 hover:text-white">Tous les types</SelectItem>
+                    <SelectItem value="dwg" className="rounded-lg hover:bg-sand-500 hover:text-white">Fichiers DWG</SelectItem>
+                    <SelectItem value="pdf" className="rounded-lg hover:bg-sand-500 hover:text-white">Fichiers PDF</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -431,20 +431,20 @@ export default function ProjectArchivePage() {
           </CardHeader>
           <CardContent>
             {/* Documents groupés par dossier */}
-            <div className="space-y-6">
+            <div className="space-y-5">
               {Object.entries(documentsByFolder).map(([folderName, folderDocs]) => (
-                <div key={folderName} className="border rounded-lg p-4">
+                <div key={folderName} className="border border-sand-200 rounded-lg p-5">
                   <div className="flex items-center space-x-2 mb-4">
-                    <Folder className="h-5 w-5 text-orange-500" />
-                    <h3 className="text-lg font-semibold text-gray-900">{folderName}</h3>
-                    <Badge variant="outline">
+                    <Folder className="h-5 w-5 text-sand-400" />
+                    <h3 className="text-base font-black tracking-tighter text-black">{folderName}</h3>
+                    <Badge variant="outline" className="border border-sand-200 bg-sand-50 text-sand-700 rounded-md">
                       {folderDocs.length} document{folderDocs.length > 1 ? "s" : ""}
                     </Badge>
                   </div>
 
                   <div className="space-y-3">
                     {folderDocs.map((doc) => (
-                      <div key={doc.id} className="border rounded-lg p-4 hover:bg-gray-50">
+                      <div key={doc.id} className="border border-sand-200 rounded-lg p-4 hover:bg-sand-50 hover:border-sand-300 transition-all">
                         <div className="flex items-center justify-between mb-3">
                           <div className="flex items-center space-x-3 flex-1">
                             {getFileIcon(doc.type)}
@@ -464,15 +464,16 @@ export default function ProjectArchivePage() {
                           <div className="flex items-center space-x-2">
                             <Dialog>
                               <DialogTrigger asChild>
-                                <Button variant="outline" size="sm" onClick={() => setSelectedDocument(doc)}>
+                                <Button variant="outline" size="sm" onClick={() => setSelectedDocument(doc)} className="rounded-lg border-2 border-sand-200 hover:bg-sand-500 hover:text-white hover:border-sand-500">
                                   <History className="h-4 w-4 mr-1" />
                                   Historique
                                 </Button>
                               </DialogTrigger>
-                              <DialogContent className="max-w-4xl">
+                              <DialogContent className="max-w-4xl rounded-lg border-2 border-sand-200">
                                 <DialogHeader>
-                                  <DialogTitle>Historique des versions - {doc.name}</DialogTitle>
-                                  <DialogDescription>
+                                  <DialogTitle className="font-black tracking-tighter text-black">Historique des versions - {doc.name}</DialogTitle>
+                                  <div className="w-12 h-0.5 bg-sand-500 mb-3"></div>
+                                  <DialogDescription className="text-sand-600 font-light">
                                     Consultez et gérez les différentes versions du document
                                   </DialogDescription>
                                 </DialogHeader>
@@ -513,16 +514,16 @@ export default function ProjectArchivePage() {
                                         </div>
                                       </div>
                                       <div className="flex items-center space-x-2">
-                                        <Button variant="outline" size="sm" disabled>
+                                        <Button variant="outline" size="sm" disabled className="rounded-lg border-2 border-sand-200">
                                           <Eye className="h-4 w-4 mr-1" />
                                           Aperçu
                                         </Button>
-                                        <Button variant="outline" size="sm" disabled>
+                                        <Button variant="outline" size="sm" disabled className="rounded-lg border-2 border-sand-200">
                                           <Download className="h-4 w-4 mr-1" />
                                           Télécharger
                                         </Button>
                                         {version.status !== "current" && (
-                                          <Button variant="outline" size="sm" disabled>
+                                          <Button variant="outline" size="sm" disabled className="rounded-lg border-2 border-sand-200">
                                             <RotateCcw className="h-4 w-4 mr-1" />
                                             Restaurer
                                           </Button>
@@ -535,20 +536,20 @@ export default function ProjectArchivePage() {
                             </Dialog>
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="sm">
-                                  <MoreVertical className="h-4 w-4" />
+                                <Button variant="ghost" size="sm" className="rounded-lg border border-sand-200 hover:bg-sand-50">
+                                  <MoreVertical className="h-4 w-4 text-sand-600" />
                                 </Button>
                               </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                <DropdownMenuItem disabled>
+                              <DropdownMenuContent align="end" className="rounded-lg border-2 border-sand-200">
+                                <DropdownMenuItem disabled className="rounded-lg">
                                   <Eye className="mr-2 h-4 w-4" />
                                   Aperçu
                                 </DropdownMenuItem>
-                                <DropdownMenuItem disabled>
+                                <DropdownMenuItem disabled className="rounded-lg">
                                   <Download className="mr-2 h-4 w-4" />
                                   Télécharger
                                 </DropdownMenuItem>
-                                <DropdownMenuItem disabled>
+                                <DropdownMenuItem disabled className="rounded-lg">
                                   <Archive className="mr-2 h-4 w-4" />
                                   Archiver version
                                 </DropdownMenuItem>
@@ -567,10 +568,10 @@ export default function ProjectArchivePage() {
             </div>
 
             {Object.keys(documentsByFolder).length === 0 && (
-              <div className="text-center py-12">
-                <FileText className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-500 text-lg">Aucun document trouvé</p>
-                <p className="text-gray-400 mt-2">Essayez de modifier vos critères de recherche</p>
+              <div className="text-center py-12 border-2 border-sand-200 rounded-xl bg-sand-50/50">
+                <FileText className="h-14 w-14 text-sand-400 mx-auto mb-3" />
+                <p className="text-black font-medium text-base mb-1.5">Aucun document trouvé</p>
+                <p className="text-sand-600 font-light text-sm">Essayez de modifier vos critères de recherche</p>
               </div>
             )}
           </CardContent>

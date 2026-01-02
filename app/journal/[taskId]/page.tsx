@@ -156,13 +156,13 @@ export default function TaskDetailPage({ params }: TaskDetailPageProps) {
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case "high":
-        return "text-red-600 bg-red-100"
+        return "text-sand-800 bg-sand-100 border border-sand-300"
       case "medium":
-        return "text-yellow-600 bg-yellow-100"
+        return "text-sand-700 bg-sand-50 border border-sand-200"
       case "low":
-        return "text-green-600 bg-green-100"
+        return "text-sand-600 bg-sand-50 border border-sand-200"
       default:
-        return "text-gray-600 bg-gray-100"
+        return "text-sand-600 bg-sand-50 border border-sand-200"
     }
   }
 
@@ -231,24 +231,24 @@ export default function TaskDetailPage({ params }: TaskDetailPageProps) {
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <div className="flex items-center space-x-2 mb-2">
-                <Badge className={`text-xs ${getPriorityColor(task.priority)}`}>
+                <Badge className={`text-xs rounded-md ${getPriorityColor(task.priority)}`}>
                   <Flag className="h-3 w-3 mr-1" />
                   {task.priority === "high" ? "Haute" : task.priority === "medium" ? "Moyenne" : "Basse"}
                 </Badge>
-                <Badge variant="outline">{getStatusLabel(task.status)}</Badge>
+                <Badge variant="outline" className="border border-sand-200 bg-sand-50 text-sand-700 rounded-md">{getStatusLabel(task.status)}</Badge>
               </div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">{task.title}</h1>
-              <p className="text-sm text-gray-500">
+              <h1 className="text-3xl font-bold text-black mb-2">{task.title}</h1>
+              <p className="text-sm text-sand-600 font-light">
                 Créée le {new Date(task.createdAt).toLocaleDateString("fr-FR")}
               </p>
             </div>
 
             <div className="flex space-x-2">
-              <Button variant="outline" size="sm" onClick={handleEdit}>
+              <Button variant="outline" size="sm" onClick={handleEdit} className="rounded-lg border-2 border-sand-200 hover:bg-sand-500 hover:text-white hover:border-sand-500">
                 <Edit className="h-4 w-4 mr-2" />
                 Modifier
               </Button>
-              <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700" onClick={handleDelete}>
+              <Button variant="outline" size="sm" className="text-red-600 hover:bg-red-50 hover:text-red-700 rounded-lg border-2 border-red-200" onClick={handleDelete}>
                 <Trash2 className="h-4 w-4 mr-2" />
                 Supprimer
               </Button>
@@ -271,14 +271,14 @@ export default function TaskDetailPage({ params }: TaskDetailPageProps) {
 
             {/* Tags */}
             {task.tags && task.tags.length > 0 && (
-              <Card>
+              <Card className="border border-sand-200">
                 <CardHeader>
                   <CardTitle>Tags</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="flex flex-wrap gap-2">
                     {task.tags.map((tag: string, index: number) => (
-                      <Badge key={index} variant="secondary">
+                      <Badge key={index} variant="secondary" className="border border-sand-200 bg-sand-50 text-sand-700 rounded-md">
                         {tag}
                       </Badge>
                     ))}
@@ -336,18 +336,18 @@ export default function TaskDetailPage({ params }: TaskDetailPageProps) {
               <CardContent>
                 {task.assignee ? (
                   <div className="flex items-center space-x-3">
-                    <Avatar className="h-10 w-10">
-                      <AvatarFallback className="bg-blue-100 text-blue-700">
+                    <Avatar className="h-10 w-10 border border-sand-200">
+                      <AvatarFallback className="bg-sand-500 text-white rounded-full">
                         {task.assignee.avatar}
                       </AvatarFallback>
                     </Avatar>
                     <div>
-                      <p className="font-medium text-sm">{task.assignee.name}</p>
-                      <p className="text-xs text-gray-500">{task.assignee.email}</p>
+                      <p className="font-medium text-sm text-black">{task.assignee.name}</p>
+                      <p className="text-xs text-sand-600 font-light">{task.assignee.email}</p>
                     </div>
                   </div>
                 ) : (
-                  <p className="text-gray-500 text-sm">Non assigné</p>
+                  <p className="text-sand-600 text-sm font-light">Non assigné</p>
                 )}
               </CardContent>
             </Card>
@@ -358,9 +358,9 @@ export default function TaskDetailPage({ params }: TaskDetailPageProps) {
                 <CardTitle className="text-sm">Échéance</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="flex items-center space-x-2 text-gray-700">
-                  <Calendar className="h-4 w-4" />
-                  <span>{new Date(task.dueDate).toLocaleDateString("fr-FR")}</span>
+                <div className="flex items-center space-x-2 text-black">
+                  <Calendar className="h-4 w-4 text-sand-400" />
+                  <span className="font-light">{new Date(task.dueDate).toLocaleDateString("fr-FR")}</span>
                 </div>
               </CardContent>
             </Card>
@@ -371,9 +371,9 @@ export default function TaskDetailPage({ params }: TaskDetailPageProps) {
                 <CardTitle className="text-sm">Temps estimé</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="flex items-center space-x-2 text-gray-700">
-                  <Clock className="h-4 w-4" />
-                  <span>{task.estimatedHours} heures</span>
+                <div className="flex items-center space-x-2 text-black">
+                  <Clock className="h-4 w-4 text-sand-400" />
+                  <span className="font-light">{task.estimatedHours} heures</span>
                 </div>
               </CardContent>
             </Card>
@@ -382,46 +382,49 @@ export default function TaskDetailPage({ params }: TaskDetailPageProps) {
 
         {/* Dialog d'édition */}
         <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-          <DialogContent className="max-w-2xl">
+          <DialogContent className="max-w-2xl rounded-lg border-2 border-sand-200">
             <DialogHeader>
-              <DialogTitle>Modifier la tâche</DialogTitle>
-              <DialogDescription>Modifiez les informations de la tâche</DialogDescription>
+              <DialogTitle className="font-black tracking-tighter text-black">Modifier la tâche</DialogTitle>
+              <div className="w-12 h-0.5 bg-sand-500 mb-3"></div>
+              <DialogDescription className="text-sand-600 font-light">Modifiez les informations de la tâche</DialogDescription>
             </DialogHeader>
             <div className="space-y-4">
               <div>
-                <Label htmlFor="editTitle">Titre de la tâche *</Label>
+                <Label htmlFor="editTitle" className="text-xs font-medium text-sand-700 uppercase tracking-wide">Titre de la tâche *</Label>
                 <Input 
                   id="editTitle" 
                   placeholder="Titre de la tâche..." 
                   value={editForm.title}
                   onChange={(e) => setEditForm(prev => ({ ...prev, title: e.target.value }))}
+                  className="rounded-lg border-2 border-sand-200 focus:border-sand-500 text-sm"
                 />
               </div>
 
               <div>
-                <Label htmlFor="editDescription">Description</Label>
+                <Label htmlFor="editDescription" className="text-xs font-medium text-sand-700 uppercase tracking-wide">Description</Label>
                 <Textarea 
                   id="editDescription" 
                   placeholder="Description détaillée..." 
                   rows={3}
                   value={editForm.description}
                   onChange={(e) => setEditForm(prev => ({ ...prev, description: e.target.value }))}
+                  className="rounded-lg border-2 border-sand-200 focus:border-sand-500 text-sm"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="editProject">Projet *</Label>
+                  <Label htmlFor="editProject" className="text-xs font-medium text-sand-700 uppercase tracking-wide">Projet *</Label>
                   <Select 
                     value={editForm.projectId} 
                     onValueChange={(value) => setEditForm(prev => ({ ...prev, projectId: value }))}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="rounded-lg border-2 border-sand-200 focus:border-sand-500">
                       <SelectValue placeholder="Sélectionner un projet" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="rounded-lg border-2 border-sand-200">
                       {projects.map(project => (
-                        <SelectItem key={project.id} value={project.id}>
+                        <SelectItem key={project.id} value={project.id} className="rounded-lg hover:bg-sand-500 hover:text-white">
                           {project.name}
                         </SelectItem>
                       ))}
@@ -429,7 +432,7 @@ export default function TaskDetailPage({ params }: TaskDetailPageProps) {
                   </Select>
                 </div>
                 <div>
-                  <Label htmlFor="editAssignee">Assigné à</Label>
+                  <Label htmlFor="editAssignee" className="text-xs font-medium text-sand-700 uppercase tracking-wide">Assigné à</Label>
                   <Select 
                     value={editForm.assigneeUserId || "unassigned"} 
                     onValueChange={(value) => setEditForm(prev => ({ 
@@ -437,12 +440,12 @@ export default function TaskDetailPage({ params }: TaskDetailPageProps) {
                       assigneeUserId: value === "unassigned" ? "" : value 
                     }))}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="rounded-lg border-2 border-sand-200 focus:border-sand-500">
                       <SelectValue placeholder="Non assigné" />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="unassigned">Non assigné</SelectItem>
-                      <SelectItem value="user-test">Utilisateur Test</SelectItem>
+                    <SelectContent className="rounded-lg border-2 border-sand-200">
+                      <SelectItem value="unassigned" className="rounded-lg hover:bg-sand-500 hover:text-white">Non assigné</SelectItem>
+                      <SelectItem value="user-test" className="rounded-lg hover:bg-sand-500 hover:text-white">Utilisateur Test</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -450,69 +453,73 @@ export default function TaskDetailPage({ params }: TaskDetailPageProps) {
 
               <div className="grid grid-cols-4 gap-4">
                 <div>
-                  <Label htmlFor="editStatus">Statut</Label>
+                  <Label htmlFor="editStatus" className="text-xs font-medium text-sand-700 uppercase tracking-wide">Statut</Label>
                   <Select 
                     value={editForm.status} 
                     onValueChange={(value: "todo" | "in-progress" | "review" | "done") => setEditForm(prev => ({ ...prev, status: value }))}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="rounded-lg border-2 border-sand-200 focus:border-sand-500">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="todo">À faire</SelectItem>
-                      <SelectItem value="in-progress">En cours</SelectItem>
-                      <SelectItem value="review">En révision</SelectItem>
-                      <SelectItem value="done">Terminé</SelectItem>
+                    <SelectContent className="rounded-lg border-2 border-sand-200">
+                      <SelectItem value="todo" className="rounded-lg hover:bg-sand-500 hover:text-white">À faire</SelectItem>
+                      <SelectItem value="in-progress" className="rounded-lg hover:bg-sand-500 hover:text-white">En cours</SelectItem>
+                      <SelectItem value="review" className="rounded-lg hover:bg-sand-500 hover:text-white">En révision</SelectItem>
+                      <SelectItem value="done" className="rounded-lg hover:bg-sand-500 hover:text-white">Terminé</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div>
-                  <Label htmlFor="editPriority">Priorité</Label>
+                  <Label htmlFor="editPriority" className="text-xs font-medium text-sand-700 uppercase tracking-wide">Priorité</Label>
                   <Select 
                     value={editForm.priority} 
                     onValueChange={(value: "low" | "medium" | "high") => setEditForm(prev => ({ ...prev, priority: value }))}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="rounded-lg border-2 border-sand-200 focus:border-sand-500">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="high">Haute</SelectItem>
-                      <SelectItem value="medium">Moyenne</SelectItem>
-                      <SelectItem value="low">Basse</SelectItem>
+                    <SelectContent className="rounded-lg border-2 border-sand-200">
+                      <SelectItem value="high" className="rounded-lg hover:bg-sand-500 hover:text-white">Haute</SelectItem>
+                      <SelectItem value="medium" className="rounded-lg hover:bg-sand-500 hover:text-white">Moyenne</SelectItem>
+                      <SelectItem value="low" className="rounded-lg hover:bg-sand-500 hover:text-white">Basse</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div>
-                  <Label htmlFor="editDueDate">Échéance</Label>
+                  <Label htmlFor="editDueDate" className="text-xs font-medium text-sand-700 uppercase tracking-wide">Échéance</Label>
                   <Input 
                     id="editDueDate" 
                     type="date"
                     value={editForm.dueDate}
                     onChange={(e) => setEditForm(prev => ({ ...prev, dueDate: e.target.value }))}
+                    className="rounded-lg border-2 border-sand-200 focus:border-sand-500 text-sm"
                   />
                 </div>
                 <div>
-                  <Label htmlFor="editHours">Heures estimées</Label>
+                  <Label htmlFor="editHours" className="text-xs font-medium text-sand-700 uppercase tracking-wide">Heures estimées</Label>
                   <Input 
                     id="editHours" 
                     type="number" 
                     placeholder="8"
                     value={editForm.estimatedHours}
                     onChange={(e) => setEditForm(prev => ({ ...prev, estimatedHours: parseInt(e.target.value) || 0 }))}
+                    className="rounded-lg border-2 border-sand-200 focus:border-sand-500 text-sm"
                   />
                 </div>
               </div>
 
-              <div className="flex justify-end space-x-2 pt-4">
+              <div className="flex justify-end space-x-2 pt-4 border-t border-sand-200">
                 <Button 
                   variant="outline" 
                   onClick={() => setIsEditDialogOpen(false)}
+                  className="rounded-lg border-2 border-sand-200 hover:bg-sand-500 hover:text-white hover:border-sand-500"
                 >
                   Annuler
                 </Button>
                 <Button 
                   onClick={handleSaveEdit}
                   disabled={!editForm.title.trim() || !editForm.projectId}
+                  className="bg-sand-500 text-white hover:bg-sand-600 rounded-lg border-2 border-sand-500"
                 >
                   Sauvegarder
                 </Button>
