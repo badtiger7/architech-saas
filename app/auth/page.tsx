@@ -46,7 +46,7 @@ export default function AuthPage() {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[1px] bg-gradient-to-r from-transparent via-black/5 to-transparent"></div>
       </div>
 
-      <Card className="w-full max-w-md border-2 border-black/10 bg-white relative z-10 rounded-none">
+      <Card className="w-full max-w-md border-2 border-black/10 bg-white relative z-10 rounded-xl">
         <CardHeader className="space-y-6 text-center p-8">
           <div className="flex items-center justify-center mb-4">
             <div className="w-16 h-16 border-2 border-black flex items-center justify-center">
@@ -67,7 +67,7 @@ export default function AuthPage() {
                   id="email" 
                   type="email" 
                   placeholder="votre@email.com" 
-                  className="pl-10 rounded-none border-2 border-black/10 focus:border-black transition-all bg-white text-black font-light" 
+                  className="pl-10 rounded-lg border-2 border-black/10 focus:border-black transition-all bg-white text-black font-light" 
                   required 
                 />
               </div>
@@ -80,14 +80,14 @@ export default function AuthPage() {
                   id="password" 
                   type="password" 
                   placeholder="••••••••" 
-                  className="pl-10 rounded-none border-2 border-black/10 focus:border-black transition-all bg-white text-black font-light" 
+                  className="pl-10 rounded-lg border-2 border-black/10 focus:border-black transition-all bg-white text-black font-light" 
                   required 
                 />
               </div>
             </div>
             <Button 
               type="submit" 
-              className="w-full bg-black text-white hover:bg-black/90 rounded-none border-2 border-black font-medium tracking-wide h-12 transition-all" 
+              className="w-full bg-black text-white hover:bg-black/90 rounded-lg border-2 border-black font-medium tracking-wide h-12 transition-all" 
               disabled={isLoading}
             >
               {isLoading ? "Connexion..." : "Se connecter"}
@@ -105,7 +105,7 @@ export default function AuthPage() {
 
           <Button
             variant="outline"
-            className="w-full rounded-none border-2 border-black/20 hover:bg-black hover:text-white hover:border-black transition-all font-medium tracking-wide h-12"
+            className="w-full rounded-lg border-2 border-black/20 hover:bg-black hover:text-white hover:border-black transition-all font-medium tracking-wide h-12"
             onClick={handleDemoLogin}
             disabled={isDemoLoading}
           >

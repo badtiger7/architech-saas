@@ -20,10 +20,10 @@
     /* Architech Brand Colors */
     --primary: 45 75% 52%; /* #D4AF37 - Exact Gold */
     --primary-foreground: 0 0% 100%; /* White text on gold */
-    --secondary: 22 68% 28%; /* #8B4513 - Saddle Brown */
-    --secondary-foreground: 0 0% 100%; /* White text on brown */
-    --tertiary: 22 50% 40%; /* #A0522D - Sienna Brown */
-    --tertiary-foreground: 0 0% 100%; /* White text on sienna */
+    --secondary: 38 30% 55%; /* Warm sand/taupe */
+    --secondary-foreground: 0 0% 98%;
+    --tertiary: 38 35% 75%; /* Lighter sand for accents */
+    --tertiary-foreground: 0 0% 20%;
     
     /* Architech Status Colors */
     --success: 142 71% 45%; /* Green for completed */
@@ -35,15 +35,27 @@
     --info: 221 83% 53%; /* Blue for info */
     --info-foreground: 0 0% 100%;
     
-    --muted: 0 0% 96.1%;
+    --muted: 38 15% 95%;
     --muted-foreground: 0 0% 45.1%;
-    --accent: 45 75% 95%; /* Light gold for accents */
+    --accent: 38 25% 92%;
     --accent-foreground: 22 68% 28%; /* Brown text on light gold */
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 45 75% 85%; /* Light gold border */
-    --input: 0 0% 89.8%;
-    --ring: 45 75% 52%; /* Gold focus ring */
+    --border: 38 20% 88%;
+    --input: 38 15% 92%;
+    --ring: 38 30% 55%;
+    
+    /* Sand Gradient Palette */
+    --sand-50: 38 45% 95%;   /* Très clair */
+    --sand-100: 38 42% 90%;  /* Clair */
+    --sand-200: 38 38% 82%;  /* Light */
+    --sand-300: 38 35% 75%;  /* Medium-light */
+    --sand-400: 38 32% 65%;  /* Medium */
+    --sand-500: 38 30% 55%;  /* Base */
+    --sand-600: 38 28% 45%;  /* Medium-dark */
+    --sand-700: 38 25% 35%;  /* Dark */
+    --sand-800: 38 22% 25%;  /* Très dark */
+    --sand-900: 38 20% 18%;  /* Presque noir */
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
     --chart-3: 197 37% 24%;
@@ -52,12 +64,12 @@
     --radius: 0.5rem;
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 22 68% 28%; /* Brown text */
-    --sidebar-primary: 45 75% 52%; /* Gold */
+    --sidebar-primary: 38 30% 55%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 45 75% 95%; /* Light gold */
+    --sidebar-accent: 38 25% 92%;
     --sidebar-accent-foreground: 22 68% 28%; /* Brown text */
-    --sidebar-border: 45 75% 85%; /* Light gold border */
-    --sidebar-ring: 45 75% 52%; /* Gold ring */
+    --sidebar-border: 38 20% 90%;
+    --sidebar-ring: 38 30% 55%;
   }
   
   .dark {

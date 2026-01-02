@@ -193,38 +193,35 @@ export default function DashboardPage() {
 
       <Navbar />
 
-      <main className="relative max-w-7xl mx-auto px-4 md:px-12 lg:px-16 py-8 md:py-12">
-        {/* Header - Nike Style */}
-        <div className="flex items-center justify-between mb-12 md:mb-16 border-b border-black/10 pb-6">
+      <main className="relative w-full px-6 md:px-12 lg:px-24 xl:px-32 2xl:px-40 py-6 md:py-8 lg:py-10">
+        {/* Header - Compact */}
+        <div className="flex items-center justify-between mb-6 md:mb-8 border-b border-black/10 pb-4 md:pb-5">
           <div>
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-black leading-[0.9] tracking-tighter text-black mb-2">
-              TABLEAU
-              <br />
-              DE BORD
+            <h1 className="font-caveat text-5xl md:text-7xl lg:text-8xl font-bold leading-[0.9] text-black mb-2">
+              Tableau de bord
             </h1>
-            <p className="text-base md:text-lg text-black/60 font-light mt-3">Vue d'ensemble de vos projets architecturaux</p>
           </div>
           <Button 
             onClick={() => setIsNewProjectDialogOpen(true)}
-            className="bg-black text-white hover:bg-black/90 rounded-none text-sm md:text-base font-medium tracking-wide px-6 md:px-8 h-12 md:h-14 border-2 border-black transition-all"
+            className="bg-sand-500 text-white hover:bg-sand-600 border-2 border-sand-500 rounded-lg text-sm font-medium tracking-wide px-5 h-9 transition-all duration-200 hover:scale-[1.02]"
           >
-            <Plus className="h-4 w-4 md:h-5 md:w-5 mr-2" />
+            <Plus className="h-4 w-4 mr-2" />
             Nouveau projet
           </Button>
         </div>
 
-        {/* Stats Cards - Minimal Grid Style */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-black/10 mb-12 md:mb-16">
-          <div className="bg-white p-6 md:p-8 border-2 border-transparent hover:border-black/10 transition-all group">
+        {/* Stats Cards - Modern Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 mb-8 md:mb-10">
+          <div className="bg-white p-6 md:p-7 border border-black/5 hover:border-sand-200 transition-all group rounded-xl">
             <div className="flex items-center justify-between mb-4">
-              <span className="text-xs md:text-sm font-medium text-black/60 uppercase tracking-wide">Projets actifs</span>
-              <TrendingUp className="h-4 w-4 md:h-5 md:w-5 text-black/40 group-hover:text-black transition-colors" />
+              <span className="text-xs md:text-sm font-medium text-sand-700 uppercase tracking-wide">Projets actifs</span>
+              <TrendingUp className="h-4 w-4 md:h-5 md:w-5 text-sand-400 group-hover:text-sand-600 transition-colors" />
             </div>
             <div className="text-3xl md:text-4xl font-black text-black tracking-tighter">{projects.length}</div>
             <p className="text-xs text-black/50 font-light mt-2">{projects.length > 0 ? "+1 ce mois" : "0 projet"}</p>
           </div>
 
-          <div className="bg-white p-6 md:p-8 border-2 border-transparent hover:border-black/10 transition-all group">
+          <div className="bg-white p-6 md:p-7 border border-black/5 hover:border-black/10 transition-all group rounded-xl">
             <div className="flex items-center justify-between mb-4">
               <span className="text-xs md:text-sm font-medium text-black/60 uppercase tracking-wide">Documents</span>
               <FileText className="h-4 w-4 md:h-5 md:w-5 text-black/40 group-hover:text-black transition-colors" />
@@ -233,7 +230,7 @@ export default function DashboardPage() {
             <p className="text-xs text-black/50 font-light mt-2">+12 cette semaine</p>
           </div>
 
-          <div className="bg-white p-6 md:p-8 border-2 border-transparent hover:border-black/10 transition-all group">
+          <div className="bg-white p-6 md:p-7 border border-black/5 hover:border-black/10 transition-all group rounded-xl">
             <div className="flex items-center justify-between mb-4">
               <span className="text-xs md:text-sm font-medium text-black/60 uppercase tracking-wide">Collaborateurs</span>
               <Users className="h-4 w-4 md:h-5 md:w-5 text-black/40 group-hover:text-black transition-colors" />
@@ -242,7 +239,7 @@ export default function DashboardPage() {
             <p className="text-xs text-black/50 font-light mt-2">Équipe active</p>
           </div>
 
-          <div className="bg-white p-6 md:p-8 border-2 border-transparent hover:border-black/10 transition-all group">
+          <div className="bg-white p-6 md:p-7 border border-black/5 hover:border-black/10 transition-all group rounded-xl">
             <div className="flex items-center justify-between mb-4">
               <span className="text-xs md:text-sm font-medium text-black/60 uppercase tracking-wide">Échéances</span>
               <Clock className="h-4 w-4 md:h-5 md:w-5 text-black/40 group-hover:text-black transition-colors" />
@@ -252,18 +249,17 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-px bg-black/10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8 lg:gap-10">
           {/* Projects Overview - Left Column */}
-          <div className="lg:col-span-2 bg-white p-6 md:p-8 lg:p-12">
-            <div className="mb-8">
-              <h2 className="text-2xl md:text-3xl font-black tracking-tighter text-black mb-2">Projets en cours</h2>
-              <div className="w-16 md:w-24 h-1 bg-black mb-4"></div>
-              <p className="text-sm md:text-base text-black/60 font-light">Suivi de l'avancement de vos projets</p>
+          <div className="lg:col-span-8 bg-white p-6 md:p-8 rounded-xl">
+            <div className="mb-6 md:mb-8">
+              <h2 className="font-caveat text-3xl md:text-4xl font-bold text-black mb-2">Projets en cours</h2>
+              <div className="w-16 md:w-24 h-1 bg-sand-500 mb-4"></div>
             </div>
             
             <div className="space-y-6 md:space-y-8">
               {projects.map((project) => (
-                <div key={project.id} className="border-2 border-black/10 p-6 md:p-8 hover:border-black/20 transition-all">
+                <div key={project.id} className="border border-black/5 p-6 md:p-8 hover:border-black/20 transition-all duration-200 rounded-xl group">
                   {/* Hidden file input for each project */}
                   <input
                     type="file"
@@ -275,8 +271,8 @@ export default function DashboardPage() {
 
                   <div className="flex flex-col md:flex-row items-start gap-6 mb-6">
                     {/* Project Thumbnail */}
-                    <div className="relative group">
-                      <div className="w-24 h-24 md:w-32 md:h-32 overflow-hidden bg-white border-2 border-black/10 flex items-center justify-center">
+                    <div className="relative thumbnail-group">
+                      <div className="w-24 h-24 md:w-32 md:h-32 overflow-hidden bg-white border border-black/10 flex items-center justify-center rounded-lg">
                         {project.thumbnail ? (
                           <img 
                             src={project.thumbnail} 
@@ -290,7 +286,7 @@ export default function DashboardPage() {
                       
                       {/* Edit overlay on hover */}
                       <div 
-                        className="absolute inset-0 bg-black/80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                        className="absolute inset-0 bg-black/80 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity cursor-pointer rounded-lg thumbnail-overlay"
                         onClick={() => triggerFileInput(project.id)}
                       >
                         <Edit3 className="w-5 h-5 md:w-6 md:h-6 text-white" />
@@ -299,7 +295,7 @@ export default function DashboardPage() {
                       {/* Edit button always visible on mobile */}
                       <button
                         onClick={() => triggerFileInput(project.id)}
-                        className="absolute -bottom-1 -right-1 bg-black text-white rounded-none p-2 shadow-lg md:hidden border-2 border-black"
+                        className="absolute -bottom-1 -right-1 bg-black text-white rounded-lg p-2 shadow-lg md:hidden border border-black"
                       >
                         <Edit3 className="w-3 h-3" />
                       </button>
@@ -313,14 +309,14 @@ export default function DashboardPage() {
                           <p className="text-sm md:text-base text-black/60 font-light">{project.client}</p>
                         </div>
                         <div className="flex items-center gap-3">
-                          <div className="px-3 py-1 border-2 border-black/20 text-black text-xs md:text-sm font-medium uppercase tracking-wide">
+                          <div className="px-3 py-1.5 border border-black/10 bg-black/5 text-black text-xs md:text-sm font-medium uppercase tracking-wide rounded-md">
                             {project.status}
                           </div>
                           <Link href={`/timeline?project=${project.projectId}`}>
                             <Button 
                               variant="outline" 
                               size="sm"
-                              className="rounded-none border-2 border-black/20 hover:bg-black hover:text-white hover:border-black transition-all"
+                              className="rounded-lg border border-black/10 hover:bg-black hover:text-white hover:border-black transition-all duration-200 text-sm h-9 px-4"
                             >
                               <Eye className="h-4 w-4 mr-1" />
                               Voir
@@ -330,7 +326,7 @@ export default function DashboardPage() {
                       </div>
 
                       {/* Project Details Grid */}
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 pb-6 border-b border-black/10">
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-6 pb-6 border-b border-black/5">
                         <div>
                           <p className="text-xs text-black/50 font-light uppercase tracking-wide mb-1">Phase actuelle</p>
                           <p className="text-sm md:text-base font-medium text-black">{project.currentPhase}</p>
@@ -349,10 +345,10 @@ export default function DashboardPage() {
                             {project.team.map((member, index) => (
                               <div 
                                 key={index} 
-                                className="flex items-center space-x-2 border-2 border-black/10 px-2 py-1 hover:bg-black hover:text-white hover:border-black transition-all cursor-pointer group"
+                                className="flex items-center space-x-2 border border-black/10 px-2.5 py-1.5 hover:bg-black hover:text-white hover:border-black transition-all duration-200 cursor-pointer group rounded-md"
                               >
-                                <Avatar className="w-5 h-5 md:w-6 md:h-6 border-2 border-black/10 group-hover:border-white">
-                                  <AvatarFallback className="text-xs bg-black text-white rounded-none">{member.initials}</AvatarFallback>
+                                <Avatar className="w-5 h-5 md:w-6 md:h-6 border border-black/10 group-hover:border-white rounded-full">
+                                  <AvatarFallback className="text-xs bg-black text-white rounded-full">{member.initials}</AvatarFallback>
                                 </Avatar>
                                 <div className="text-xs">
                                   <p className="font-medium">{member.name}</p>
@@ -369,9 +365,9 @@ export default function DashboardPage() {
                           <span className="text-xs text-black/60 font-light uppercase tracking-wide">Progression</span>
                           <span className="text-sm md:text-base font-black text-black">{project.progress}%</span>
                         </div>
-                        <div className="h-1 bg-black/10 w-full">
+                        <div className="h-1.5 bg-black/5 w-full rounded-full overflow-hidden">
                           <div 
-                            className="h-full bg-black transition-all" 
+                            className="h-full bg-black transition-all duration-300 rounded-full" 
                             style={{ width: `${project.progress}%` }}
                           ></div>
                         </div>
@@ -384,16 +380,15 @@ export default function DashboardPage() {
           </div>
 
           {/* Sidebar - Right Column */}
-          <div className="bg-white p-6 md:p-8 lg:p-12 space-y-8">
+          <div className="lg:col-span-4 bg-white p-6 md:p-8 space-y-8 rounded-xl">
             {/* Recent Documents */}
             <div>
-              <h3 className="text-xl md:text-2xl font-black tracking-tighter text-black mb-4">
+              <h3 className="text-lg md:text-xl font-black tracking-tighter text-black mb-4">
                 Documents récents
               </h3>
-              <div className="w-12 md:w-16 h-1 bg-black mb-6"></div>
-              <div className="space-y-6">
+              <div className="space-y-5">
                 {recentDocuments.map((doc, index) => (
-                  <div key={index} className="border-l-2 border-black/10 pl-4 hover:border-black transition-all">
+                  <div key={index} className="border-l border-black/10 pl-4 hover:border-black/30 transition-all duration-200">
                     <div className="flex items-start gap-3">
                       <FileText className="h-4 w-4 md:h-5 md:w-5 text-black/40 mt-1 flex-shrink-0" />
                       <div className="flex-1 min-w-0">
@@ -410,7 +405,7 @@ export default function DashboardPage() {
                   <Button 
                     variant="outline" 
                     size="sm" 
-                    className="w-full rounded-none border-2 border-black/20 hover:bg-black hover:text-white hover:border-black transition-all"
+                    className="w-full rounded-lg border border-black/10 hover:bg-black hover:text-white hover:border-black transition-all duration-200 text-sm h-9"
                   >
                     Voir tous les documents
                   </Button>
@@ -420,13 +415,12 @@ export default function DashboardPage() {
 
             {/* Notifications */}
             <div>
-              <h3 className="text-xl md:text-2xl font-black tracking-tighter text-black mb-4">
+              <h3 className="text-lg md:text-xl font-black tracking-tighter text-black mb-4">
                 Notifications récentes
               </h3>
-              <div className="w-12 md:w-16 h-1 bg-black mb-6"></div>
-              <div className="space-y-6">
+              <div className="space-y-5">
                 {notifications.map((notif, index) => (
-                  <div key={index} className="border-l-2 border-black/10 pl-4 hover:border-black transition-all">
+                  <div key={index} className="border-l border-black/10 pl-4 hover:border-black/30 transition-all duration-200">
                     <div className="flex items-start gap-3">
                       {notif.type === "deadline" && <Clock className="h-4 w-4 md:h-5 md:w-5 text-black/40 mt-1" />}
                       {notif.type === "document" && <FileText className="h-4 w-4 md:h-5 md:w-5 text-black/40 mt-1" />}
@@ -442,7 +436,7 @@ export default function DashboardPage() {
                   <Button 
                     variant="outline" 
                     size="sm" 
-                    className="w-full rounded-none border-2 border-black/20 hover:bg-black hover:text-white hover:border-black transition-all"
+                    className="w-full rounded-lg border border-black/10 hover:bg-black hover:text-white hover:border-black transition-all duration-200 text-sm h-9"
                   >
                     Voir toutes les notifications
                   </Button>
@@ -452,15 +446,14 @@ export default function DashboardPage() {
 
             {/* Quick Actions */}
             <div>
-              <h3 className="text-xl md:text-2xl font-black tracking-tighter text-black mb-4">
+              <h3 className="text-lg md:text-xl font-black tracking-tighter text-black mb-4">
                 Actions rapides
               </h3>
-              <div className="w-12 md:w-16 h-1 bg-black mb-6"></div>
-              <div className="space-y-3">
+              <div className="space-y-2">
                 <Link href="/timeline">
                   <Button 
                     variant="outline" 
-                    className="w-full justify-start rounded-none border-2 border-black/20 hover:bg-black hover:text-white hover:border-black transition-all"
+                    className="w-full justify-start rounded-lg border border-black/10 hover:bg-black hover:text-white hover:border-black transition-all duration-200 text-sm h-9 px-4"
                   >
                     <Calendar className="h-4 w-4 mr-2" />
                     Voir la timeline
@@ -469,7 +462,7 @@ export default function DashboardPage() {
                 <Link href="/drive">
                   <Button 
                     variant="outline" 
-                    className="w-full justify-start rounded-none border-2 border-black/20 hover:bg-black hover:text-white hover:border-black transition-all"
+                    className="w-full justify-start rounded-lg border border-black/10 hover:bg-black hover:text-white hover:border-black transition-all duration-200 text-sm h-9 px-4"
                   >
                     <FileText className="h-4 w-4 mr-2" />
                     Gérer les documents
@@ -478,7 +471,7 @@ export default function DashboardPage() {
                 <Link href="/journal">
                   <Button 
                     variant="outline" 
-                    className="w-full justify-start rounded-none border-2 border-black/20 hover:bg-black hover:text-white hover:border-black transition-all"
+                    className="w-full justify-start rounded-lg border border-black/10 hover:bg-black hover:text-white hover:border-black transition-all duration-200 text-sm h-9 px-4"
                   >
                     <Users className="h-4 w-4 mr-2" />
                     Journal de chantier
@@ -501,13 +494,12 @@ export default function DashboardPage() {
           >
             {/* Modal content */}
             <div 
-              className="bg-white border-2 border-black p-8 md:p-12 max-w-lg w-full mx-4"
+              className="bg-white border border-black/10 shadow-xl p-8 md:p-12 max-w-lg w-full mx-4 rounded-xl"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="mb-8">
                 <h2 className="text-2xl md:text-3xl font-black tracking-tighter text-black mb-2">Créer un nouveau projet</h2>
-                <div className="w-16 h-1 bg-black mb-4"></div>
-                <p className="text-sm md:text-base text-black/60 font-light">Ajoutez un nouveau projet à votre portefeuille</p>
+                <p className="text-sm md:text-base text-black/60 font-light mt-2">Ajoutez un nouveau projet à votre portefeuille</p>
               </div>
 
               <div className="space-y-6">
@@ -521,7 +513,7 @@ export default function DashboardPage() {
                     placeholder="Ex: Résidence Les Jardins..." 
                     value={newProjectForm.name}
                     onChange={(e) => setNewProjectForm(prev => ({ ...prev, name: e.target.value }))}
-                    className="w-full px-4 py-3 border-2 border-black/10 focus:border-black transition-all rounded-none bg-white text-black font-light placeholder:text-black/30"
+                    className="w-full px-4 py-3 border-2 border-black/10 focus:border-black transition-all rounded-lg bg-white text-black font-light placeholder:text-black/30 text-sm"
                   />
                 </div>
 
@@ -535,7 +527,7 @@ export default function DashboardPage() {
                     placeholder="Ex: SCI Les Jardins..." 
                     value={newProjectForm.clientName}
                     onChange={(e) => setNewProjectForm(prev => ({ ...prev, clientName: e.target.value }))}
-                    className="w-full px-4 py-3 border-2 border-black/10 focus:border-black transition-all rounded-none bg-white text-black font-light placeholder:text-black/30"
+                    className="w-full px-4 py-3 border-2 border-black/10 focus:border-black transition-all rounded-lg bg-white text-black font-light placeholder:text-black/30 text-sm"
                   />
                 </div>
 
@@ -548,7 +540,7 @@ export default function DashboardPage() {
                     type="date"
                     value={newProjectForm.startDate}
                     onChange={(e) => setNewProjectForm(prev => ({ ...prev, startDate: e.target.value }))}
-                    className="w-full px-4 py-3 border-2 border-black/10 focus:border-black transition-all rounded-none bg-white text-black font-light"
+                    className="w-full px-4 py-3 border-2 border-black/10 focus:border-black transition-all rounded-lg bg-white text-black font-light text-sm"
                   />
                 </div>
 
@@ -556,14 +548,14 @@ export default function DashboardPage() {
                   <Button 
                     variant="outline" 
                     onClick={closeNewProjectDialog}
-                    className="rounded-none border-2 border-black/20 hover:bg-black hover:text-white hover:border-black transition-all"
+                    className="rounded-lg border border-black/10 hover:bg-black hover:text-white hover:border-black transition-all duration-200 px-5"
                   >
                     Annuler
                   </Button>
                   <Button 
                     onClick={handleCreateProject}
                     disabled={!newProjectForm.name.trim()}
-                    className="bg-black text-white hover:bg-black/90 rounded-none border-2 border-black transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="bg-black text-white hover:bg-black/80 rounded-lg border border-black/10 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed px-5 hover:scale-[1.02]"
                   >
                     Créer le projet
                   </Button>

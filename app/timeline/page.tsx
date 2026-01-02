@@ -264,12 +264,12 @@ export default function TimelinePage() {
               
               <div className="flex-1">
                 <Select value={selectedProject} onValueChange={handleProjectChange}>
-                  <SelectTrigger className="w-full md:w-80 bg-white border-2 border-black/10 rounded-none hover:border-black/20 transition-all">
+                  <SelectTrigger className="w-full md:w-80 bg-white border-2 border-black/10 rounded-lg hover:border-black/20 transition-all">
                     <SelectValue placeholder="Sélectionner un projet" />
                   </SelectTrigger>
-                  <SelectContent className="rounded-none border-2 border-black">
+                  <SelectContent className="rounded-lg border-2 border-black">
                     {projects.map((project) => (
-                      <SelectItem key={project.id} value={project.id} className="p-3 hover:bg-black hover:text-white rounded-none">
+                      <SelectItem key={project.id} value={project.id} className="p-3 hover:bg-black hover:text-white rounded-lg">
                         <div className="flex items-center space-x-3 w-full">
                           <div className="w-2 h-2 bg-black flex-shrink-0"></div>
                           <div className="flex-1 min-w-0">
@@ -288,12 +288,12 @@ export default function TimelinePage() {
               <div className="flex items-center space-x-2">
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button variant="outline" size="sm" className="flex items-center space-x-2 rounded-none border-2 border-black/20 hover:bg-black hover:text-white hover:border-black transition-all">
+                    <Button variant="outline" size="sm" className="flex items-center space-x-2 rounded-lg border-2 border-black/20 hover:bg-black hover:text-white hover:border-black transition-all">
                       <Share2 className="h-4 w-4" />
                       <span>Partager</span>
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="sm:max-w-md rounded-none border-2 border-black">
+                  <DialogContent className="sm:max-w-md rounded-lg border-2 border-black">
                     <DialogHeader>
                       <DialogTitle className="font-black tracking-tighter text-black">Partager le projet</DialogTitle>
                       <div className="w-12 h-1 bg-black mb-4"></div>
@@ -309,7 +309,7 @@ export default function TimelinePage() {
                           value={shareForm.fullName}
                           onChange={(e) => setShareForm(prev => ({ ...prev, fullName: e.target.value }))}
                           placeholder="Jean Dupont"
-                          className="rounded-none border-2 border-black/10 focus:border-black transition-all bg-white text-black font-light"
+                          className="rounded-lg border-2 border-black/10 focus:border-black transition-all bg-white text-black font-light"
                         />
                       </div>
                       <div className="space-y-2">
@@ -320,31 +320,31 @@ export default function TimelinePage() {
                           value={shareForm.email}
                           onChange={(e) => setShareForm(prev => ({ ...prev, email: e.target.value }))}
                           placeholder="jean@example.com"
-                          className="rounded-none border-2 border-black/10 focus:border-black transition-all bg-white text-black font-light"
+                          className="rounded-lg border-2 border-black/10 focus:border-black transition-all bg-white text-black font-light"
                         />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="permission" className="text-sm font-medium text-black uppercase tracking-wide">Permission</Label>
                         <Select value={shareForm.permission} onValueChange={(value) => setShareForm(prev => ({ ...prev, permission: value }))}>
-                          <SelectTrigger className="rounded-none border-2 border-black/10 focus:border-black">
+                          <SelectTrigger className="rounded-lg border-2 border-black/10 focus:border-black">
                             <SelectValue />
                           </SelectTrigger>
-                          <SelectContent className="rounded-none border-2 border-black">
-                            <SelectItem value="read" className="rounded-none hover:bg-black hover:text-white">Lecture seule</SelectItem>
-                            <SelectItem value="write" className="rounded-none hover:bg-black hover:text-white">Lecture et écriture</SelectItem>
-                            <SelectItem value="admin" className="rounded-none hover:bg-black hover:text-white">Administrateur</SelectItem>
+                          <SelectContent className="rounded-lg border-2 border-black">
+                            <SelectItem value="read" className="rounded-lg hover:bg-black hover:text-white">Lecture seule</SelectItem>
+                            <SelectItem value="write" className="rounded-lg hover:bg-black hover:text-white">Lecture et écriture</SelectItem>
+                            <SelectItem value="admin" className="rounded-lg hover:bg-black hover:text-white">Administrateur</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
                       <DialogFooter>
-                        <Button type="submit" className="w-full bg-black text-white hover:bg-black/90 rounded-none border-2 border-black font-medium tracking-wide">
+                        <Button type="submit" className="w-full bg-black text-white hover:bg-black/90 rounded-lg border-2 border-black font-medium tracking-wide">
                           Envoyer l'invitation
                         </Button>
                       </DialogFooter>
                     </form>
                   </DialogContent>
                 </Dialog>
-                <Button variant="outline" size="sm" className="flex items-center space-x-2 rounded-none border-2 border-black/20 hover:bg-black hover:text-white hover:border-black transition-all">
+                <Button variant="outline" size="sm" className="flex items-center space-x-2 rounded-lg border-2 border-black/20 hover:bg-black hover:text-white hover:border-black transition-all">
                   <Settings className="h-4 w-4" />
                   <span>Configuration</span>
                 </Button>
@@ -376,17 +376,17 @@ export default function TimelinePage() {
               <div className="space-y-6">
                 <div className="flex items-center justify-between mb-8">
                   <div>
-                    <h2 className="text-3xl md:text-4xl font-black tracking-tighter text-black mb-2">Timeline du Projet</h2>
-                    <div className="w-16 md:w-24 h-1 bg-black"></div>
+                    <h2 className="font-caveat text-4xl md:text-5xl font-bold text-black mb-2">Timeline du Projet</h2>
+                    <div className="w-16 md:w-24 h-1 bg-sand-500"></div>
                   </div>
                   <Dialog open={addPhaseDialogOpen} onOpenChange={setAddPhaseDialogOpen}>
                     <DialogTrigger asChild>
-                      <Button className="bg-black text-white hover:bg-black/90 rounded-none border-2 border-black font-medium tracking-wide">
+                      <Button className="bg-sand-500 text-white hover:bg-sand-600 border-2 border-sand-500 rounded-lg font-medium tracking-wide">
                         <Plus className="h-4 w-4 mr-2" />
-                        Ajouter une phase
+                        Ajouter phase
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className="sm:max-w-md rounded-none border-2 border-black">
+                    <DialogContent className="sm:max-w-md rounded-lg border-2 border-black">
                       <DialogHeader>
                         <DialogTitle className="font-black tracking-tighter text-black">Ajouter une nouvelle phase</DialogTitle>
                         <div className="w-12 h-1 bg-black mb-4"></div>
@@ -403,7 +403,7 @@ export default function TimelinePage() {
                             onChange={(e) => setNewPhaseForm(prev => ({ ...prev, name: e.target.value }))}
                             placeholder="Ex: Études techniques"
                             required
-                            className="rounded-none border-2 border-black/10 focus:border-black transition-all bg-white text-black font-light"
+                            className="rounded-lg border-2 border-black/10 focus:border-black transition-all bg-white text-black font-light"
                           />
                         </div>
                         <div className="space-y-2">
@@ -413,7 +413,7 @@ export default function TimelinePage() {
                             type="date"
                             value={newPhaseForm.startDate}
                             onChange={(e) => setNewPhaseForm(prev => ({ ...prev, startDate: e.target.value }))}
-                            className="rounded-none border-2 border-black/10 focus:border-black transition-all bg-white text-black font-light"
+                            className="rounded-lg border-2 border-black/10 focus:border-black transition-all bg-white text-black font-light"
                           />
                         </div>
                         <DialogFooter>
@@ -421,11 +421,11 @@ export default function TimelinePage() {
                             type="button" 
                             variant="outline" 
                             onClick={() => setAddPhaseDialogOpen(false)}
-                            className="rounded-none border-2 border-black/20 hover:bg-black hover:text-white hover:border-black transition-all"
+                            className="rounded-lg border-2 border-black/20 hover:bg-black hover:text-white hover:border-black transition-all"
                           >
                             Annuler
                           </Button>
-                          <Button type="submit" className="bg-black text-white hover:bg-black/90 rounded-none border-2 border-black font-medium tracking-wide">
+                          <Button type="submit" className="bg-black text-white hover:bg-black/90 rounded-lg border-2 border-black font-medium tracking-wide">
                             Ajouter la phase
                           </Button>
                         </DialogFooter>
@@ -435,7 +435,7 @@ export default function TimelinePage() {
                 </div>
 
                 {phases.length === 0 ? (
-                  <div className="border-2 border-black/10 p-8 text-center">
+                  <div className="border-2 border-black/10 p-8 text-center rounded-xl">
                     <Calendar className="h-12 w-12 text-black/40 mx-auto mb-4" />
                     <h3 className="text-lg font-black text-black mb-2">Aucune phase</h3>
                     <p className="text-black/60 font-light mb-4">
@@ -443,12 +443,12 @@ export default function TimelinePage() {
                     </p>
                     <Dialog open={addPhaseDialogOpen} onOpenChange={setAddPhaseDialogOpen}>
                       <DialogTrigger asChild>
-                        <Button className="bg-black text-white hover:bg-black/90 rounded-none border-2 border-black font-medium tracking-wide">
+                        <Button className="bg-black text-white hover:bg-black/90 rounded-lg border-2 border-black font-medium tracking-wide">
                           <Plus className="h-4 w-4 mr-2" />
                           Créer la première phase
                         </Button>
                       </DialogTrigger>
-                      <DialogContent className="sm:max-w-md rounded-none border-2 border-black">
+                      <DialogContent className="sm:max-w-md rounded-xl border-2 border-black">
                         <DialogHeader>
                           <DialogTitle className="font-black tracking-tighter text-black">Ajouter une nouvelle phase</DialogTitle>
                           <div className="w-12 h-1 bg-black mb-4"></div>
@@ -465,7 +465,7 @@ export default function TimelinePage() {
                               onChange={(e) => setNewPhaseForm(prev => ({ ...prev, name: e.target.value }))}
                               placeholder="Ex: Esquisse"
                               required
-                              className="rounded-none border-2 border-black/10 focus:border-black transition-all bg-white text-black font-light"
+                              className="rounded-lg border-2 border-black/10 focus:border-black transition-all bg-white text-black font-light"
                             />
                           </div>
                           <div className="space-y-2">
@@ -475,7 +475,7 @@ export default function TimelinePage() {
                               type="date"
                               value={newPhaseForm.startDate}
                               onChange={(e) => setNewPhaseForm(prev => ({ ...prev, startDate: e.target.value }))}
-                              className="rounded-none border-2 border-black/10 focus:border-black transition-all bg-white text-black font-light"
+                              className="rounded-lg border-2 border-black/10 focus:border-black transition-all bg-white text-black font-light"
                             />
                           </div>
                           <DialogFooter>
@@ -483,11 +483,11 @@ export default function TimelinePage() {
                               type="button" 
                               variant="outline"
                               onClick={() => setAddPhaseDialogOpen(false)}
-                              className="rounded-none border-2 border-black/20 hover:bg-black hover:text-white hover:border-black transition-all"
+                              className="rounded-lg border-2 border-black/20 hover:bg-black hover:text-white hover:border-black transition-all"
                             >
                               Annuler
                             </Button>
-                            <Button type="submit" className="bg-black text-white hover:bg-black/90 rounded-none border-2 border-black font-medium tracking-wide">
+                            <Button type="submit" className="bg-black text-white hover:bg-black/90 rounded-lg border-2 border-black font-medium tracking-wide">
                               Créer la phase
                             </Button>
                           </DialogFooter>
@@ -500,7 +500,7 @@ export default function TimelinePage() {
                     {phases.map((phase, index) => (
                       <div 
                         key={phase.id} 
-                        className="border-2 border-black/10 p-6 md:p-8 hover:border-black/20 transition-all cursor-pointer"
+                        className="border-2 border-black/10 p-6 md:p-8 hover:border-black/20 transition-all cursor-pointer rounded-xl"
                         onClick={() => {
                           const url = `/timeline/${phase.id}?projectId=${selectedProject}`
                           router.push(url)
@@ -608,15 +608,15 @@ export default function TimelinePage() {
                 <h3 className="text-xl md:text-2xl font-black tracking-tighter text-black mb-4">Actions Rapides</h3>
                 <div className="w-12 md:w-16 h-1 bg-black mb-6"></div>
                 <div className="space-y-3">
-                  <Button variant="outline" className="w-full justify-start rounded-none border-2 border-black/20 hover:bg-black hover:text-white hover:border-black transition-all">
+                  <Button variant="outline" className="w-full justify-start rounded-lg border-2 border-black/20 hover:bg-black hover:text-white hover:border-black transition-all">
                     <FileText className="h-4 w-4 mr-2" />
                     Ajouter un document
                   </Button>
-                  <Button variant="outline" className="w-full justify-start rounded-none border-2 border-black/20 hover:bg-black hover:text-white hover:border-black transition-all">
+                  <Button variant="outline" className="w-full justify-start rounded-lg border-2 border-black/20 hover:bg-black hover:text-white hover:border-black transition-all">
                     <Users className="h-4 w-4 mr-2" />
                     Inviter un collaborateur
                   </Button>
-                  <Button variant="outline" className="w-full justify-start rounded-none border-2 border-black/20 hover:bg-black hover:text-white hover:border-black transition-all">
+                  <Button variant="outline" className="w-full justify-start rounded-lg border-2 border-black/20 hover:bg-black hover:text-white hover:border-black transition-all">
                     <Calendar className="h-4 w-4 mr-2" />
                     Planifier une réunion
                   </Button>

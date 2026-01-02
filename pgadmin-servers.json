@@ -3,7 +3,7 @@
     "1": {
       "Name": "Architech Database",
       "Group": "Servers",
-      "Host": "localhost",
+      "Host": "postgres",
       "Port": 5432,
       "MaintenanceDB": "architech_db",
       "Username": "postgres",

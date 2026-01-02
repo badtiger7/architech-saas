@@ -83,7 +83,7 @@ export default function SettingsPage() {
       <main className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Paramètres</h1>
+          <h1 className="font-caveat text-5xl md:text-6xl font-bold text-gray-900">Paramètres</h1>
           <p className="text-gray-600 mt-1">Gérez votre profil et vos préférences</p>
         </div>
 

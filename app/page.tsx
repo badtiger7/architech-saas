@@ -52,7 +52,7 @@ export default function HomePage() {
               </Link>
             </nav>
             <Link href="/auth">
-              <Button className="bg-black text-white hover:bg-black/90 rounded-none border-2 border-black font-medium tracking-wide text-sm px-6 h-10">
+              <Button className="bg-black text-white hover:bg-black/90 rounded-lg border-2 border-black font-medium tracking-wide text-sm px-6 h-10">
                 Se connecter
               </Button>
             </Link>
@@ -90,7 +90,7 @@ export default function HomePage() {
             <Link href="/auth">
               <Button
                 size="lg"
-                className="bg-black text-white hover:bg-black/90 rounded-none border-2 border-black text-base md:text-lg font-medium tracking-wide px-8 py-6 h-auto transition-all"
+                className="bg-black text-white hover:bg-black/90 rounded-lg border-2 border-black text-base md:text-lg font-medium tracking-wide px-8 py-6 h-auto transition-all"
               >
                 Créer un projet
                 <ArrowRight className="ml-2 h-5 w-5" />
@@ -99,7 +99,7 @@ export default function HomePage() {
             <Button
               size="lg"
               variant="outline"
-              className="rounded-none border-2 border-black/20 hover:bg-black hover:text-white hover:border-black text-base md:text-lg font-medium tracking-wide px-8 py-6 h-auto transition-all"
+              className="rounded-lg border-2 border-black/20 hover:bg-black hover:text-white hover:border-black text-base md:text-lg font-medium tracking-wide px-8 py-6 h-auto transition-all"
             >
               <Play className="mr-2 h-5 w-5" />
               Voir la démo
@@ -419,7 +419,7 @@ export default function HomePage() {
             <Link href="/auth">
               <Button
                 size="lg"
-                className="bg-white text-black hover:bg-white/90 rounded-none border-2 border-white text-base md:text-lg font-medium tracking-wide px-10 py-6 h-auto transition-all"
+                className="bg-white text-black hover:bg-white/90 rounded-lg border-2 border-white text-base md:text-lg font-medium tracking-wide px-10 py-6 h-auto transition-all"
               >
                 Commencer gratuitement
                 <ArrowRight className="ml-2 h-5 w-5" />
@@ -428,7 +428,7 @@ export default function HomePage() {
             <Button
               size="lg"
               variant="outline"
-              className="rounded-none border-2 border-white/20 text-white hover:bg-white hover:text-black hover:border-white text-base md:text-lg font-medium tracking-wide px-10 py-6 h-auto transition-all"
+              className="rounded-lg border-2 border-white/20 text-white hover:bg-white hover:text-black hover:border-white text-base md:text-lg font-medium tracking-wide px-10 py-6 h-auto transition-all"
             >
               <Play className="mr-2 h-5 w-5" />
               Voir la démo

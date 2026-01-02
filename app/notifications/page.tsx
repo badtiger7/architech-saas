@@ -135,7 +135,7 @@ export default function NotificationsPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Centre de Notifications</h1>
+            <h1 className="font-caveat text-5xl md:text-6xl font-bold text-gray-900">Centre de Notifications</h1>
             <p className="text-gray-600 mt-1">
               {unreadCount > 0
                 ? `${unreadCount} notification${unreadCount > 1 ? "s" : ""} non lue${unreadCount > 1 ? "s" : ""}`
