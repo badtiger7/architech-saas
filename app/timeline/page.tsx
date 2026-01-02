@@ -140,13 +140,13 @@ export default function TimelinePage() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "completed":
-        return <span className="px-3 py-1 border-2 border-black/20 text-black text-xs font-medium uppercase tracking-wide">Terminée</span>
+        return <span className="px-2.5 py-1 border border-sand-200 bg-sand-50 text-sand-700 text-xs font-medium uppercase tracking-wide rounded-md">Terminée</span>
       case "in-progress":
-        return <span className="px-3 py-1 bg-black text-white text-xs font-medium uppercase tracking-wide">En cours</span>
+        return <span className="px-2.5 py-1 bg-sand-500 text-white text-xs font-medium uppercase tracking-wide rounded-md">En cours</span>
       case "blocked":
-        return <span className="px-3 py-1 border-2 border-black text-black text-xs font-medium uppercase tracking-wide">Bloquée</span>
+        return <span className="px-2.5 py-1 border border-sand-300 bg-sand-100 text-sand-800 text-xs font-medium uppercase tracking-wide rounded-md">Bloquée</span>
       default:
-        return <span className="px-3 py-1 border-2 border-black/10 text-black/60 text-xs font-medium uppercase tracking-wide">Non commencée</span>
+        return <span className="px-2.5 py-1 border border-sand-200 bg-sand-50 text-sand-600 text-xs font-medium uppercase tracking-wide rounded-md">Non commencée</span>
     }
   }
 
@@ -231,13 +231,13 @@ export default function TimelinePage() {
       <Navbar />
       
       {/* Project Selection Header */}
-      <div className="border-b-2 border-black/10 bg-white">
-        <div className="max-w-7xl mx-auto px-4 md:px-12 lg:px-16 py-6">
+      <div className="border-b-2 border-sand-200 bg-white">
+        <div className="max-w-7xl mx-auto px-4 md:px-12 lg:px-16 py-5">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div className="flex items-center space-x-4">
               <div className="relative group">
                 <div 
-                  className="w-16 h-16 border-2 border-black/10 overflow-hidden cursor-pointer bg-white flex items-center justify-center hover:border-black transition-all"
+                  className="w-14 h-14 border-2 border-sand-200 overflow-hidden cursor-pointer bg-sand-50 flex items-center justify-center hover:border-sand-400 transition-all rounded-lg"
                   onClick={triggerFileInput}
                 >
                   {projectThumbnails[selectedProject] ? (
@@ -247,9 +247,9 @@ export default function TimelinePage() {
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <Camera className="h-6 w-6 text-black/40" />
+                    <Camera className="h-5 w-5 text-sand-400" />
                   )}
-                  <div className="absolute inset-0 bg-black/80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                  <div className="absolute inset-0 bg-sand-500/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer rounded-lg">
                     <Camera className="h-4 w-4 text-white" />
                   </div>
                 </div>
@@ -264,21 +264,38 @@ export default function TimelinePage() {
               
               <div className="flex-1">
                 <Select value={selectedProject} onValueChange={handleProjectChange}>
-                  <SelectTrigger className="w-full md:w-80 bg-white border-2 border-black/10 rounded-lg hover:border-black/20 transition-all">
+                  <SelectTrigger className="w-full md:w-80 bg-white border-2 border-sand-200 rounded-lg hover:border-sand-300 transition-all [&>svg]:text-sand-600">
                     <SelectValue placeholder="Sélectionner un projet" />
                   </SelectTrigger>
-                  <SelectContent className="rounded-lg border-2 border-black">
-                    {projects.map((project) => (
-                      <SelectItem key={project.id} value={project.id} className="p-3 hover:bg-black hover:text-white rounded-lg">
-                        <div className="flex items-center space-x-3 w-full">
-                          <div className="w-2 h-2 bg-black flex-shrink-0"></div>
-                          <div className="flex-1 min-w-0">
-                            <div className="font-medium truncate text-black">{project.name}</div>
-                            <div className="text-xs text-black/50 font-light">Timeline documentaire</div>
+                  <SelectContent className="rounded-lg border-2 border-sand-200">
+                    {projects.map((project) => {
+                      const isActive = project.id === selectedProject
+                      return (
+                        <SelectItem 
+                          key={project.id} 
+                          value={project.id} 
+                          className={`p-3 rounded-lg transition-all ${
+                            isActive 
+                              ? "bg-sand-500 text-white border-2 border-sand-500 hover:!bg-sand-500 hover:!text-white focus:!bg-sand-500 focus:!text-white" 
+                              : "hover:bg-sand-500 hover:text-white"
+                          }`}
+                        >
+                          <div className="flex items-center space-x-3 w-full">
+                            <div className={`w-2 h-2 rounded-full flex-shrink-0 ${
+                              isActive ? "bg-white" : "bg-sand-500"
+                            }`}></div>
+                            <div className="flex-1 min-w-0">
+                              <div className={`font-medium truncate text-sm ${
+                                isActive ? "text-white" : "text-black"
+                              }`}>{project.name}</div>
+                              <div className={`text-xs font-light ${
+                                isActive ? "text-white/90" : "text-sand-600"
+                              }`}>Timeline documentaire</div>
+                            </div>
                           </div>
-                        </div>
-                      </SelectItem>
-                    ))}
+                        </SelectItem>
+                      )
+                    })}
                   </SelectContent>
                 </Select>
               </div>
@@ -288,63 +305,63 @@ export default function TimelinePage() {
               <div className="flex items-center space-x-2">
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button variant="outline" size="sm" className="flex items-center space-x-2 rounded-lg border-2 border-black/20 hover:bg-black hover:text-white hover:border-black transition-all">
+                    <Button variant="outline" size="sm" className="flex items-center space-x-2 rounded-lg border-2 border-sand-200 hover:bg-sand-500 hover:text-white hover:border-sand-500 transition-all">
                       <Share2 className="h-4 w-4" />
                       <span>Partager</span>
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="sm:max-w-md rounded-lg border-2 border-black">
+                  <DialogContent className="sm:max-w-md rounded-lg border-2 border-sand-200">
                     <DialogHeader>
                       <DialogTitle className="font-black tracking-tighter text-black">Partager le projet</DialogTitle>
-                      <div className="w-12 h-1 bg-black mb-4"></div>
-                      <DialogDescription className="text-black/60 font-light">
+                      <div className="w-12 h-0.5 bg-sand-500 mb-3"></div>
+                      <DialogDescription className="text-sand-600 font-light">
                         Inviter quelqu'un à collaborer sur {currentProject.name}
                       </DialogDescription>
                     </DialogHeader>
                     <form onSubmit={handleShareSubmit} className="space-y-4">
                       <div className="space-y-2">
-                        <Label htmlFor="fullName" className="text-sm font-medium text-black uppercase tracking-wide">Nom complet</Label>
+                        <Label htmlFor="fullName" className="text-xs font-medium text-sand-700 uppercase tracking-wide">Nom complet</Label>
                         <Input
                           id="fullName"
                           value={shareForm.fullName}
                           onChange={(e) => setShareForm(prev => ({ ...prev, fullName: e.target.value }))}
                           placeholder="Jean Dupont"
-                          className="rounded-lg border-2 border-black/10 focus:border-black transition-all bg-white text-black font-light"
+                          className="rounded-lg border-2 border-sand-200 focus:border-sand-500 transition-all bg-white text-black font-light text-sm"
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="email" className="text-sm font-medium text-black uppercase tracking-wide">Email</Label>
+                        <Label htmlFor="email" className="text-xs font-medium text-sand-700 uppercase tracking-wide">Email</Label>
                         <Input
                           id="email"
                           type="email"
                           value={shareForm.email}
                           onChange={(e) => setShareForm(prev => ({ ...prev, email: e.target.value }))}
                           placeholder="jean@example.com"
-                          className="rounded-lg border-2 border-black/10 focus:border-black transition-all bg-white text-black font-light"
+                          className="rounded-lg border-2 border-sand-200 focus:border-sand-500 transition-all bg-white text-black font-light text-sm"
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="permission" className="text-sm font-medium text-black uppercase tracking-wide">Permission</Label>
+                        <Label htmlFor="permission" className="text-xs font-medium text-sand-700 uppercase tracking-wide">Permission</Label>
                         <Select value={shareForm.permission} onValueChange={(value) => setShareForm(prev => ({ ...prev, permission: value }))}>
-                          <SelectTrigger className="rounded-lg border-2 border-black/10 focus:border-black">
+                          <SelectTrigger className="rounded-lg border-2 border-sand-200 focus:border-sand-500">
                             <SelectValue />
                           </SelectTrigger>
-                          <SelectContent className="rounded-lg border-2 border-black">
-                            <SelectItem value="read" className="rounded-lg hover:bg-black hover:text-white">Lecture seule</SelectItem>
-                            <SelectItem value="write" className="rounded-lg hover:bg-black hover:text-white">Lecture et écriture</SelectItem>
-                            <SelectItem value="admin" className="rounded-lg hover:bg-black hover:text-white">Administrateur</SelectItem>
+                          <SelectContent className="rounded-lg border-2 border-sand-200">
+                            <SelectItem value="read" className="rounded-lg hover:bg-sand-500 hover:text-white">Lecture seule</SelectItem>
+                            <SelectItem value="write" className="rounded-lg hover:bg-sand-500 hover:text-white">Lecture et écriture</SelectItem>
+                            <SelectItem value="admin" className="rounded-lg hover:bg-sand-500 hover:text-white">Administrateur</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
                       <DialogFooter>
-                        <Button type="submit" className="w-full bg-black text-white hover:bg-black/90 rounded-lg border-2 border-black font-medium tracking-wide">
+                        <Button type="submit" className="w-full bg-sand-500 text-white hover:bg-sand-600 rounded-lg border-2 border-sand-500 font-medium tracking-wide">
                           Envoyer l'invitation
                         </Button>
                       </DialogFooter>
                     </form>
                   </DialogContent>
                 </Dialog>
-                <Button variant="outline" size="sm" className="flex items-center space-x-2 rounded-lg border-2 border-black/20 hover:bg-black hover:text-white hover:border-black transition-all">
+                <Button variant="outline" size="sm" className="flex items-center space-x-2 rounded-lg border-2 border-sand-200 hover:bg-sand-500 hover:text-white hover:border-sand-500 transition-all">
                   <Settings className="h-4 w-4" />
                   <span>Configuration</span>
                 </Button>
@@ -370,50 +387,50 @@ export default function TimelinePage() {
             </div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-px bg-black/10">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-px bg-sand-200">
             {/* Timeline */}
-            <div className="lg:col-span-3 bg-white p-6 md:p-8 lg:p-12">
-              <div className="space-y-6">
-                <div className="flex items-center justify-between mb-8">
+            <div className="lg:col-span-3 bg-white p-5 md:p-6 lg:p-8">
+              <div className="space-y-5">
+                <div className="flex items-center justify-between mb-6">
                   <div>
                     <h2 className="font-caveat text-4xl md:text-5xl font-bold text-black mb-2">Timeline du Projet</h2>
                     <div className="w-16 md:w-24 h-1 bg-sand-500"></div>
                   </div>
                   <Dialog open={addPhaseDialogOpen} onOpenChange={setAddPhaseDialogOpen}>
                     <DialogTrigger asChild>
-                      <Button className="bg-sand-500 text-white hover:bg-sand-600 border-2 border-sand-500 rounded-lg font-medium tracking-wide">
+                      <Button className="bg-sand-500 text-white hover:bg-sand-600 border-2 border-sand-500 rounded-lg font-medium tracking-wide text-sm h-9">
                         <Plus className="h-4 w-4 mr-2" />
                         Ajouter phase
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className="sm:max-w-md rounded-lg border-2 border-black">
+                    <DialogContent className="sm:max-w-md rounded-lg border-2 border-sand-200">
                       <DialogHeader>
                         <DialogTitle className="font-black tracking-tighter text-black">Ajouter une nouvelle phase</DialogTitle>
-                        <div className="w-12 h-1 bg-black mb-4"></div>
-                        <DialogDescription className="text-black/60 font-light">
+                        <div className="w-12 h-0.5 bg-sand-500 mb-3"></div>
+                        <DialogDescription className="text-sand-600 font-light">
                           Créer une nouvelle phase pour le projet {currentProject?.name}
                         </DialogDescription>
                       </DialogHeader>
                       <form onSubmit={addPhase} className="space-y-4">
                         <div className="space-y-2">
-                          <Label htmlFor="phaseName" className="text-sm font-medium text-black uppercase tracking-wide">Nom de la phase</Label>
+                          <Label htmlFor="phaseName" className="text-xs font-medium text-sand-700 uppercase tracking-wide">Nom de la phase</Label>
                           <Input
                             id="phaseName"
                             value={newPhaseForm.name}
                             onChange={(e) => setNewPhaseForm(prev => ({ ...prev, name: e.target.value }))}
                             placeholder="Ex: Études techniques"
                             required
-                            className="rounded-lg border-2 border-black/10 focus:border-black transition-all bg-white text-black font-light"
+                            className="rounded-lg border-2 border-sand-200 focus:border-sand-500 transition-all bg-white text-black font-light text-sm"
                           />
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="phaseStartDate" className="text-sm font-medium text-black uppercase tracking-wide">Date de début (optionnel)</Label>
+                          <Label htmlFor="phaseStartDate" className="text-xs font-medium text-sand-700 uppercase tracking-wide">Date de début (optionnel)</Label>
                           <Input
                             id="phaseStartDate"
                             type="date"
                             value={newPhaseForm.startDate}
                             onChange={(e) => setNewPhaseForm(prev => ({ ...prev, startDate: e.target.value }))}
-                            className="rounded-lg border-2 border-black/10 focus:border-black transition-all bg-white text-black font-light"
+                            className="rounded-lg border-2 border-sand-200 focus:border-sand-500 transition-all bg-white text-black font-light text-sm"
                           />
                         </div>
                         <DialogFooter>
@@ -421,11 +438,11 @@ export default function TimelinePage() {
                             type="button" 
                             variant="outline" 
                             onClick={() => setAddPhaseDialogOpen(false)}
-                            className="rounded-lg border-2 border-black/20 hover:bg-black hover:text-white hover:border-black transition-all"
+                            className="rounded-lg border-2 border-sand-200 hover:bg-sand-500 hover:text-white hover:border-sand-500 transition-all"
                           >
                             Annuler
                           </Button>
-                          <Button type="submit" className="bg-black text-white hover:bg-black/90 rounded-lg border-2 border-black font-medium tracking-wide">
+                          <Button type="submit" className="bg-sand-500 text-white hover:bg-sand-600 rounded-lg border-2 border-sand-500 font-medium tracking-wide">
                             Ajouter la phase
                           </Button>
                         </DialogFooter>
@@ -435,47 +452,47 @@ export default function TimelinePage() {
                 </div>
 
                 {phases.length === 0 ? (
-                  <div className="border-2 border-black/10 p-8 text-center rounded-xl">
-                    <Calendar className="h-12 w-12 text-black/40 mx-auto mb-4" />
-                    <h3 className="text-lg font-black text-black mb-2">Aucune phase</h3>
-                    <p className="text-black/60 font-light mb-4">
+                  <div className="border-2 border-sand-200 p-6 text-center rounded-xl bg-sand-50/50">
+                    <Calendar className="h-10 w-10 text-sand-400 mx-auto mb-3" />
+                    <h3 className="text-base font-black text-black mb-1.5">Aucune phase</h3>
+                    <p className="text-sand-600 font-light mb-4 text-sm">
                       Ce projet n'a pas encore de phases définies.
                     </p>
                     <Dialog open={addPhaseDialogOpen} onOpenChange={setAddPhaseDialogOpen}>
                       <DialogTrigger asChild>
-                        <Button className="bg-black text-white hover:bg-black/90 rounded-lg border-2 border-black font-medium tracking-wide">
+                        <Button className="bg-sand-500 text-white hover:bg-sand-600 rounded-lg border-2 border-sand-500 font-medium tracking-wide text-sm h-9">
                           <Plus className="h-4 w-4 mr-2" />
                           Créer la première phase
                         </Button>
                       </DialogTrigger>
-                      <DialogContent className="sm:max-w-md rounded-xl border-2 border-black">
+                      <DialogContent className="sm:max-w-md rounded-xl border-2 border-sand-200">
                         <DialogHeader>
                           <DialogTitle className="font-black tracking-tighter text-black">Ajouter une nouvelle phase</DialogTitle>
-                          <div className="w-12 h-1 bg-black mb-4"></div>
-                          <DialogDescription className="text-black/60 font-light">
+                          <div className="w-12 h-0.5 bg-sand-500 mb-3"></div>
+                          <DialogDescription className="text-sand-600 font-light">
                             Créer la première phase pour le projet {currentProject?.name}
                           </DialogDescription>
                         </DialogHeader>
                         <form onSubmit={addPhase} className="space-y-4">
                           <div className="space-y-2">
-                            <Label htmlFor="phaseName" className="text-sm font-medium text-black uppercase tracking-wide">Nom de la phase</Label>
+                            <Label htmlFor="phaseName" className="text-xs font-medium text-sand-700 uppercase tracking-wide">Nom de la phase</Label>
                             <Input
                               id="phaseName"
                               value={newPhaseForm.name}
                               onChange={(e) => setNewPhaseForm(prev => ({ ...prev, name: e.target.value }))}
                               placeholder="Ex: Esquisse"
                               required
-                              className="rounded-lg border-2 border-black/10 focus:border-black transition-all bg-white text-black font-light"
+                              className="rounded-lg border-2 border-sand-200 focus:border-sand-500 transition-all bg-white text-black font-light text-sm"
                             />
                           </div>
                           <div className="space-y-2">
-                            <Label htmlFor="phaseStartDate" className="text-sm font-medium text-black uppercase tracking-wide">Date de début (optionnel)</Label>
+                            <Label htmlFor="phaseStartDate" className="text-xs font-medium text-sand-700 uppercase tracking-wide">Date de début (optionnel)</Label>
                             <Input
                               id="phaseStartDate"
                               type="date"
                               value={newPhaseForm.startDate}
                               onChange={(e) => setNewPhaseForm(prev => ({ ...prev, startDate: e.target.value }))}
-                              className="rounded-lg border-2 border-black/10 focus:border-black transition-all bg-white text-black font-light"
+                              className="rounded-lg border-2 border-sand-200 focus:border-sand-500 transition-all bg-white text-black font-light text-sm"
                             />
                           </div>
                           <DialogFooter>
@@ -483,11 +500,11 @@ export default function TimelinePage() {
                               type="button" 
                               variant="outline"
                               onClick={() => setAddPhaseDialogOpen(false)}
-                              className="rounded-lg border-2 border-black/20 hover:bg-black hover:text-white hover:border-black transition-all"
+                              className="rounded-lg border-2 border-sand-200 hover:bg-sand-500 hover:text-white hover:border-sand-500 transition-all"
                             >
                               Annuler
                             </Button>
-                            <Button type="submit" className="bg-black text-white hover:bg-black/90 rounded-lg border-2 border-black font-medium tracking-wide">
+                            <Button type="submit" className="bg-sand-500 text-white hover:bg-sand-600 rounded-lg border-2 border-sand-500 font-medium tracking-wide">
                               Créer la phase
                             </Button>
                           </DialogFooter>
@@ -496,11 +513,11 @@ export default function TimelinePage() {
                     </Dialog>
                   </div>
                 ) : (
-                  <div className="space-y-6">
+                  <div className="space-y-4">
                     {phases.map((phase, index) => (
                       <div 
                         key={phase.id} 
-                        className="border-2 border-black/10 p-6 md:p-8 hover:border-black/20 transition-all cursor-pointer rounded-xl"
+                        className="border-2 border-sand-200 p-5 md:p-6 hover:border-sand-300 transition-all cursor-pointer rounded-xl shadow-sm hover:shadow-md"
                         onClick={() => {
                           const url = `/timeline/${phase.id}?projectId=${selectedProject}`
                           router.push(url)

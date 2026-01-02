@@ -323,9 +323,6 @@ export default function DrivePage() {
                         }`}
                       >
                         <div className="flex items-center space-x-3 w-full">
-                          <div className={`w-2 h-2 rounded-full flex-shrink-0 ${
-                            isActive ? "bg-white" : "bg-sand-500"
-                          }`}></div>
                           <div className="flex-1 min-w-0">
                             <div className={`font-medium text-sm truncate ${
                               isActive ? "text-white" : "text-black"

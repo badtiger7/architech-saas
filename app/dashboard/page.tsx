@@ -195,7 +195,7 @@ export default function DashboardPage() {
 
       <main className="relative w-full px-6 md:px-12 lg:px-24 xl:px-32 2xl:px-40 py-6 md:py-8 lg:py-10">
         {/* Header - Compact */}
-        <div className="flex items-center justify-between mb-6 md:mb-8 border-b border-black/10 pb-4 md:pb-5">
+        <div className="flex items-center justify-between mb-6 md:mb-8 border-b border-sand-200 pb-4 md:pb-5">
           <div>
             <h1 className="font-caveat text-5xl md:text-7xl lg:text-8xl font-bold leading-[0.9] text-black mb-2">
               Tableau de bord
@@ -221,37 +221,37 @@ export default function DashboardPage() {
             <p className="text-xs text-black/50 font-light mt-2">{projects.length > 0 ? "+1 ce mois" : "0 projet"}</p>
           </div>
 
-          <div className="bg-white p-6 md:p-7 border border-black/5 hover:border-black/10 transition-all group rounded-xl">
+          <div className="bg-white p-6 md:p-7 border border-black/5 hover:border-sand-200 transition-all group rounded-xl">
             <div className="flex items-center justify-between mb-4">
-              <span className="text-xs md:text-sm font-medium text-black/60 uppercase tracking-wide">Documents</span>
-              <FileText className="h-4 w-4 md:h-5 md:w-5 text-black/40 group-hover:text-black transition-colors" />
+              <span className="text-xs md:text-sm font-medium text-sand-700 uppercase tracking-wide">Documents</span>
+              <FileText className="h-4 w-4 md:h-5 md:w-5 text-sand-400 group-hover:text-sand-600 transition-colors" />
             </div>
             <div className="text-3xl md:text-4xl font-black text-black tracking-tighter">{recentDocuments.length}</div>
-            <p className="text-xs text-black/50 font-light mt-2">+12 cette semaine</p>
+            <p className="text-xs text-sand-600 font-light mt-2">+12 cette semaine</p>
           </div>
 
-          <div className="bg-white p-6 md:p-7 border border-black/5 hover:border-black/10 transition-all group rounded-xl">
+          <div className="bg-white p-6 md:p-7 border border-black/5 hover:border-sand-200 transition-all group rounded-xl">
             <div className="flex items-center justify-between mb-4">
-              <span className="text-xs md:text-sm font-medium text-black/60 uppercase tracking-wide">Collaborateurs</span>
-              <Users className="h-4 w-4 md:h-5 md:w-5 text-black/40 group-hover:text-black transition-colors" />
+              <span className="text-xs md:text-sm font-medium text-sand-700 uppercase tracking-wide">Collaborateurs</span>
+              <Users className="h-4 w-4 md:h-5 md:w-5 text-sand-400 group-hover:text-sand-600 transition-colors" />
             </div>
             <div className="text-3xl md:text-4xl font-black text-black tracking-tighter">8</div>
-            <p className="text-xs text-black/50 font-light mt-2">Équipe active</p>
+            <p className="text-xs text-sand-600 font-light mt-2">Équipe active</p>
           </div>
 
-          <div className="bg-white p-6 md:p-7 border border-black/5 hover:border-black/10 transition-all group rounded-xl">
+          <div className="bg-white p-6 md:p-7 border border-black/5 hover:border-sand-200 transition-all group rounded-xl">
             <div className="flex items-center justify-between mb-4">
-              <span className="text-xs md:text-sm font-medium text-black/60 uppercase tracking-wide">Échéances</span>
-              <Clock className="h-4 w-4 md:h-5 md:w-5 text-black/40 group-hover:text-black transition-colors" />
+              <span className="text-xs md:text-sm font-medium text-sand-700 uppercase tracking-wide">Échéances</span>
+              <Clock className="h-4 w-4 md:h-5 md:w-5 text-sand-400 group-hover:text-sand-600 transition-colors" />
             </div>
             <div className="text-3xl md:text-4xl font-black text-black tracking-tighter">2</div>
-            <p className="text-xs text-black/50 font-light mt-2">Cette semaine</p>
+            <p className="text-xs text-sand-600 font-light mt-2">Cette semaine</p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8 lg:gap-10">
           {/* Projects Overview - Left Column */}
-          <div className="lg:col-span-8 bg-white p-6 md:p-8 rounded-xl">
+          <div className="lg:col-span-8 bg-white p-5 md:p-6 rounded-xl">
             <div className="mb-6 md:mb-8">
               <h2 className="font-caveat text-3xl md:text-4xl font-bold text-black mb-2">Projets en cours</h2>
               <div className="w-16 md:w-24 h-1 bg-sand-500 mb-4"></div>
@@ -259,7 +259,7 @@ export default function DashboardPage() {
             
             <div className="space-y-6 md:space-y-8">
               {projects.map((project) => (
-                <div key={project.id} className="border border-black/5 p-6 md:p-8 hover:border-black/20 transition-all duration-200 rounded-xl group">
+                <div key={project.id} className="border border-sand-200 p-5 md:p-6 hover:border-sand-300 transition-all duration-200 rounded-xl group shadow-sm hover:shadow-md">
                   {/* Hidden file input for each project */}
                   <input
                     type="file"
@@ -272,7 +272,7 @@ export default function DashboardPage() {
                   <div className="flex flex-col md:flex-row items-start gap-6 mb-6">
                     {/* Project Thumbnail */}
                     <div className="relative thumbnail-group">
-                      <div className="w-24 h-24 md:w-32 md:h-32 overflow-hidden bg-white border border-black/10 flex items-center justify-center rounded-lg">
+                      <div className="w-20 h-20 md:w-28 md:h-28 overflow-hidden bg-sand-50 border border-sand-200 flex items-center justify-center rounded-lg">
                         {project.thumbnail ? (
                           <img 
                             src={project.thumbnail} 
@@ -280,22 +280,22 @@ export default function DashboardPage() {
                             className="w-full h-full object-cover"
                           />
                         ) : (
-                          <Camera className="w-8 h-8 md:w-10 md:h-10 text-black/40" />
+                          <Camera className="w-6 h-6 md:w-8 md:h-8 text-sand-400" />
                         )}
                       </div>
                       
                       {/* Edit overlay on hover */}
                       <div 
-                        className="absolute inset-0 bg-black/80 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity cursor-pointer rounded-lg thumbnail-overlay"
+                        className="absolute inset-0 bg-sand-500/90 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity cursor-pointer rounded-lg thumbnail-overlay"
                         onClick={() => triggerFileInput(project.id)}
                       >
-                        <Edit3 className="w-5 h-5 md:w-6 md:h-6 text-white" />
+                        <Edit3 className="w-4 h-4 md:w-5 md:h-5 text-white" />
                       </div>
                       
                       {/* Edit button always visible on mobile */}
                       <button
                         onClick={() => triggerFileInput(project.id)}
-                        className="absolute -bottom-1 -right-1 bg-black text-white rounded-lg p-2 shadow-lg md:hidden border border-black"
+                        className="absolute -bottom-1 -right-1 bg-sand-500 text-white rounded-lg p-1.5 shadow-lg md:hidden border border-sand-500"
                       >
                         <Edit3 className="w-3 h-3" />
                       </button>
@@ -303,20 +303,20 @@ export default function DashboardPage() {
 
                     {/* Project Info */}
                     <div className="flex-1 w-full">
-                      <div className="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-4">
+                      <div className="flex flex-col md:flex-row md:items-center justify-between mb-3 gap-3">
                         <div>
-                          <h3 className="text-xl md:text-2xl font-black tracking-tighter text-black mb-1">{project.name}</h3>
-                          <p className="text-sm md:text-base text-black/60 font-light">{project.client}</p>
+                          <h3 className="text-lg md:text-xl font-black tracking-tighter text-black mb-0.5">{project.name}</h3>
+                          <p className="text-sm text-sand-600 font-light">{project.client}</p>
                         </div>
                         <div className="flex items-center gap-3">
-                          <div className="px-3 py-1.5 border border-black/10 bg-black/5 text-black text-xs md:text-sm font-medium uppercase tracking-wide rounded-md">
+                          <div className="px-2.5 py-1 border border-sand-200 bg-sand-50 text-sand-700 text-xs font-medium uppercase tracking-wide rounded-md">
                             {project.status}
                           </div>
                           <Link href={`/timeline?project=${project.projectId}`}>
                             <Button 
                               variant="outline" 
                               size="sm"
-                              className="rounded-lg border border-black/10 hover:bg-black hover:text-white hover:border-black transition-all duration-200 text-sm h-9 px-4"
+                              className="rounded-lg border border-sand-200 hover:bg-sand-500 hover:text-white hover:border-sand-500 transition-all duration-200 text-sm h-9 px-4"
                             >
                               <Eye className="h-4 w-4 mr-1" />
                               Voir
@@ -326,29 +326,29 @@ export default function DashboardPage() {
                       </div>
 
                       {/* Project Details Grid */}
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-6 pb-6 border-b border-black/5">
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5 mb-5 pb-5 border-b border-sand-200">
                         <div>
-                          <p className="text-xs text-black/50 font-light uppercase tracking-wide mb-1">Phase actuelle</p>
-                          <p className="text-sm md:text-base font-medium text-black">{project.currentPhase}</p>
+                          <p className="text-xs text-sand-600 font-light uppercase tracking-wide mb-1">Phase actuelle</p>
+                          <p className="text-sm font-medium text-black">{project.currentPhase}</p>
                         </div>
                         <div>
-                          <p className="text-xs text-black/50 font-light uppercase tracking-wide mb-1">Date de début</p>
-                          <p className="text-sm md:text-base font-medium text-black">{project.startDate}</p>
+                          <p className="text-xs text-sand-600 font-light uppercase tracking-wide mb-1">Date de début</p>
+                          <p className="text-sm font-medium text-black">{project.startDate}</p>
                         </div>
                         <div>
-                          <p className="text-xs text-black/50 font-light uppercase tracking-wide mb-1">Commencé il y a</p>      
-                          <p className="text-sm md:text-base font-medium text-black">{calculateProjectDuration(project.startDate)}</p>
+                          <p className="text-xs text-sand-600 font-light uppercase tracking-wide mb-1">Commencé il y a</p>      
+                          <p className="text-sm font-medium text-black">{calculateProjectDuration(project.startDate)}</p>
                         </div>
                         <div>
-                          <p className="text-xs text-black/50 font-light uppercase tracking-wide mb-1">Équipe</p>
+                          <p className="text-xs text-sand-600 font-light uppercase tracking-wide mb-1">Équipe</p>
                           <div className="flex flex-wrap gap-2 mt-1">
                             {project.team.map((member, index) => (
                               <div 
                                 key={index} 
-                                className="flex items-center space-x-2 border border-black/10 px-2.5 py-1.5 hover:bg-black hover:text-white hover:border-black transition-all duration-200 cursor-pointer group rounded-md"
+                                className="flex items-center space-x-2 border border-sand-200 px-2 py-1 hover:bg-sand-500 hover:text-white hover:border-sand-500 transition-all duration-200 cursor-pointer group rounded-md"
                               >
-                                <Avatar className="w-5 h-5 md:w-6 md:h-6 border border-black/10 group-hover:border-white rounded-full">
-                                  <AvatarFallback className="text-xs bg-black text-white rounded-full">{member.initials}</AvatarFallback>
+                                <Avatar className="w-5 h-5 border border-sand-200 group-hover:border-white rounded-full">
+                                  <AvatarFallback className="text-xs bg-sand-500 text-white rounded-full">{member.initials}</AvatarFallback>
                                 </Avatar>
                                 <div className="text-xs">
                                   <p className="font-medium">{member.name}</p>
@@ -362,12 +362,12 @@ export default function DashboardPage() {
                       {/* Progress */}
                       <div>
                         <div className="flex items-center justify-between mb-2">
-                          <span className="text-xs text-black/60 font-light uppercase tracking-wide">Progression</span>
-                          <span className="text-sm md:text-base font-black text-black">{project.progress}%</span>
+                          <span className="text-xs text-sand-600 font-light uppercase tracking-wide">Progression</span>
+                          <span className="text-sm font-black text-black">{project.progress}%</span>
                         </div>
-                        <div className="h-1.5 bg-black/5 w-full rounded-full overflow-hidden">
+                        <div className="h-1.5 bg-sand-100 w-full rounded-full overflow-hidden">
                           <div 
-                            className="h-full bg-black transition-all duration-300 rounded-full" 
+                            className="h-full bg-sand-500 transition-all duration-300 rounded-full" 
                             style={{ width: `${project.progress}%` }}
                           ></div>
                         </div>
@@ -380,32 +380,39 @@ export default function DashboardPage() {
           </div>
 
           {/* Sidebar - Right Column */}
-          <div className="lg:col-span-4 bg-white p-6 md:p-8 space-y-8 rounded-xl">
+          <div className="lg:col-span-4 bg-white p-5 md:p-6 space-y-6 rounded-xl">
             {/* Recent Documents */}
             <div>
-              <h3 className="text-lg md:text-xl font-black tracking-tighter text-black mb-4">
+              <h3 className="text-base md:text-lg font-black tracking-tighter text-black mb-2">
                 Documents récents
               </h3>
-              <div className="space-y-5">
+              <div className="w-12 h-0.5 bg-sand-500 mb-3"></div>
+              <div className="space-y-2.5">
                 {recentDocuments.map((doc, index) => (
-                  <div key={index} className="border-l border-black/10 pl-4 hover:border-black/30 transition-all duration-200">
-                    <div className="flex items-start gap-3">
-                      <FileText className="h-4 w-4 md:h-5 md:w-5 text-black/40 mt-1 flex-shrink-0" />
+                  <div 
+                    key={index} 
+                    className="group p-2.5 rounded-lg hover:bg-sand-50 transition-all duration-200 cursor-pointer border border-transparent hover:border-sand-200"
+                  >
+                    <div className="flex items-start gap-2.5">
+                      <div className="p-1.5 rounded-md bg-sand-50 group-hover:bg-sand-100 transition-colors">
+                        <FileText className="h-3.5 w-3.5 text-sand-600 flex-shrink-0" />
+                      </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm md:text-base font-medium text-black mb-1">{doc.name}</p>
-                        <p className="text-xs text-black/60 font-light">{doc.project}</p>
-                        <p className="text-xs text-black/40 font-light mt-1">
-                          {doc.uploadedBy} • {doc.time}
-                        </p>
+                        <p className="text-xs font-medium text-black mb-0.5 truncate">{doc.name}</p>
+                        <div className="flex items-center gap-1.5 text-xs text-sand-600 font-light">
+                          <span className="truncate">{doc.project}</span>
+                          <span>•</span>
+                          <span>{doc.time}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
                 ))}
-                <Link href="/drive">
+                <Link href="/drive" className="block mt-3">
                   <Button 
                     variant="outline" 
                     size="sm" 
-                    className="w-full rounded-lg border border-black/10 hover:bg-black hover:text-white hover:border-black transition-all duration-200 text-sm h-9"
+                    className="w-full rounded-lg border border-sand-200 hover:bg-sand-500 hover:text-white hover:border-sand-500 transition-all duration-200 text-xs h-8"
                   >
                     Voir tous les documents
                   </Button>
@@ -415,66 +422,49 @@ export default function DashboardPage() {
 
             {/* Notifications */}
             <div>
-              <h3 className="text-lg md:text-xl font-black tracking-tighter text-black mb-4">
+              <h3 className="text-base md:text-lg font-black tracking-tighter text-black mb-2">
                 Notifications récentes
               </h3>
-              <div className="space-y-5">
-                {notifications.map((notif, index) => (
-                  <div key={index} className="border-l border-black/10 pl-4 hover:border-black/30 transition-all duration-200">
-                    <div className="flex items-start gap-3">
-                      {notif.type === "deadline" && <Clock className="h-4 w-4 md:h-5 md:w-5 text-black/40 mt-1" />}
-                      {notif.type === "document" && <FileText className="h-4 w-4 md:h-5 md:w-5 text-black/40 mt-1" />}
-                      {notif.type === "validation" && <AlertCircle className="h-4 w-4 md:h-5 md:w-5 text-black/40 mt-1" />}
-                      <div className="flex-1">
-                        <p className="text-sm md:text-base text-black mb-1">{notif.message}</p>
-                        <p className="text-xs text-black/40 font-light">{notif.time}</p>
+              <div className="w-12 h-0.5 bg-sand-500 mb-3"></div>
+              <div className="space-y-2.5">
+                {notifications.map((notif, index) => {
+                  const getIcon = () => {
+                    switch (notif.type) {
+                      case "deadline":
+                        return <Clock className="h-3.5 w-3.5 text-sand-600" />
+                      case "document":
+                        return <FileText className="h-3.5 w-3.5 text-sand-600" />
+                      case "validation":
+                        return <AlertCircle className="h-3.5 w-3.5 text-sand-600" />
+                      default:
+                        return <FileText className="h-3.5 w-3.5 text-sand-600" />
+                    }
+                  }
+                  
+                  return (
+                    <div 
+                      key={index} 
+                      className="group p-2.5 rounded-lg hover:bg-sand-50 transition-all duration-200 cursor-pointer border border-transparent hover:border-sand-200"
+                    >
+                      <div className="flex items-start gap-2.5">
+                        <div className="p-1.5 rounded-md bg-sand-50 group-hover:bg-sand-100 transition-colors">
+                          {getIcon()}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs text-black mb-0.5 leading-relaxed">{notif.message}</p>
+                          <p className="text-xs text-sand-500 font-light">{notif.time}</p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-                <Link href="/notifications">
+                  )
+                })}
+                <Link href="/notifications" className="block mt-3">
                   <Button 
                     variant="outline" 
                     size="sm" 
-                    className="w-full rounded-lg border border-black/10 hover:bg-black hover:text-white hover:border-black transition-all duration-200 text-sm h-9"
+                    className="w-full rounded-lg border border-sand-200 hover:bg-sand-500 hover:text-white hover:border-sand-500 transition-all duration-200 text-xs h-8"
                   >
                     Voir toutes les notifications
-                  </Button>
-                </Link>
-              </div>
-            </div>
-
-            {/* Quick Actions */}
-            <div>
-              <h3 className="text-lg md:text-xl font-black tracking-tighter text-black mb-4">
-                Actions rapides
-              </h3>
-              <div className="space-y-2">
-                <Link href="/timeline">
-                  <Button 
-                    variant="outline" 
-                    className="w-full justify-start rounded-lg border border-black/10 hover:bg-black hover:text-white hover:border-black transition-all duration-200 text-sm h-9 px-4"
-                  >
-                    <Calendar className="h-4 w-4 mr-2" />
-                    Voir la timeline
-                  </Button>
-                </Link>
-                <Link href="/drive">
-                  <Button 
-                    variant="outline" 
-                    className="w-full justify-start rounded-lg border border-black/10 hover:bg-black hover:text-white hover:border-black transition-all duration-200 text-sm h-9 px-4"
-                  >
-                    <FileText className="h-4 w-4 mr-2" />
-                    Gérer les documents
-                  </Button>
-                </Link>
-                <Link href="/journal">
-                  <Button 
-                    variant="outline" 
-                    className="w-full justify-start rounded-lg border border-black/10 hover:bg-black hover:text-white hover:border-black transition-all duration-200 text-sm h-9 px-4"
-                  >
-                    <Users className="h-4 w-4 mr-2" />
-                    Journal de chantier
                   </Button>
                 </Link>
               </div>
@@ -494,17 +484,18 @@ export default function DashboardPage() {
           >
             {/* Modal content */}
             <div 
-              className="bg-white border border-black/10 shadow-xl p-8 md:p-12 max-w-lg w-full mx-4 rounded-xl"
+              className="bg-white border border-sand-200 shadow-xl p-6 md:p-8 max-w-lg w-full mx-4 rounded-xl"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="mb-8">
-                <h2 className="text-2xl md:text-3xl font-black tracking-tighter text-black mb-2">Créer un nouveau projet</h2>
-                <p className="text-sm md:text-base text-black/60 font-light mt-2">Ajoutez un nouveau projet à votre portefeuille</p>
+              <div className="mb-6">
+                <h2 className="text-xl md:text-2xl font-black tracking-tighter text-black mb-2">Créer un nouveau projet</h2>
+                <div className="w-12 h-1 bg-sand-500 mb-3"></div>
+                <p className="text-sm text-sand-600 font-light">Ajoutez un nouveau projet à votre portefeuille</p>
               </div>
 
-              <div className="space-y-6">
+              <div className="space-y-4">
                 <div>
-                  <Label htmlFor="projectName" className="text-sm font-medium text-black uppercase tracking-wide mb-2 block">
+                  <Label htmlFor="projectName" className="text-xs font-medium text-sand-700 uppercase tracking-wide mb-1.5 block">
                     Nom du projet *
                   </Label>
                   <input 
@@ -513,12 +504,12 @@ export default function DashboardPage() {
                     placeholder="Ex: Résidence Les Jardins..." 
                     value={newProjectForm.name}
                     onChange={(e) => setNewProjectForm(prev => ({ ...prev, name: e.target.value }))}
-                    className="w-full px-4 py-3 border-2 border-black/10 focus:border-black transition-all rounded-lg bg-white text-black font-light placeholder:text-black/30 text-sm"
+                    className="w-full px-3 py-2.5 border-2 border-sand-200 focus:border-sand-500 transition-all rounded-lg bg-white text-black font-light placeholder:text-sand-400 text-sm"
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="clientName" className="text-sm font-medium text-black uppercase tracking-wide mb-2 block">
+                  <Label htmlFor="clientName" className="text-xs font-medium text-sand-700 uppercase tracking-wide mb-1.5 block">
                     Client
                   </Label>
                   <input 
@@ -527,12 +518,12 @@ export default function DashboardPage() {
                     placeholder="Ex: SCI Les Jardins..." 
                     value={newProjectForm.clientName}
                     onChange={(e) => setNewProjectForm(prev => ({ ...prev, clientName: e.target.value }))}
-                    className="w-full px-4 py-3 border-2 border-black/10 focus:border-black transition-all rounded-lg bg-white text-black font-light placeholder:text-black/30 text-sm"
+                    className="w-full px-3 py-2.5 border-2 border-sand-200 focus:border-sand-500 transition-all rounded-lg bg-white text-black font-light placeholder:text-sand-400 text-sm"
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="startDate" className="text-sm font-medium text-black uppercase tracking-wide mb-2 block">
+                  <Label htmlFor="startDate" className="text-xs font-medium text-sand-700 uppercase tracking-wide mb-1.5 block">
                     Date de début
                   </Label>
                   <input 
@@ -540,22 +531,22 @@ export default function DashboardPage() {
                     type="date"
                     value={newProjectForm.startDate}
                     onChange={(e) => setNewProjectForm(prev => ({ ...prev, startDate: e.target.value }))}
-                    className="w-full px-4 py-3 border-2 border-black/10 focus:border-black transition-all rounded-lg bg-white text-black font-light text-sm"
+                    className="w-full px-3 py-2.5 border-2 border-sand-200 focus:border-sand-500 transition-all rounded-lg bg-white text-black font-light text-sm"
                   />
                 </div>
 
-                <div className="flex justify-end space-x-3 pt-4 border-t border-black/10">
+                <div className="flex justify-end space-x-3 pt-4 border-t border-sand-200">
                   <Button 
                     variant="outline" 
                     onClick={closeNewProjectDialog}
-                    className="rounded-lg border border-black/10 hover:bg-black hover:text-white hover:border-black transition-all duration-200 px-5"
+                    className="rounded-lg border border-sand-200 hover:bg-sand-500 hover:text-white hover:border-sand-500 transition-all duration-200 px-4"
                   >
                     Annuler
                   </Button>
                   <Button 
                     onClick={handleCreateProject}
                     disabled={!newProjectForm.name.trim()}
-                    className="bg-black text-white hover:bg-black/80 rounded-lg border border-black/10 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed px-5 hover:scale-[1.02]"
+                    className="bg-sand-500 text-white hover:bg-sand-600 rounded-lg border-2 border-sand-500 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed px-4 hover:scale-[1.02]"
                   >
                     Créer le projet
                   </Button>
